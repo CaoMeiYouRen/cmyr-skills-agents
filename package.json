@@ -25,6 +25,7 @@
   "scripts": {
     "release": "semantic-release",
     "lint": "cross-env NODE_ENV=production eslint . --fix",
+    "lint:md": "lint-md *.md docs/**/*.md .github/**/*.md --fix",
     "prebuild": "rimraf dist",
     "build": "cross-env NODE_ENV=production tsx scripts/cli.ts",
     "dev": "cross-env NODE_ENV=development tsx watch src/index.ts",
@@ -38,6 +39,7 @@
   },
   "devDependencies": {
     "@clack/prompts": "^1.0.0",
+    "@lint-md/cli": "^2.0.0",
     "@types/debug": "^4.1.12",
     "@types/node": "^25.1.0",
     "commitizen": "^4.3.1",
@@ -86,6 +88,14 @@
   },
   "pnpm": {
     "overrides": {
+      "semver": "^7.7.3",
+      "@typescript-eslint/parser": "^8.54.0",
+      "@typescript-eslint/eslint-plugin": "^8.54.0",
+      "@typescript-eslint/utils": "^8.54.0",
+      "@typescript-eslint/type-utils": "^8.54.0",
+      "@typescript-eslint/scope-manager": "^8.54.0",
+      "@typescript-eslint/visitor-keys": "^8.54.0",
+      "@typescript-eslint/typescript-estree": "^8.54.0",
       "compare-func": "^2.0.0",
       "katex": "^0.16.21",
       "esbuild": "^0.25.0",
