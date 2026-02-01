@@ -34,7 +34,8 @@
         "src/*.ts",
         "src/**/*.ts",
         "*.config.ts",
-        "*.config.js"
+        "*.config.js",
+        "meta.ts"
     ],
     "exclude": [
         "node_modules",
