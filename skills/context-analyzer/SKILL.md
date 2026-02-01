@@ -35,3 +35,4 @@ applyTo: "**/*.{ts,vue,json,md}"
 
 
 
+

@@ -6,7 +6,19 @@
 ## 核心理念
 本项目分为两大部分：
 1.  **最佳实践（Best Practices）**：包含通用的、符合行业标准的开发规范和解决思路。
-2.  **个性化（Opinionated）**：包含草梅友仁个人的开发习惯、偏好和特定的个性化配置。
+2.  **个性化（Opinionated）**：包含草梅友仁个人的开发习惯和特定偏好：
+    *   **核心语言**：偏好 TypeScript (Node.js/JavaScript)。
+    *   **前端生态**：首选 **Vue 3**，兼容 React。
+    *   **后端生态**：纯 API 项目首选 **Hono**；全栈项目首选 **Nuxt**。
+    *   **数据存储**：PostgreSQL, MySQL, SQLite, MongoDB。
+    *   **基础设施**：优先使用 **Docker** 部署，倾向 **Vercel** 和 **Cloudflare** 的 Serverless 生态。
+    *   **包管理与构建**：强制使用 **pnpm**；使用 **tsdown** 进行构建。
+    *   **测试框架**：首选 **vitest**。
+    *   **质量红线**：
+        *   代码规范：必须遵循 `eslint-config-cmyr`。
+        *   提交规范：必须通过 `commitlint`。
+        *   样式规范：SCSS 必须通过 `stylelint`。
+        *   文档规范：Markdown 必须通过 `@lint-md/cli`。
 
 ## 项目架构
 本项目主要由以下两部分组成：

@@ -51,7 +51,7 @@ appliesTo: "**/*"
 
 4. **质量检测与审查 (Test/Review)**
     - **要求**：执行测试前，**必须读取** [测试规范](../[项目规范文档]())。
-    - **任务**：运行 `npm run lint`, `npm run typecheck`, `npm test`。
+    - **任务**：运行 `pnpm lint`, `pnpm typecheck`, `pnpm test`。
     - **约束**：严禁破坏原有测试。若失败需分析核心原因。
     - **技能**：`quality-guardian`、`test-engineer`、`code-reviewer`
 
@@ -124,6 +124,7 @@ workflow:
   - step: "测试补充"        # test-engineer
   - step: "测试提交"        # conventional-committer
 ```
+
 
 
 

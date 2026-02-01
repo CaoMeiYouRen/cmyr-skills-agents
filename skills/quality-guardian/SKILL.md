@@ -12,10 +12,10 @@ tools: ["terminal"]
 
 在提交前，建议按顺序运行以下指令进行完整审计：
 
-1. `npm run lint`: 代码风格与潜在逻辑错误检查。
-2. `npm run lint`: SCSS 样式规范检查。
-3. `npm run typecheck`: 全量 TypeScript 类型检查（由于 lint-staged 通常不包含此项，需手动触发）。
-4. `npm test`: 自动化测试（可选，建议在重大逻辑变更后必装）。
+1. `pnpm lint (包含 eslint, stylelint, lint-md)`: 代码风格与潜在逻辑错误检查。
+2. `pnpm lint (包含 eslint, stylelint, lint-md)`: SCSS 样式规范检查。
+3. `pnpm typecheck`: 全量 TypeScript 类型检查（由于 lint-staged 通常不包含此项，需手动触发）。
+4. `pnpm test`: 自动化测试（可选，建议在重大逻辑变更后必装）。
 
 ## 指令 (Instructions)
 
@@ -27,7 +27,9 @@ tools: ["terminal"]
 ## 使用示例 (Usage Example)
 
 输入: "验证最近的更改。"
-动作: 运行 `npm run typecheck` 和 `npm test`。如果 `npm run typecheck` 失败，报告具体的类型不匹配错误。
+动作: 运行 `pnpm typecheck` 和 `pnpm test`。如果 `pnpm typecheck` 失败，报告具体的类型不匹配错误。
+
+
 
 
 

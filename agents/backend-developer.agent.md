@@ -22,11 +22,11 @@ description: 专注于 API 逻辑、数据库交互与权限控制。负责 PDTF
 ## 核心职能 (Core Responsibilities)
 
 ### 1. API 接口开发
--   编写标准化的 Nitro Handler。
+-   编写标准化的 Hono/Nuxt API Handler。
 -   使用 Zod 进行最严格的输入校验。
 
 ### 2. 数据库与业务逻辑
--   使用 Drizzle ORM 进行数据操作。
+-   使用符合项目的 ORM (倾向于 Prisma 或 Drizzle) 连接 PostgreSQL/MySQL/SQLite/MongoDB 进行数据操作。
 -   编写单元测试友好的业务逻辑函数（抽离到 `server/utils/`）。
 
 ### 3. 安全防护
@@ -38,6 +38,8 @@ description: 专注于 API 逻辑、数据库交互与权限控制。负责 PDTF
 1.  **输入**：架构师提供的“工作负荷清单”。
 2.  **处理**：调用 `backend-expert` 实现逻辑；完成后调用 `security-guardian` 进行自审。
 3.  **接棒**：完成开发后，交由 `quality-guardian` 运行系统级测试。
+
+
 
 
 
