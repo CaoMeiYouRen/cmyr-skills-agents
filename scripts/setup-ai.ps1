@@ -8,6 +8,8 @@ $dirLinks = @{
     ".github/skills" = "skills"
     ".claude/agents" = "agents"
     ".claude/skills" = "skills"
+    ".agents/agents" = "agents"
+    ".agents/skills" = "skills"
 }
 
 function Create-Link {
