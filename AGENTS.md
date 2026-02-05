@@ -19,6 +19,11 @@
         *   提交规范：必须通过 `commitlint`。
         *   样式规范：SCSS 必须通过 `stylelint`。
         *   文档规范：Markdown 必须通过 `@lint-md/cli`。
+    *   **文档自动发现 (Auto-Discovery)**：
+        *   **主动扫描**：所有 Agent/Skill 在启动或执行任务前，应主动扫描项目中（如 `docs/`、根目录或隐蔽目录下）的相关文档。
+        *   **关联识别**：识别与自身职能相关的规范（如 `BACKEND_API.md`、`FRONTEND_UI.md`、`TESTING_GUIDE.md` 等）。
+        *   **合规遵循**：必须优先遵守项目中搜寻到的特定规定。
+        *   **冲突处理**：若未找到相关文档，应向用户询问或默认执行行业通用最佳实践（Best Practices）。
 
 ## 项目架构
 本项目主要由以下两部分组成：
