@@ -10,7 +10,7 @@
     *   **核心语言**：偏好 TypeScript (Node.js/JavaScript)。
     *   **前端生态**：首选 **Vue 3**，兼容 React。
     *   **后端生态**：纯 API 项目首选 **Hono**；全栈项目首选 **Nuxt**。
-    *   **数据存储**：PostgreSQL, MySQL, SQLite, MongoDB。
+    *   **数据存储**：优先使用 PostgreSQL, 兼容 MySQL、 SQLite, 可选 MongoDB。
     *   **基础设施**：优先使用 **Docker** 部署，倾向 **Vercel** 和 **Cloudflare** 的 Serverless 生态。
     *   **包管理与构建**：强制使用 **pnpm**；使用 **tsdown** 进行构建。
     *   **测试框架**：首选 **vitest**。
