@@ -25,7 +25,7 @@
   "scripts": {
     "release": "semantic-release",
     "lint": "cross-env NODE_ENV=production eslint . --fix",
-    "lint:md": "lint-md *.md docs/**/*.md .github/**/*.md --fix",
+    "lint:md": "lint-md *.md .github/**/*.md --fix",
     "prebuild": "rimraf dist",
     "build": "cross-env NODE_ENV=production tsx scripts/cli.ts",
     "dev": "cross-env NODE_ENV=development tsx watch src/index.ts",
