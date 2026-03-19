@@ -1,68 +1,90 @@
 ---
 name: code-reviewer
-description: 负责代码审查与安全审计，确保代码符合规范、逻辑严密且无安全漏洞。
-version: 1.0.0
-author: GitHub Copilot
+description: 审查当前 git 变更、PR、提交范围、技能定义文件、架构调整或安全敏感代码时使用。覆盖正确性、安全、架构、SOLID、可删除代码、性能与测试风险；默认只输出 review，不直接修改代码。用户提到 review、code review、PR 审查、deep review、security audit、merge ready、SOLID、架构审查时都应触发。
 ---
 
-# Code Reviewer Skill (代码审查者与安全审计员)
+# Code Reviewer
 
-## 概述
+铁律：先给 findings，再给总结。不要因为测试通过、代码能跑或改动量小，就跳过正确性、安全和架构审查。
 
-作为 `code-reviewer`，你的核心职责是作为项目上线的最后一道防线。你需要对代码变更（Commits 或 PRs）进行严苛的审计。你不仅关注代码是否能跑通，更关注代码是否“正确”、“安全”以及“符合长远规划”。
+## 工作流
 
-## 核心职责
+- [ ] Step 1: 建立审查上下文 ⚠️ REQUIRED
+    - [ ] 1.1 读取 git 状态、diff 范围和受影响文件。
+    - [ ] 1.2 确认入口、关键路径和高风险区域，如鉴权、数据写入、外部调用、配置变更。
+    - [ ] 1.3 如果没有 diff，明确告诉用户并询问是否改看 staged changes 或指定范围。
+- [ ] Step 2: 加载约束与相关资料 ⚠️ REQUIRED
+    - [ ] 2.1 优先读取与改动直接相关的根目录文档、配置文件和模块实现，而不是假设存在 docs/。
+    - [ ] 2.2 如果改动涉及 skills/*/SKILL.md、agents/*.agent.md 或 AGENTS.md，额外加载 skill-forge，按技能设计规范审查触发面、工作流和资源布局。
+- [ ] Step 3: 进行结构化审查
+    - [ ] 3.1 使用本目录 references/solid-checklist.md 检查职责边界、扩展点和耦合度。
+    - [ ] 3.2 使用本目录 references/security-checklist.md 检查鉴权、注入、密钥泄露、日志和资源滥用风险。
+    - [ ] 3.3 使用本目录 references/code-quality-checklist.md 检查错误处理、边界条件、性能与可维护性。
+    - [ ] 3.4 使用本目录 references/removal-plan.md 判断冗余代码是可立即删除，还是需要后续迭代计划。
+- [ ] Step 4: 判定严重级别 ⚠️ REQUIRED
+    - [ ] 4.1 P0：安全漏洞、数据损坏、明显 correctness bug。
+    - [ ] 4.2 P1：逻辑错误、重大架构问题、显著回归风险。
+    - [ ] 4.3 P2：维护性、可读性、轻度设计问题。
+    - [ ] 4.4 P3：风格、命名、非阻塞建议。
+- [ ] Step 5: 输出审查结果
+    - [ ] 5.1 Findings 必须按严重级别排序，并附具体文件位置与修复方向。
+    - [ ] 5.2 明确给出 APPROVE、REQUEST_CHANGES 或 COMMENT。
+    - [ ] 5.3 如果无问题，也要说明检查范围与残余风险。
+- [ ] Step 6: 确认后续动作
+    - [ ] 6.1 默认停在 review，不直接改代码。
+    - [ ] 6.2 只有用户明确要求修复时，才进入实现阶段。
 
-### 1. 规范与规划一致性检查 (Alignment)
+## 输出格式
 
--   **文档对照**: 强制检查代码实现是否与 `docs/plan/roadmap.md` 和 `docs/plan/todo.md` 中的定义一致。
--   **规范遵守**: 检查是否严格遵循 `docs/standards/` 下的开发、API 和测试规范。
--   **架构一致性**: 确保新增代码不破坏现有的架构模式（如 Nuxt 4 结构、Better-Auth 集成等）。
+```markdown
+## Code Review Summary
 
-### 2. 代码质量与优化 (Quality & Optimization)
+**Files reviewed**: X files
+**Overall assessment**: [APPROVE / REQUEST_CHANGES / COMMENT]
 
--   **逻辑严密性**: 识别潜在的边界条件缺失、空指针风险或竞态条件。
--   **性能评估**: 检查是否存在不必要的重复渲染、低效的 API 调用或内存泄露隐患。
--   **DRY 原则**: 发现并建议提取重复的逻辑到 Utils 或 Composables。
--   **命名规范**: 确保变量、函数和组件命名具有自解释性且符合项目约定。
+## Findings
 
-### 3. 安全审计 (Security Audit) 🛡️
+### P0 - Critical
+1. [file:line] 问题标题
+     - 风险说明
+     - 修复建议
 
--   **漏洞检测**: 识别常见的安全风险，如 XSS、SQL 注入、CSRF、敏感信息泄露（Secrets in code）。
--   **权限验证**: 检查 API 接口是否缺失必要的鉴权中间件或权限校验逻辑。
--   **数据残留**: 审查日志打印是否包含用户敏感数据。
--   **依赖安全**: 留意新增依赖是否存在已知的安全风险。
+### P1 - High
+...
 
-### 4. 反妥协审查 (Anti-Compromise) ⚡
+## Removal / Follow-up Plan
 
--   **拒绝“草率”代码**: 严厉打击以“完成任务”为借口的妥协写法（如滥用 `any`、欠下的 TODOs、缺乏注释的复杂 Hack 等）。
--   **技术债预警**: 如果代码引入了短期可行但长期有害的设计，必须明确指出并要求重构或记录。
+## Residual Risks
+```
 
-## 审查指令 (Instructions)
+## 技能文件专项审查
 
-1.  **准备阶段**:
-    -   读取当前的变更 diff。
-    -   读取相关的规划文档 (`docs/plan/*.md`) 和标准文档 (`docs/standards/*.md`)。
-2.  **执行分析**:
-    -   逐行扫描变更，识别上述核心职责中的违规项。
-    -   特别注意：**如果实现与规划不一致，必须判定为阻塞性问题**。
-3.  **反馈格式**:
-    -   使用结构化的列表提供反馈。
-    -   区分级别：`Critical` (必须修复), `Major` (影响设计), `Minor` (改进建议)。
-    -   对于安全问题，标记为 `Security`。
-4.  **最终结论**:
-    -   给出 `Approve` (通过), `Request Changes` (需要修改) 或 `Comment` (仅评论)。
+当改动涉及技能体系时，额外检查：
 
-## 审查示例
+- description 是否真的能触发技能，而不是抽象介绍。
+- 正文是否具备铁律、工作流、确认门、反模式和交付前检查。
+- references/、scripts/、assets/ 是否职责清晰，是否存在跨目录重复定义。
+- 是否保留了兼容别名，以及 canonical skill 是否唯一明确。
 
--   **错误**: "我直接把 API 密钥写在代码里了，反正现在只是本地测试。"
--   **审查反馈 (Critical/Security)**: 违反安全规范，严禁硬编码敏感信息。必须使用 `.env` 并在 `nuxt.config.ts` 中通过 `runtimeConfig` 引用。
+## 确认门
 
--   **错误**: "这个功能规划中说要支持多语言，但我先做个中文版的。"
--   **审查反馈 (Major/Alignment)**: 违反规划文档。实现必须包含 `vue-i18n` 代码结构，确保未来可无缝扩展语言。
+- 没有用户确认时，不直接实现审查意见。
+- 审查范围过大时，先和用户确认是全量 review 还是重点 review。
 
--   **错误**: "if (user.role === 'admin') { ... }"
--   **审查反馈 (Critical/Security)**: 鉴权逻辑错误。本项目支持多角色（以逗号分隔），禁止使用等号判断角色。必须使用 `isAdmin(user.role)` 或 `hasRole(user.role, 'admin')`。
+## 反模式
+
+- 只给笼统评价，如“看起来不错”“代码质量还行”。
+- 按文件顺序复述 diff，而不是提炼真正的问题。
+- 用“可能”掩盖已经足够明确的风险。
+- 审查技能文件时，继续沿用旧模板标准而忽略 skill-forge。
+
+## 交付前检查
+
+- [ ] Findings 排在总结前面。
+- [ ] 每个阻塞问题都说明了风险和修复方向。
+- [ ] 已覆盖正确性、安全、架构、性能和测试风险。
+- [ ] 如果审查了技能文件，已按 skill-forge 规范补充设计审查。
+- [ ] 未经用户确认，不包含自动实施修改。
 
 
 

@@ -1,39 +1,46 @@
 ---
 name: context-analyzer
-description: 分析项目上下文、Nuxt 结构和依赖项，用于规划和调试。
-version: 1.0.0
-author: GitHub Copilot
-applyTo: "**/*.{ts,vue,json,md}"
+description: 在动手规划、修改、调试或回答复杂项目问题前使用。用于快速扫描项目结构、依赖、约束文档、关键文件和调用链，输出任务相关上下文，而不是直接改代码。用户提到 analyze context、scan repo、understand project、定位实现、找规范、排查调用链时都应触发。
 ---
 
-# Context Analyzer Skill (上下文分析技能)
+# Context Analyzer
 
-## 能力 (Capabilities)
+铁律：在没有建立最小充分上下文前，不要直接下结论，更不要直接修改代码。
 
--   **项目结构分析**: 理解 Nuxt 目录约定 (`server/api`, `components`, `pages`) 以及 Nuxt 4 特性。
--   **符号解析**: 定位组件、自动导入的可组合函数 (composables) 和 TypeORM 实体的定义。
--   **认证流程分析**: 深入理解 Better-Auth 的集成，包括 `lib/auth.ts` (服务端), `lib/auth-client.ts` (客户端), `middleware/auth.global.ts` (全局中间件)。
--   **依赖检查**: 读取 `package.json` 以验证已安装的包和版本。
--   **文档自动发现**: 主动扫描 `docs/`、根目录以及 `.github/` 目录中的 `.md` 文件，识别与当前任务或职能相关的规范文档。
+## 工作流
 
-## 指令 (Instructions)
+- [ ] Step 1: 先扫结构 ⚠️ REQUIRED
+	- [ ] 1.1 查看根目录、关键子目录和配置文件。
+	- [ ] 1.2 忽略构建产物与依赖目录，聚焦真实源码和文档。
+- [ ] Step 2: 自动发现约束文档 ⚠️ REQUIRED
+	- [ ] 2.1 优先读根目录文档、AGENTS.md、README、贡献与安全文档。
+	- [ ] 2.2 如果存在 docs/、.github/ 或特定规范文件，再按主题补读。
+- [ ] Step 3: 锁定任务相关代码
+	- [ ] 3.1 用文件名、符号名、配置项和调用链缩小范围。
+	- [ ] 3.2 识别入口、核心模块、依赖边界和风险区域。
+- [ ] Step 4: 输出上下文摘要
+	- [ ] 4.1 给出关键文件、已知约束、未知点和下一步建议。
+	- [ ] 4.2 区分“已确认事实”和“待验证假设”。
 
-1.  **读取结构**: 使用目录列表工具了解布局，忽略 `node_modules` 和 `.output`。
-2.  **文档搜索**: 优先扫描 `docs/` 目录。根据关键词（如 `api`, `style`, `auth`, `deploy`, `test`）匹配相关文档。
-3.  **识别 Nuxt 类型**: 将 `server/api` 识别为后端定义，将 `pages`/`components` 识别为前端。
-4.  **追踪逻辑**: 广泛搜索符号定义，以理解数据如何在后端实体 (Entities) 和前端组件 (Components) 之间流动。
-5.  **身份验证感知**: 在处理受保护路由或用户数据时，务必检查 `server/api/auth/*` 和 `middleware/auth.global.ts`。
-6.  **合规性确认**: 在执行写操作前，确认是否已读取项目中对应的规范文档。若无明确规范，则采用通用最佳实践。
-7.  **依赖项**: 在建议导入之前检查 `package.json` 以了解可用的库。
+## 输出目标
 
-## 使用示例 (Usage Example)
+- 任务相关文件清单。
+- 需要遵循的规范来源。
+- 关键数据流、依赖和调用链摘要。
+- 仍然缺失的信息和最小下一步。
 
-输入: "分析当前的项目规范。"
-动作: 扫描 `docs/` 和根目录，查找 `README.md`, `CONTRIBUTING.md`, `STYLE_GUIDE.md` 等文件并汇总核心规则。
+## 反模式
 
-输入: "分析当前的用户认证流程。"
-动作: 读取 `server/api/auth/*`, `lib/auth-client.ts`, `middleware/auth.global.ts` 和 `pages/login.vue` 来映射流程。
-同时检查 `docs/AUTH.md` (如果存在)。
+- 把仓库里所有文件都读一遍，导致分析失焦。
+- 看到相似文件名就假定实现细节一致。
+- 不区分事实和猜测，直接给出实现建议。
+
+## 交付前检查
+
+- [ ] 已定位任务相关文件，而不是泛泛而谈。
+- [ ] 已优先扫描实际存在的规范文档。
+- [ ] 已把结论、证据和未知点分开表述。
+- [ ] 输出足以支撑下一步规划或实现。
 
 
 

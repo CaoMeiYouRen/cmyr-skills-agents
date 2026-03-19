@@ -1,247 +1,92 @@
 ---
 name: skill-forge
-description: "Create high-quality, production-grade skills for Claude Code. Expert guidance on skill architecture, workflow design, prompt engineering, and packaging. Use when user wants to create a new skill, build a skill, design a skill, write a skill, update an existing skill, improve a skill, refactor a skill, debug a skill, or package a skill. Triggers: 'create skill', 'build skill', 'new skill', 'skill creation', 'write a skill', 'make a skill', 'design a skill', 'improve skill', 'package skill', 'skill development', 'skill template', 'skill best practices', 'write SKILL.md'."
+description: 设计、创建、翻译、重构、评审、封装、评测和优化技能时使用。只要用户提到 create skill、build skill、new skill、write SKILL.md、improve skill、refactor skill、package skill、benchmark skill、trigger tuning、description optimization、evals、skill workflow 或要把现有经验沉淀为技能，都应优先使用本技能。它统一了 skill-forge 的结构设计方法与 skill-creator 的评测迭代工具链。
 ---
 
 # Skill Forge
 
-IRON LAW: Every line in a skill must justify its token cost. If it doesn't make the model's output better, more consistent, or more reliable — cut it.
-
-## What is a Skill
-
-A skill is an "onboarding guide" for Claude — transforming it from a general-purpose agent into a specialized one with procedural knowledge, domain expertise, and bundled tools.
-
-```
-skill-name/
-├── SKILL.md           # Required: workflow + instructions (<500 lines)
-├── scripts/           # Optional: deterministic, repeatable operations
-├── references/        # Optional: loaded into context on demand
-└── assets/            # Optional: used in output, never loaded into context
-```
-
-**Default assumption: Claude is already very smart.** Only add what Claude doesn't already know. Challenge every paragraph: "Does this justify its token cost?"
-
-## Workflow
-
-Copy this checklist and check off items as you complete them:
-
-```
-Skill Forge Progress:
-
-- [ ] Step 1: Understand the Skill ⚠️ REQUIRED
-  - [ ] 1.1 Clarify purpose and concrete use cases
-  - [ ] 1.2 Collect 3+ concrete usage examples
-  - [ ] 1.3 Identify trigger scenarios and keywords
-- [ ] Step 2: Plan Architecture
-  - [ ] 2.1 Identify reusable resources (scripts, references, assets)
-  - [ ] 2.2 Design progressive loading strategy
-  - [ ] 2.3 Design parameter system (if applicable)
-- [ ] Step 3: Initialize ⛔ BLOCKING (skip if skill already exists)
-  - [ ] Run init_skill.py
-- [ ] Step 4: Write Description
-  - [ ] Load references/description-guide.md
-  - [ ] Apply keyword bombing technique
-- [ ] Step 5: Write SKILL.md Body
-  - [ ] 5.1 Set Iron Law
-  - [ ] 5.2 Design workflow checklist
-  - [ ] 5.3 Add confirmation gates
-  - [ ] 5.4 Add parameter system (if applicable)
-  - [ ] 5.5 Apply writing techniques
-  - [ ] 5.6 Add anti-patterns list
-  - [ ] 5.7 Add pre-delivery checklist
-- [ ] Step 6: Build Resources
-  - [ ] 6.1 Implement and test scripts
-  - [ ] 6.2 Write reference files
-  - [ ] 6.3 Prepare assets
-- [ ] Step 7: Review ⚠️ REQUIRED
-  - [ ] Run pre-delivery checklist (Step 9)
-  - [ ] Present summary to user for confirmation
-- [ ] Step 8: Package
-  - [ ] Run package_skill.py
-- [ ] Step 9: Iterate based on real usage
-```
-
-## Step 1: Understand the Skill ⚠️ REQUIRED
-
-Ask yourself:
-- What specific problem does this skill solve that Claude can't do well on its own?
-- What would a user literally type to trigger this skill?
-- What are 3-5 concrete usage examples with realistic inputs and expected outputs?
-
-If unclear, ask the user (don't ask everything at once — start with the most critical):
-- "Can you give me 3 examples of how you'd use this skill?"
-- "What would you literally say to trigger it?"
-- "What does a good output look like?"
-
-Do NOT proceed until you have at least 3 concrete examples.
-
-## Step 2: Plan Architecture
-
-For each concrete example, ask:
-1. What operations are deterministic and repeatable? → `scripts/`
-2. What domain knowledge does Claude need at specific steps? → `references/`
-3. What files are used in output but not in reasoning? → `assets/`
-
-Key constraints:
-- SKILL.md must stay under 500 lines — everything else goes to `references/`
-- References organized by domain, one level of nesting only
-- Load references/architecture-guide.md for progressive loading patterns and organization strategies
-
-## Step 3: Initialize ⛔ BLOCKING
-
-Skip if working on an existing skill. Otherwise run:
-
-```bash
-python3 scripts/init_skill.py <skill-name> --path <output-directory>
-```
-
-The script creates a template with Iron Law placeholder, workflow checklist, and proper directory structure.
-
-## Step 4: Write Description
-
-This is the most underestimated part of a skill. The description determines:
-1. Whether the skill triggers automatically
-2. Whether users find it by search
-
-Load references/description-guide.md for the keyword bombing technique and good/bad examples.
-
-Key rule: NEVER put "When to Use" info in the SKILL.md body. The body loads AFTER triggering — too late.
-
-## Step 5: Write SKILL.md Body
-
-Load reference files as needed for each sub-step:
-
-### 5.1 Set Iron Law
-
-Ask: "What is the ONE mistake the model will most likely make with this skill?"
-Write a rule that prevents it. Place it at the top of SKILL.md, right after the frontmatter.
-
-→ Load references/writing-techniques.md for Iron Law patterns and red flag signals.
-
-### 5.2 Design Workflow Checklist
-
-Create a trackable checklist with:
-- ⚠️ REQUIRED for steps that must not be skipped
-- ⛔ BLOCKING for prerequisites
-- Sub-step nesting for complex steps
-- (conditional) for steps that depend on earlier choices
-
-→ Load references/workflow-patterns.md for checklist patterns and examples.
-
-### 5.3 Add Confirmation Gates
-
-Force the model to stop and ask the user before:
-- Destructive operations (delete, overwrite, modify)
-- Generative operations with significant cost
-- Applying changes based on analysis
-
-→ Load references/workflow-patterns.md for confirmation gate patterns.
-
-### 5.4 Add Parameter System (if applicable)
-
-If the skill benefits from flags like `--quick`, `--style`, `--regenerate N`:
-
-→ Load references/parameter-system.md for $ARGUMENTS, flags, argument-hint, and partial execution patterns.
-
-### 5.5 Apply Writing Techniques
-
-Three techniques that dramatically improve output quality:
-
-1. **Question-style instructions**: Give questions, not vague directives
-2. **Anti-pattern documentation**: List what NOT to do
-3. **Iron Law + Red Flags**: Prevent the model from taking shortcuts
-
-→ Load references/writing-techniques.md for all three with examples.
-
-### 5.6 Add Anti-Patterns List
-
-Ask: "What would Claude's lazy default look like for this task?" Then explicitly forbid it.
-
-→ Load references/writing-techniques.md for anti-pattern examples.
-
-### 5.7 Add Pre-Delivery Checklist
-
-Add concrete, verifiable checks. Each item must be specific enough that the model can check it by looking at the output. Not "ensure good quality" but "no placeholder text remaining (TODO, FIXME, xxx)."
-
-→ Load references/output-patterns.md for checklist patterns and priority-based output.
-
-### Writing Principles
-
-- **Concise**: Only add what Claude doesn't already know
-- **Imperative form**: "Analyze the input" not "You should analyze the input"
-- **Match freedom to fragility**: Narrow bridge → specific guardrails; open field → many routes
-  - High freedom (text): multiple valid approaches
-  - Medium (pseudocode/params): preferred pattern, some variation OK
-  - Low (specific scripts): fragile operations, consistency critical
-
-## Step 6: Build Resources
-
-### Scripts
-- Encapsulate deterministic, repeatable operations
-- Scripts execute without loading into context — major token savings
-- Test every script before packaging
-- In SKILL.md, document only the command and arguments, not the source code
-
-### References
-- Organize by domain, not by type
-- One level of nesting only
-- Each file referenced from SKILL.md with clear "when to load" instructions
-- Large files (>100 lines) should have a table of contents at the top
-
-### Assets
-- Templates, images, fonts used in output
-- Not loaded into context, just referenced by path
-
-→ Load references/architecture-guide.md for detailed patterns.
-
-## Step 7: Review ⚠️ REQUIRED
-
-Present the skill summary to the user and confirm before packaging.
-
-### Pre-Delivery Checklist
-
-#### Structure
-- [ ] SKILL.md under 500 lines
-- [ ] Frontmatter has `name` and `description` only (plus optional `allowed-tools`, `license`, `metadata`)
-- [ ] Description includes trigger keywords and usage scenarios
-- [ ] No README.md, CHANGELOG.md, or other unnecessary files
-- [ ] No example/placeholder files left from initialization
-
-#### Quality
-- [ ] Has an Iron Law or core constraint at the top
-- [ ] Has a trackable workflow checklist with ⚠️/⛔ markers
-- [ ] Confirmation gates before destructive/generative operations
-- [ ] Uses question-style instructions, not vague directives
-- [ ] Lists anti-patterns (what NOT to do)
-- [ ] References loaded progressively, not all upfront
-
-#### Resources
-- [ ] Scripts tested and executable
-- [ ] References organized by domain, one level deep
-- [ ] Large references have table of contents
-- [ ] Assets used in output, not loaded into context
-
-#### Anti-Patterns to Avoid
-- Stuffing everything into one massive SKILL.md (>500 lines)
-- Vague description like "A tool for X"
-- No workflow — letting the model freestyle
-- No confirmation gates — model runs unchecked to completion
-- Vague instructions like "ensure good quality" instead of specific checks
-- Including README.md, INSTALLATION_GUIDE.md, or other documentation files
-- "When to Use" info in the body instead of the description field
-
-## Step 8: Package
-
-```bash
-python3 scripts/package_skill.py <path/to/skill-folder> [output-directory]
-```
-
-Validates automatically before packaging. Fix errors and re-run.
-
-## Step 9: Iterate
-
-After real usage:
-1. Notice where the model struggles or is inconsistent
-2. Identify which workflow step needs improvement
-3. Add more specific instructions, examples, or anti-patterns
-4. Re-test and re-package
+铁律：不要再产出只有 Capabilities、Instructions、Usage Example 的旧模板技能。技能必须同时具备可触发的 description、可执行的工作流、必要的确认门、反模式和交付前检查。
+
+## 工作流
+
+- [ ] Step 1: 明确技能目标 ⚠️ REQUIRED
+  - [ ] 1.1 提炼用户真正要沉淀的能力边界。
+  - [ ] 1.2 收集至少 3 个真实触发示例，优先从当前对话或现有技能中提取。
+  - [ ] 1.3 明确输出是什么，哪些内容必须稳定、哪些允许自由发挥。
+- [ ] Step 2: 盘点现状
+  - [ ] 2.1 如果是改造已有技能，先审计 SKILL.md、scripts/、references/、assets/。
+  - [ ] 2.2 区分应该保留、迁移、删除和兼容保留的旧内容。
+- [ ] Step 3: 设计技能架构 ⚠️ REQUIRED
+  - [ ] 3.1 决定哪些规则留在 SKILL.md，哪些拆到 references/。
+  - [ ] 3.2 决定哪些操作值得做成 scripts/，哪些只保留为流程指引。
+  - [ ] 3.3 如果需要参数系统，先定义参数，再写正文。
+- [ ] Step 4: 编写触发面
+  - [ ] 4.1 先写 frontmatter 的 description，用关键词覆盖真实触发语句。
+  - [ ] 4.2 所有 when-to-use 信息都放进 description，不放在正文里。
+- [ ] Step 5: 编写 SKILL.md 主体 ⚠️ REQUIRED
+  - [ ] 5.1 先写铁律，阻止该技能最常见的错误。
+  - [ ] 5.2 再写可跟踪的工作流清单，标注 ⚠️ REQUIRED 或 ⛔ BLOCKING。
+  - [ ] 5.3 在 destructive 或高成本步骤前加入确认门。
+  - [ ] 5.4 补上反模式与交付前检查。
+- [ ] Step 6: 构建资源
+  - [ ] 6.1 使用本目录 references/ 处理结构设计、描述写法和工作流模式。
+  - [ ] 6.2 需要评测、benchmark、trigger tuning 时，复用 ../skill-creator/ 下的脚本与资源。
+- [ ] Step 7: 评测与迭代 (conditional)
+  - [ ] 7.1 轻量任务可只做人工审阅。
+  - [ ] 7.2 复杂技能必须补 2 到 3 个真实 eval prompt，并决定是否做 baseline 对比。
+  - [ ] 7.3 需要量化评估时，使用 skill-creator 的 benchmark 和 viewer 工具链。
+- [ ] Step 8: 收口与交付 ⚠️ REQUIRED
+  - [ ] 8.1 总结本次保留、删除、重命名和兼容策略。
+  - [ ] 8.2 包装前运行自检，必要时执行 package_skill.py。
+
+## 资源装载策略
+
+### 本目录资源
+
+- references/description-guide.md：写 description 前加载。
+- references/workflow-patterns.md：设计工作流、确认门和输出节奏时加载。
+- references/writing-techniques.md：写铁律、反模式和问题式指令时加载。
+- references/output-patterns.md：设计交付模板和自检清单时加载。
+- references/parameter-system.md：需要参数或 partial execution 时加载。
+- references/architecture-guide.md：规划 references/、scripts/、assets/ 分层时加载。
+- scripts/init_skill.py：初始化新技能骨架。
+- scripts/package_skill.py：打包前校验并封装技能。
+
+### 复用 skill-creator 工具链
+
+- ../skill-creator/references/schemas.md：编写 evals、grading、benchmark JSON 时加载。
+- ../skill-creator/scripts/run_eval.py：需要批量跑 eval 时使用。
+- ../skill-creator/scripts/aggregate_benchmark.py：需要聚合 benchmark 时使用。
+- ../skill-creator/scripts/run_loop.py：需要做 description trigger optimization 时使用。
+- ../skill-creator/eval-viewer/generate_review.py：需要让用户对多轮输出进行可视化评审时使用。
+- ../skill-creator/agents/analyzer.md、grader.md、comparator.md：需要分析 benchmark、做断言评估或盲测比较时加载。
+
+## 关键约束
+
+- SKILL.md 保持精炼，超出主体骨架的知识尽量下沉到 references/。
+- 只有会稳定节省 token 或提升一致性的操作，才值得写成 scripts/。
+- description 是技能发现面，正文不是。
+- 如果只是单次小修，不要硬套完整 benchmark 流程。
+
+## 确认门
+
+- 在删除目录、覆盖旧技能、批量重写 references/ 前，先征求用户确认。
+- 在生成大批 eval、运行耗时 benchmark、替换兼容技能名时，先说明成本和影响。
+- 在保留兼容壳技能时，明确哪个目录是“单一事实来源”。
+
+## 反模式
+
+- 把所有规则塞进一个超长 SKILL.md。
+- 让 description 只写“一个用于 X 的技能”，没有触发关键词。
+- 没有工作流，任由模型自由发挥。
+- 明明需要渐进加载，却把细节全写进正文。
+- 为了凑完整度而强行引入 benchmark，而不是按任务复杂度选择评测强度。
+- 保留两个互相冲突的技能创建流程，导致后续维护分叉。
+
+## 交付前检查
+
+- [ ] description 已覆盖真实触发语句和场景，而不是抽象概括。
+- [ ] SKILL.md 具备铁律、工作流、确认门、反模式和交付前检查。
+- [ ] 已明确哪些内容留在本目录，哪些复用 ../skill-creator/ 工具链。
+- [ ] 如果保留兼容别名，已说明 canonical skill 是哪个。
+- [ ] 如有 eval 或 benchmark，目录结构与 JSON schema 已对齐。

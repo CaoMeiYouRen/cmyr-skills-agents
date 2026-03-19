@@ -1,30 +1,39 @@
 ---
 name: git-flow-manager
-description: 专注于 Git 暂存、规范化提交与变更记录管理。
-version: 1.0.0
-author: GitHub Copilot
-applyTo: "**/*"
+description: 管理暂存策略、拆分提交、检查变更边界、维护提交顺序、生成变更记录和预判冲突时使用。适合多步交付而不只是单次 commit message 生成。用户提到 staging、split commits、git flow、changelog、release prep、冲突预警时都应触发。
 ---
 
-# Git Flow Manager Skill (Git 工作流管理技能)
+# Git Flow Manager
 
-## 能力 (Capabilities)
+铁律：不要把一串无关改动塞进同一次提交，也不要在没有质量门结果时安排提交流程。
 
--   **精准暂存**: 识别应当被 `git add` 的相关文件，排除临时文件。
--   **Conventional Commits**: 生成语义明确、符合规范的提交消息。
--   **Changelog 生成**: 基于提交记录更新变更日志。
--   **冲突预警**: 识别并行任务可能产生的合并冲突。
+## 工作流
 
-## 指令 (Instructions)
+- [ ] Step 1: 划分变更批次 ⚠️ REQUIRED
+	- [ ] 1.1 按功能、测试、文档、配置变更拆分提交单元。
+	- [ ] 1.2 标记用户已有改动与当前任务改动，避免误暂存。
+- [ ] Step 2: 安排提交流程
+	- [ ] 2.1 明确哪些提交必须先于其他提交进入仓库。
+	- [ ] 2.2 如果只是生成提交消息，交给 conventional-committer 执行。
+- [ ] Step 3: 风险检查
+	- [ ] 3.1 先确认 quality-guardian 已完成必要检查。
+	- [ ] 3.2 识别可能引起冲突的共享文件和长生命周期分支风险。
+- [ ] Step 4: 变更记录 (conditional)
+	- [ ] 4.1 需要 changelog 或 release note 时，按提交批次汇总。
+	- [ ] 4.2 说明哪些更改适合单独提交，哪些适合压缩。
 
-1.  **分步提交**: 严格执行 PDTFC+ 中的两阶段提交（功能提交 + 测试提交）。
-2.  **提交描述**: 必须使用中文（或用户使用的语言），描述“为什么”而不仅仅是“做了什么”。
-3.  **验证先验**: 在执行提交命令前，必须确信已经执行过 `quality-guardian`。
+## 反模式
 
-## 使用示例 (Usage Example)
+- 为了省事把功能、测试、格式化和重命名全部混在一起。
+- 不区分用户已有改动和当前任务改动。
+- 提交顺序没有解释，后续无法稳定 cherry-pick 或回滚。
 
-输入: "提交刚才修复的 Bug。"
-动作: 生成 `fix(api): 修复文章详情页 PV 统计不准的问题` 并执行提交。
+## 交付前检查
+
+- [ ] 已按功能边界拆分提交计划。
+- [ ] 已识别无关改动和潜在冲突点。
+- [ ] 质量门状态清晰。
+- [ ] 如需提交消息，已明确交给 conventional-committer。
 
 
 
