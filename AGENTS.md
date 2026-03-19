@@ -15,6 +15,9 @@
 -   **数据存储**：优先 PostgreSQL，兼容 MySQL、SQLite，可选 MongoDB。
 -   **基础设施**：优先 Docker，倾向 Vercel 与 Cloudflare Serverless 生态。
 -   **包管理与构建**：优先 pnpm，构建使用 tsdown。
+-   **包发布**：优先使用 semantic-release 做自动化版本发布。
+-   **Docker 镜像发布**：默认同时推送到 docker.io、ghcr.io 和 registry.cn-hangzhou.aliyuncs.com。
+-   **文档站点构建**：优先使用 VitePress。
 -   **测试框架**：优先 Vitest。
 -   **质量红线**：ESLint、commitlint、stylelint、Markdown lint 必须通过。
 
@@ -24,6 +27,7 @@
 -   **真实依赖原则**：只能引用仓库中真实存在的文件、目录、技能和角色。
 -   **角色收壳原则**：agent 负责身份、边界和接棒关系；具体规则优先下沉到 skill。
 -   **问答能力下沉**：只读问答由 [QA Assistant](./skills/qa-assistant/SKILL.md) skill 承载，不再保留独立 QA agent。
+-   **性能下限原则**：新增或准入的智能体，其基础能力不应低于 Gemini 3 Flash / Claude Sonnet 4.5 / GPT-5 这一档的大模型水平。
 
 ## 项目架构
 -   **[Skills (技能)](./skills/)**：原子化工作流能力，存放在 `skills/` 目录下，每个技能包含一个 `SKILL.md`。
