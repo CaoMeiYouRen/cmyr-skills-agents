@@ -30,6 +30,13 @@ description: 设计或实现 Vue 3、Nuxt、React 兼容组件、页面、样式
 - 表单交互是否覆盖 loading、error、empty 和 success 状态。
 - 样式命名是否稳定，而不是临时补丁。
 
+## 项目特化提示
+
+- 组件实现优先沿用 <script setup lang="ts">、Composition API 和现有 UI 组件库，而不是平行引入另一套风格。
+- 样式优先保留 BEM、设计 token、全局变量和 mixin 的约束，不用 !important 做补丁。
+- 页面级组件要考虑 useHead 或 definePageMeta 一类 SEO 元信息入口。
+- 文本默认走 useI18n 或 $t()，不要因为赶工回退到硬编码文案。
+
 ## 反模式
 
 - 直接在模板里堆复杂业务逻辑。
