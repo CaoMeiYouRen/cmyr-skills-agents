@@ -39,6 +39,7 @@
 *   **[System Architect](./agents/system-architect.agent.md)**：系统架构师，负责方案设计与架构对齐。
 *   **[Frontend/Backend Developer](./agents/frontend-developer.agent.md)**：前/后端开发者，负责具体业务逻辑实现。
 *   **[Quality Guardian](./agents/quality-guardian.agent.md)**：质量守护者，负责自动化测试与静态检查。
+*   **[Skill & Agent Governor](./agents/skill-agent-governor.agent.md)**：技能与智能体治理官，负责 skills 与 agents 的准入判断、创建编排、规范审计与安全治理。
 
 #### [Skills](./skills/)
 包含可被重用的原子技能，例如：
@@ -46,6 +47,8 @@
 *   **[Context Analyzer](./skills/context-analyzer/SKILL.md)**：上下文分析技能，帮助 AI 快速理解项目现状。
 *   **[Security Guardian](./skills/security-guardian/SKILL.md)**：安全守护技能，进行安全审计与风险检查。
 *   **[Test Engineer](./skills/test-engineer/SKILL.md)**：测试工程师技能，负责编写与执行测试用例。
+*   **[Skill Creator](./skills/skill-creator/SKILL.md)**：技能创建与重构技能，负责 skill 的设计、文本资产回收、评测与打包。
+*   **[Agent Creator](./skills/agent-creator/SKILL.md)**：Agent 创建技能，负责判断应由 skill 还是 agent 承载、创建或更新 agent，并审计准入标准与安全边界。
 
 **特点**：
 *   **组合性**：Skills 和 Agents 既可以独立运作，也可以组合起来使用。
