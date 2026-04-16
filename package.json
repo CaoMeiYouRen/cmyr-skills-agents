@@ -25,17 +25,10 @@
   "scripts": {
     "release": "semantic-release",
     "lint": "cross-env NODE_ENV=production eslint . --fix",
-    "lint:md": "lint-md *.md .github/**/*.md skills/**/*.md--fix",
-    "prebuild": "rimraf dist",
-    "build": "cross-env NODE_ENV=production tsx scripts/cli.ts",
-    "dev": "cross-env NODE_ENV=development tsx watch src/index.ts",
+    "lint:md": "lint-md *.md .github/**/*.md skills/**/*.md --fix",
     "dev:tsdown": "cross-env NODE_ENV=development tsdown --watch",
-    "start": "tsx scripts/cli.ts",
-    "start:tsx": "cross-env NODE_ENV=production tsx src/index.ts",
     "commit": "cz",
-    "prepare": "husky",
-    "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "prepare": "husky"
   },
   "devDependencies": {
     "@clack/prompts": "^1.0.0",
@@ -59,7 +52,7 @@
     "tsdown": "^0.20.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "vite": "^7.0.5",
+    "vite": "^7.3.2",
     "vitest": "^3.2.4"
   },
   "config": {},
@@ -102,8 +95,19 @@
       "@octokit/plugin-paginate-rest": "^11.4.1",
       "@octokit/request": "^9.2.1",
       "@octokit/request-error": "^5.1.1",
+      "@semantic-release/github": "^12.0.6",
+      "@semantic-release/npm": "^13.1.5",
       "brace-expansion": "^2.0.2",
+      "@isaacs/brace-expansion": "^5.0.1",
+      "defu": "^6.1.5",
+      "flatted": "^3.4.2",
       "handlebars": "^4.7.9",
+      "@eslint/config-array>minimatch": "^3.1.4",
+      "lodash": "^4.18.1",
+      "lodash-es": "^4.18.1",
+      "micromatch>picomatch": "^2.3.2",
+      "picomatch@^4.0.0": "^4.0.4",
+      "rollup": "^4.59.0",
       "tmp": "^0.2.4",
       "js-yaml": "^4.1.1"
     }
