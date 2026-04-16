@@ -21,6 +21,7 @@ overrides:
   '@octokit/request-error': ^5.1.1
   '@semantic-release/github': ^12.0.6
   '@semantic-release/npm': ^13.1.5
+  '@actions/http-client>undici': ^7.24.0
   brace-expansion: ^2.0.2
   '@isaacs/brace-expansion': ^5.0.1
   defu: ^6.1.5
@@ -30,6 +31,7 @@ overrides:
   lodash: ^4.18.1
   lodash-es: ^4.18.1
   micromatch>picomatch: ^2.3.2
+  '@semantic-release/github>undici': ^7.24.0
   picomatch@^4.0.0: ^4.0.4
   rollup: ^4.59.0
   tmp: ^0.2.4
@@ -3987,12 +3989,8 @@ packages:
   undici-types@7.16.0:
     resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
 
-  undici@6.23.0:
-    resolution: {integrity: sha512-VfQPToRA5FZs/qJxLIinmU59u0r7LXqoJkCzinq3ckNJp3vKEh7jTWN589YQ5+aoAC/TGRLyJLCPKcLQbM8r9g==}
-    engines: {node: '>=18.17'}
-
-  undici@7.19.2:
-    resolution: {integrity: sha512-4VQSpGEGsWzk0VYxyB/wVX/Q7qf9t5znLRgs0dzszr9w9Fej/8RVNQ+S20vdXSAyra/bJ7ZQfGv6ZMj7UEbzSg==}
+  undici@7.25.0:
+    resolution: {integrity: sha512-xXnp4kTyor2Zq+J1FfPI6Eq3ew5h6Vl0F/8d9XU5zZQf1tX9s2Su1/3PiMmUANFULpmksxkClamIZcaUqryHsQ==}
     engines: {node: '>=20.18.1'}
 
   unicode-emoji-modifier-base@1.0.0:
@@ -4270,7 +4268,7 @@ snapshots:
   '@actions/http-client@4.0.0':
     dependencies:
       tunnel: 0.0.6
-      undici: 6.23.0
+      undici: 7.25.0
 
   '@actions/io@3.0.2': {}
 
@@ -5039,7 +5037,7 @@ snapshots:
       p-filter: 4.1.0
       semantic-release: 25.0.3(typescript@5.9.3)
       tinyglobby: 0.2.15
-      undici: 7.19.2
+      undici: 7.25.0
       url-join: 5.0.0
     transitivePeerDependencies:
       - supports-color
@@ -8718,9 +8716,7 @@ snapshots:
 
   undici-types@7.16.0: {}
 
-  undici@6.23.0: {}
-
-  undici@7.19.2: {}
+  undici@7.25.0: {}
 
   unicode-emoji-modifier-base@1.0.0: {}
 
