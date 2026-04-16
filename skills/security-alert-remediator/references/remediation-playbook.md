@@ -1,5 +1,7 @@
 # 安全告警修复手册
 
+本文中出现的 scripts/ 路径都相对于当前技能目录。如果技能是全局安装的，先定位当前技能目录，再解析 ./scripts/*；不要假设这些脚本存在于用户项目根目录。
+
 ## 1. 仓库前置条件
 
 - 工作区必须干净。任何未提交改动都会污染升级结果，也会让回滚和分批提交失去边界。
@@ -67,8 +69,8 @@
 
 ### Override 清理的最小步骤
 
-1. 先用 scripts/collect-security-alerts.mjs 记录移除前快照。
-2. 运行 scripts/remove-pnpm-override.mjs，默认保留安装、frozen 校验和告警对比。
+1. 先用 <skill-dir>/scripts/collect-security-alerts.mjs 记录移除前快照。
+2. 运行 <skill-dir>/scripts/remove-pnpm-override.mjs，默认保留安装、frozen 校验和告警对比。
 3. 确认移除后没有重新引入目标包依赖告警，也没有新增达到阈值的依赖告警。
 4. 继续执行完整质量门，而不是停在 lockfile 校验通过这一层。
 
