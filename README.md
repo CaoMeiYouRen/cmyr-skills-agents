@@ -150,22 +150,16 @@ npx skills update
 npm install
 ```
 
-## 👨‍💻 使用
+## 👨‍💻 使用说明
+
+这是一个 skills / agents 仓库，不提供独立的运行时入口程序。
+
+日常维护主要使用以下命令：
 
 ```sh
-npm run start
-```
-
-## 🛠️ 开发
-
-```sh
-npm run dev
-```
-
-## 🔧 编译
-
-```sh
-npm run build
+npm run lint
+npm run lint:md
+npm run commit
 ```
 
 ## 🔍 Lint

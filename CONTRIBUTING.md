@@ -27,11 +27,12 @@
    # 或 yarn
    # 或 pnpm i
    ```
-3.  运行开发环境
+3.  运行仓库检查
 
-    ```sh
-    npm run dev
-    ```
+   ```sh
+   npm run lint
+   npm run lint:md
+   ```
 
 ## 问题和功能请求
 
