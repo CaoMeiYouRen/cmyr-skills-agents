@@ -103,6 +103,7 @@
       "@octokit/request": "^9.2.1",
       "@octokit/request-error": "^5.1.1",
       "brace-expansion": "^2.0.2",
+      "handlebars": "^4.7.9",
       "tmp": "^0.2.4",
       "js-yaml": "^4.1.1"
     }
