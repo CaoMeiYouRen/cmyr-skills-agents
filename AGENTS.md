@@ -83,7 +83,7 @@
 -   **[Frontend Expert](./skills/frontend-expert/SKILL.md)**：前端页面、组件、样式、交互与 i18n 实现。
 -   **[Backend Expert](./skills/backend-expert/SKILL.md)**：后端 API、服务层、数据库与权限实现。
 -   **[Security Guardian](./skills/security-guardian/SKILL.md)**：鉴权、权限、输入处理和数据写入的安全审计。
--   **[Security Alert Remediator](./skills/security-alert-remediator/SKILL.md)**：聚合 Dependabot、Code Scanning 与 pnpm audit 告警，按严重级别和可修复性排序，逐批升级依赖、修复 frozen-lockfile 并汇报未解决的 high+ 风险。
+-   **[Security Alert Remediator](./skills/security-alert-remediator/SKILL.md)**：聚合 Dependabot、Code Scanning 与 pnpm audit 告警，按严重级别和可修复性排序，逐批升级依赖、修复 frozen-lockfile，并在用户显式要求时审慎清理已过时的 pnpm overrides，最后汇报未解决的 high+ 风险。
 
 ### 验证与评审
 -   **[UI Validator](./skills/ui-validator/SKILL.md)**：真实页面验证、截图留证与视觉回归检查。
