@@ -1,0 +1,21 @@
+{
+  "name": "super-search",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsdown",
+    "env-check": "node dist/env-check.mjs",
+    "search": "node dist/search.mjs",
+    "fetch": "node dist/fetch.mjs",
+    "analyze": "node dist/analyze.mjs",
+    "review": "node dist/review.mjs",
+    "report": "node dist/report.mjs",
+    "pipeline": "node dist/pipeline.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "tsdown": "latest",
+    "typescript": "latest"
+  }
+}

@@ -78,6 +78,7 @@
 -   **[QA Assistant](./skills/qa-assistant/SKILL.md)**：只读问答、查证事实与解释实现。
 -   **[Documentation Specialist](./skills/documentation-specialist/SKILL.md)**：文档生成、更新、对齐与审校。
 -   **[Full Stack Master](./skills/full-stack-master/SKILL.md)**：多技能协作的全流程编排 skill。
+-   **[Super Search](./skills/super-search/SKILL.md)**：通用网页搜索、爬取、交叉验证、对抗审查与研究报告生成。
 
 ### 开发与安全
 -   **[Frontend Expert](./skills/frontend-expert/SKILL.md)**：前端页面、组件、样式、交互与 i18n 实现。
