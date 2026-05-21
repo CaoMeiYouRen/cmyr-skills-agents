@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto'
 import { readFile, writeFile, mkdir, access } from 'node:fs/promises'
 import { join, dirname } from 'node:path'
 import { homedir } from 'node:os'
+import { fileURLToPath } from 'node:url'
 import type { CacheIndex, CacheEntry } from './types.js'
 
 const DEFAULT_CACHE_DIR = join(homedir(), '.super-search-cache')
@@ -141,4 +142,104 @@ export async function getCacheStats(): Promise<{ totalEntries: number; searchEnt
     fetchEntries,
     cacheDir: dir
   }
+}
+
+async function main(): Promise<void> {
+  const args = process.argv.slice(2)
+  const command = args[0]
+
+  if (!command) {
+    const stats = await getCacheStats()
+    console.log(JSON.stringify(stats, null, 2))
+    return
+  }
+
+  switch (command) {
+    case 'set': {
+      const urlIdx = args.indexOf('--url')
+      const typeIdx = args.indexOf('--type')
+      const dataIdx = args.indexOf('--data')
+      const ttlIdx = args.indexOf('--ttl')
+
+      if (urlIdx === -1 || typeIdx === -1 || dataIdx === -1) {
+        console.error('Usage: node cache.mjs set --url "..." --type fetch|search --data \'{"...":"..."}\' [--ttl 86400000]')
+        console.error('       echo \'{"...":"..."}\' | node cache.mjs set --url "..." --type fetch --data -')
+        process.exit(1)
+      }
+
+      const url = args[urlIdx + 1]
+      const type = args[typeIdx + 1] as 'fetch' | 'search'
+
+      let data: unknown
+      if (args[dataIdx + 1] === '-') {
+        const chunks: Buffer[] = []
+        for await (const chunk of process.stdin) {
+          chunks.push(Buffer.from(chunk))
+        }
+        data = JSON.parse(Buffer.concat(chunks).toString('utf-8'))
+      } else {
+        data = JSON.parse(args[dataIdx + 1])
+      }
+
+      const ttl = ttlIdx !== -1 ? parseInt(args[ttlIdx + 1]) : undefined
+      const resolvedTTL = ttl || (type === 'fetch' ? 86400000 : 1800000)
+      await cacheSet(url, type, data, resolvedTTL)
+      console.log(JSON.stringify({ status: 'cached', url, type, ttl: resolvedTTL }))
+      break
+    }
+
+    case 'get': {
+      const urlIdx = args.indexOf('--url')
+      const typeIdx = args.indexOf('--type')
+
+      if (urlIdx === -1 || typeIdx === -1) {
+        console.error('Usage: node cache.mjs get --url "..." --type fetch|search')
+        process.exit(1)
+      }
+
+      const url = args[urlIdx + 1]
+      const type = args[typeIdx + 1] as 'fetch' | 'search'
+      const result = await cacheGet(url, type)
+      console.log(JSON.stringify({ hit: result !== null, url, type, data: result }))
+      break
+    }
+
+    case 'has': {
+      const urlIdx = args.indexOf('--url')
+      const typeIdx = args.indexOf('--type')
+
+      if (urlIdx === -1 || typeIdx === -1) {
+        console.error('Usage: node cache.mjs has --url "..." --type fetch|search')
+        process.exit(1)
+      }
+
+      const url = args[urlIdx + 1]
+      const type = args[typeIdx + 1] as 'fetch' | 'search'
+      const exists = await cacheHas(url, type)
+      console.log(JSON.stringify({ exists, url, type }))
+      break
+    }
+
+    case 'purge': {
+      const purged = await cachePurgeExpired()
+      console.log(JSON.stringify({ status: 'purged', expiredEntriesRemoved: purged }))
+      break
+    }
+
+    case 'stats': {
+      const stats = await getCacheStats()
+      console.log(JSON.stringify(stats, null, 2))
+      break
+    }
+
+    default:
+      console.error(`Unknown command: ${command}`)
+      console.error('Available: set, get, has, purge, stats')
+      process.exit(1)
+  }
+}
+
+const isDirectExecution = process.argv[1] === fileURLToPath(import.meta.url)
+if (isDirectExecution) {
+  main()
 }

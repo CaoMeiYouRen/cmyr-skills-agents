@@ -73,9 +73,26 @@ Ask: "对以下问题，我应该额外搜索哪些对立面/反面/批评性关
 
 运行 `node dist/fetch.mjs --cache-dir '...'` 检查缓存。
 
-- 命中缓存 → 直接使用缓存内容
+- 命中缓存 → 直接使用缓存内容（`node dist/cache.mjs get --url "..." --type fetch`）
 - 未命中 → 使用可用 fetch 工具抓取（tinyfish-search_fetch、webfetch 等）
-- 抓取后写入缓存
+- 抓取后**必须立即**回写缓存：
+
+```bash
+# 方式 1: 管道传入数据（推荐，避免跨 shell 引号问题）
+echo '{"title":"...","content":"..."}' | node dist/cache.mjs set --url "https://..." --type fetch --data -
+
+# 方式 2: 直接传参
+node dist/cache.mjs set --url "https://..." --type fetch --data '{"title":"...","content":"..."}'
+```
+
+可用的缓存 CLI 命令：
+```bash
+node dist/cache.mjs set --url "..." --type fetch --data '{"title":"...","content":"..."}'
+node dist/cache.mjs get --url "..." --type fetch
+node dist/cache.mjs has --url "..." --type fetch
+node dist/cache.mjs stats
+node dist/cache.mjs purge
+```
 
 默认 TTL：搜索结果 30min，网页内容 24h。
 
