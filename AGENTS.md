@@ -96,6 +96,7 @@
 -   **[Git Flow Manager](./skills/git-flow-manager/SKILL.md)**：拆分提交边界、维护提交顺序与冲突预判。
 -   **[Conventional Committer](./skills/conventional-committer/SKILL.md)**：生成并执行符合 commitlint 预期的提交消息。
 -   **[DevOps Specialist](./skills/devops-specialist/SKILL.md)**：部署、CI/CD、容器和运行时配置变更。
+-   **[Pnpm Major Migrator](./skills/pnpm-major-migrator/SKILL.md)**：迁移 pnpm 大版本及相关配置，当前优先覆盖 v10 到 v11，并保留后续版本迁移扩展位。
 
 ## 规范与参考
 -   [About custom agents for GitHub Copilot](https://docs.github.com/en/copilot/concepts/agents/coding-agent/about-custom-agents)
