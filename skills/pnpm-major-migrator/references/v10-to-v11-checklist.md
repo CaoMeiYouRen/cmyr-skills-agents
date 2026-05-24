@@ -7,8 +7,9 @@
 - [ ] 运行 codemod：`pnpx codemod run pnpm-v10-to-v11`
 - [ ] 将 `package.json#pnpm` 配置迁移到 `pnpm-workspace.yaml`
 - [ ] 将 `.npmrc` 中非 auth/registry 配置迁移到 `pnpm-workspace.yaml`（键名改为 camelCase）
-- [ ] 将 `package.json#packageManager` 升级到目标 v11 版本
+- [ ] 仅在 `package.json` 原先已存在 `packageManager` 字段时，才将其升级到目标 v11 版本
 - [ ] 重新生成 lockfile 并验证 `pnpm install --frozen-lockfile`
+- [ ] 若项目使用 `Dockerfile`/`Dockerfile.*` 构建，更新容器内 pnpm 安装方式与缓存配置到目标 major
 
 ## 2) 需要人工确认项
 
@@ -32,12 +33,16 @@
 
 ## 4) CI 与发布一致性
 
-- [ ] GitHub Actions 中 `pnpm/action-setup` 改为显式版本，不使用 `latest`
+- [ ] GitHub Actions 中 `pnpm/action-setup` 改为显式 major 版本，不使用 `latest`，且不固定 minor/patch
 - [ ] Node 版本、pnpm 版本与 lockfile 版本在本地与 CI 保持一致
 - [ ] 发布工作流和测试工作流都执行 frozen-lockfile 安装验证
 
 ## 5) 验证与收口
 
+- [ ] 验证依赖安装成功（安装过程无异常退出、无缺失依赖、工作区安装完整）
+- [ ] 确认 `pnpm-lock.yaml` 已按预期更新，且与目标 major 一致
 - [ ] 跑最小充分质量门：lint/test/build/typecheck（按项目真实脚本）
+- [ ] 检查是否引入新问题（lint/typecheck/test/build 回归、脚本报错、CI 配置漂移）
+- [ ] 若发现新问题，先修复并重复执行“安装验证 + 质量门”
 - [ ] 输出迁移报告：改动清单 + 风险清单 + 未决事项
 - [ ] 如失败，按“配置迁移 -> lockfile -> CI 对齐”分批回滚与重试
