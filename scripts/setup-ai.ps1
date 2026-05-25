@@ -10,6 +10,8 @@ $dirLinks = @{
     ".claude/skills" = "skills"
     ".agents/agents" = "agents"
     ".agents/skills" = "skills"
+    ".opencode/agents" = "agents"
+    ".opencode/skills" = "skills"
 }
 
 function Create-Link {
