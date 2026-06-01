@@ -84,12 +84,20 @@ export interface CacheIndex {
   entries: Record<string, CacheEntry>
 }
 
+export interface MultiLanguageQueries {
+  language: string
+  label: string
+  queries: string[]
+  rationale: string
+}
+
 export interface SearchPlan {
   topic: string
   depth: 'quick' | 'normal' | 'deep'
   queries: string[]
   counterQueries: string[]
   targetSourceCount: number
+  multiLanguageQueries?: MultiLanguageQueries[]
 }
 
 export interface FetchPlan {
