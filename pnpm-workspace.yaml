@@ -44,3 +44,8 @@ onlyBuiltDependencies:
     - esbuild
     - nice-napi
     - simple-git-hooks
+
+allowBuilds:
+    esbuild: true
+    nice-napi: true
+    simple-git-hooks: true
