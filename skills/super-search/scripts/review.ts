@@ -24,6 +24,7 @@ const HIGH_RISK_PATTERNS: { pattern: RegExp; label: string }[] = [
   { pattern: /法律|诉讼|合同|判决|法规|违法|犯罪|律师|法院|legal|law|court|contract/i, label: '法律' },
   { pattern: /金融|股票|投资|基金|理财|保险|贷款|利率|finance|stock|investment/i, label: '金融/投资' },
   { pattern: /安全|漏洞|攻击|黑客|加密|认证|security|vulnerability|hack|exploit/i, label: '安全' },
+  { pattern: /定价|费率|佣金|价格表|价格对比|折扣|限免|免费额度|套餐|pricing|rate|fee|commission|discount|free tier|plan/i, label: '定价/费率' },
 ]
 
 const SCIENCE_PATTERNS: { pattern: RegExp; label: string }[] = [
