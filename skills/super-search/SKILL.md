@@ -58,7 +58,7 @@ Ask: 哪些 search/fetch 工具当前可用？
 - 核心主题与搜索关键词
 - 搜索深度：`quick`（3-5 源）、`normal`（8-12 源）、`deep`（15-20 源）
 - 是否需要对抗审查（见 `references/review-triggers.md`）
-- 输出文件路径（用户指定或默认 `./research-output/{topic-slug}-{date}.md`）
+- 输出文件路径（用户指定或默认 `./research-output/{date}-{topic-slug}.md`）
 - 缓存目录（用户指定或默认 `~/.super-search-cache/`）
 
 Ask: "对以下问题，我应该额外搜索哪些对立面/反面/批评性关键词？"
