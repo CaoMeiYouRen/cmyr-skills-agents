@@ -23,7 +23,8 @@ const AUTHORITY_PATTERNS: { pattern: RegExp; score: number; label: string }[] = 
   { pattern: /github\.com|npmjs\.com|pypi\.org/i, score: 75, label: '开源平台' },
   { pattern: /nature\.com|science\.org|ieee\.org|acm\.org|arxiv\.org/i, score: 95, label: '学术期刊' },
   { pattern: /reuters\.com|apnews\.com|bbc\.com|bloomberg\.com/i, score: 85, label: '权威媒体' },
-  { pattern: /zhihu\.com|jianshu\.com|csdn\.net|juejin\.cn|segmentfault\.com/i, score: 40, label: '个人/UGC 平台' },
+  { pattern: /zhihu\.com|jianshu\.com|juejin\.cn|segmentfault\.com/i, score: 40, label: '个人/UGC 平台' },
+  { pattern: /csdn\.net/i, score: 0, label: '已封禁: CSDN（内容农场级，全局排除）' },
   { pattern: /medium\.com|dev\.to|hashnode\.com/i, score: 35, label: '博客平台' },
 ]
 

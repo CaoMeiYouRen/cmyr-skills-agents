@@ -1,4 +1,5 @@
 import { writeFile, mkdir } from 'node:fs/promises'
+import { access, constants } from 'node:fs/promises'
 import { join, dirname } from 'node:path'
 
 interface ReportInput {
@@ -79,6 +80,12 @@ function formatDate(): string {
   const d = new Date()
   const pad = (n: number) => String(n).padStart(2, '0')
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
+}
+
+function formatDateSlug(): string {
+  const d = new Date()
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
 }
 
 function scoreToLabel(score: number): string {
@@ -185,8 +192,28 @@ async function main(): Promise<void> {
   const args = parseArgs()
   const input = parseInput()
 
-  const outputPath = args.output
-    || join(process.cwd(), 'research-output', `${slugify(input.topic)}-${formatDate().replace(/[:\s]/g, '-')}.md`)
+  const baseSlug = slugify(input.topic)
+  const dateSlug = formatDateSlug()
+  const defaultBase = join(process.cwd(), 'research-output', `${dateSlug}-${baseSlug}`)
+
+  let outputPath = args.output || `${defaultBase}.md`
+
+  // Collision handling: if file exists, append -v2, -v3, etc.
+  if (!args.output) {
+    let version = 2
+    let candidate = outputPath
+    let exists = true
+    while (exists) {
+      try {
+        await access(candidate, constants.F_OK)
+        candidate = `${defaultBase}-v${version}.md`
+        version++
+      } catch {
+        exists = false
+        outputPath = candidate
+      }
+    }
+  }
 
   const report = buildReport(input)
 
