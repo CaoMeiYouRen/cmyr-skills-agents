@@ -6,13 +6,14 @@
  * 批量收集当前用户所有仓库的 Dependabot alerts，按严重级别和仓库排序后输出 JSON。
  *
  * 用法：
- *   node <skill-dir>/scripts/collect-multi-repo-alerts.mjs [--output-json <path>] [--output-markdown <path>]
+ *   node <skill-dir>/scripts/collect-multi-repo-alerts.mjs [--output-json <path>] [--output-markdown <path>] [--updated-after <date>]
  *
  * 环境变量：
  *   GITHUB_TOKEN / GH_TOKEN — GitHub personal access token，必须（权限：repo + security_events）。
  *
  * 默认行为：
  *   - 拉取当前用户所有非私有、非 fork、非归档、非禁用的仓库
+ *   - 默认只包含最近 3 个月内有更新的仓库（可通过 --updated-after 覆盖）
  *   - 每个仓库拉取 open 状态的 Dependabot alerts
  *   - 跳过无 alerts 的仓库
  *   - 按 critical > high > medium > low > unknown 优先级排序
@@ -46,12 +47,52 @@ const ALERT_PAGE_SIZE = 100
 // ── 参数解析 ──────────────────────────────────────────
 
 function parseArgs(args) {
-    const opts = { outputJson: null, outputMarkdown: null }
+    const opts = { outputJson: null, outputMarkdown: null, updatedAfter: null }
     for (let i = 0; i < args.length; i++) {
         if (args[i] === '--output-json' && args[i + 1]) opts.outputJson = resolve(args[++i])
         else if (args[i] === '--output-markdown' && args[i + 1]) opts.outputMarkdown = resolve(args[++i])
+        else if (args[i] === '--updated-after' && args[i + 1]) opts.updatedAfter = args[++i]
     }
     return opts
+}
+
+// ── 时间范围解析 ──────────────────────────────────────
+
+function parseUpdatedAfter(raw) {
+    if (!raw) {
+        // 默认：最近 3 个月
+        const d = new Date()
+        d.setMonth(d.getMonth() - 3)
+        return d
+    }
+
+    // 相对表达式：3months, 6months, 1year, 30days 等
+    const relMatch = raw.match(/^(\d+)\s*(months?|month|years?|year|days?|day|weeks?|week)$/i)
+    if (relMatch) {
+        const n = parseInt(relMatch[1], 10)
+        const unit = relMatch[2].toLowerCase()
+        const d = new Date()
+        switch (unit) {
+            case 'year': case 'years': d.setFullYear(d.getFullYear() - n); break
+            case 'months': case 'month': d.setMonth(d.getMonth() - n); break
+            case 'weeks': case 'week': d.setDate(d.getDate() - n * 7); break
+            case 'days': case 'day': d.setDate(d.getDate() - n); break
+        }
+        return d
+    }
+
+    // ISO / 日期字符串：2024-01-15, 2024-01-15T00:00:00Z 等
+    const d = new Date(raw)
+    if (!isNaN(d.getTime())) return d
+
+    console.error(`[collect-multi-repo-alerts] Invalid --updated-after value: "${raw}", falling back to 3 months`)
+    const fallback = new Date()
+    fallback.setMonth(fallback.getMonth() - 3)
+    return fallback
+}
+
+function formatDateFilter(threshold) {
+    return threshold.toISOString().slice(0, 10)
 }
 
 // ── Octokit ───────────────────────────────────────────
@@ -159,11 +200,12 @@ function escapeMd(text) {
     return String(text).replace(/\|/g, '\\|').replace(/\n/g, ' ')
 }
 
-function buildMarkdownReport(repoResults, severityCounts) {
+function buildMarkdownReport(repoResults, severityCounts, filterInfo) {
     const lines = []
     lines.push('# Multi-Repo Security Alert Summary')
     lines.push('')
     lines.push(`- Generated at: ${new Date().toISOString()}`)
+    lines.push(`- Updated-after filter: repos updated since ${filterInfo}`)
     lines.push(`- Repositories with open alerts: ${repoResults.length}`)
     lines.push(`- Total open alerts: ${severityCounts.critical + severityCounts.high + severityCounts.medium + severityCounts.low + severityCounts.unknown}`)
     lines.push('')
@@ -208,9 +250,13 @@ async function main() {
     const opts = parseArgs(process.argv.slice(2))
     const octokit = createOctokit()
 
+    const updatedAfterThreshold = parseUpdatedAfter(opts.updatedAfter)
+    console.error(`[collect-multi-repo-alerts] Updated-after filter: ${formatDateFilter(updatedAfterThreshold)}`)
+
     console.error('[collect-multi-repo-alerts] Fetching user repositories...')
-    const repos = await fetchAllUserRepos(octokit)
-    console.error(`[collect-multi-repo-alerts] Filtered repos: ${repos.length}`)
+    const allRepos = await fetchAllUserRepos(octokit)
+    const repos = allRepos.filter((r) => new Date(r.updated_at) >= updatedAfterThreshold)
+    console.error(`[collect-multi-repo-alerts] Filtered repos: ${repos.length} (of ${allRepos.length} total)`)
 
     const severityCounts = { critical: 0, high: 0, medium: 0, low: 0, unknown: 0 }
     const repoResults = []
@@ -265,7 +311,7 @@ async function main() {
 
     // 输出 Markdown
     if (opts.outputMarkdown) {
-        const md = buildMarkdownReport(repoResults, severityCounts)
+        const md = buildMarkdownReport(repoResults, severityCounts, formatDateFilter(updatedAfterThreshold))
         writeFileSync(opts.outputMarkdown, md, 'utf8')
         console.error(`[collect-multi-repo-alerts] Markdown written to ${opts.outputMarkdown}`)
     }
