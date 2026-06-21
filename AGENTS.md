@@ -85,6 +85,7 @@
 -   **[Backend Expert](./skills/backend-expert/SKILL.md)**：后端 API、服务层、数据库与权限实现。
 -   **[Security Guardian](./skills/security-guardian/SKILL.md)**：鉴权、权限、输入处理和数据写入的安全审计。
 -   **[Security Alert Remediator](./skills/security-alert-remediator/SKILL.md)**：聚合 Dependabot、Code Scanning 与 pnpm audit 告警，按严重级别和可修复性排序，逐批升级依赖、修复 frozen-lockfile，并在用户显式要求时审慎清理已过时的 pnpm overrides，最后汇报未解决的 high+ 风险。
+-   **[Multi-Repo Alert Remediator](./skills/multi-repo-alert-remediator/SKILL.md)**：批量拉取当前用户所有 GitHub 仓库的 Dependabot 安全告警，按优先级排序后逐仓库落地到本地修复。复用 Security Alert Remediator 的单仓库修复能力，每仓库独立 commit 但不推送，等待用户 review。
 
 ### 验证与评审
 -   **[UI Validator](./skills/ui-validator/SKILL.md)**：真实页面验证、截图留证与视觉回归检查。
