@@ -15,6 +15,7 @@
 
 - [ ] `auditConfig.ignoreCves` -> `auditConfig.ignoreGhsas` 后，逐条将 CVE 映射为 GHSA
 - [ ] 检查并处理被移除配置：`ignorePatchFailures`
+- [ ] **`allowBuilds` 迁移**：v11 用 `allowBuilds` 取代 v10 的 `onlyBuiltDependencies` 和 `ignoredBuiltDependencies`；必须将所有需要构建脚本的包（如 esbuild、sharp、workerd、@swc/core、protobufjs、puppeteer 等）加入 `pnpm-workspace.yaml` 的 `allowBuilds` 列表，否则 `pnpm install` 会报 `ERR_PNPM_IGNORED_BUILDS`
 - [ ] 检查环境变量前缀：`npm_config_*` -> `pnpm_config_*`
 - [ ] 检查 `pnpm link <pkg-name>` 语义变化是否影响现有脚本
 - [ ] 检查 `pnpm install -g`（无参数）旧行为是否还被使用
@@ -36,6 +37,7 @@
 - [ ] GitHub Actions 中 `pnpm/action-setup` 改为显式 major 版本，不使用 `latest`，且不固定 minor/patch
 - [ ] Node 版本、pnpm 版本与 lockfile 版本在本地与 CI 保持一致
 - [ ] 发布工作流和测试工作流都执行 frozen-lockfile 安装验证
+- [ ] 确认 CI 中使用的 `pnpm-workspace.yaml` 已包含 `allowBuilds` 配置，确保 CI 构建不因 `ERR_PNPM_IGNORED_BUILDS` 失败
 
 ## 5) 验证与收口
 

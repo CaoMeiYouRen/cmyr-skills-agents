@@ -45,7 +45,7 @@ description: 批量拉取当前用户所有 GitHub 仓库的 Dependabot / Code S
     - [ ] 5.2.2 运行 `<sardir>/scripts/collect-security-alerts.mjs` 收集当前仓库告警（若已有从 Step 2 的全局告警数据可复用，则跳过此步）。
     - [ ] 5.2.3 按 `<sardir>/references/severity-policy.md` 决定聚焦级别。
     - [ ] 5.2.4 使用 `<sardir>/scripts/update-pnpm-dependency.mjs` 执行单包或关联包升级。
-    - [ ] 5.2.5 若遇到 lockfile 不一致，使用 `<sardir>/scripts/repair-frozen-lockfile.mjs` 修复。
+    - [ ] 5.2.5 若遇到 lockfile 不一致或 `ERR_PNPM_IGNORED_BUILDS`，使用 `<sardir>/scripts/repair-frozen-lockfile.mjs` 修复。
     - [ ] 5.2.6 每次升级后运行项目真实存在的 lint / test / build / typecheck 质量门。
   - [ ] 5.3 每个仓库修复完成后，在**该仓库目录内**执行：
     - [ ] 5.3.1 `git add` 变更文件。
@@ -75,7 +75,7 @@ description: 批量拉取当前用户所有 GitHub 仓库的 Dependabot / Code S
 - `<sardir>/scripts/check-git-preflight.mjs`：检查单个仓库的 Git 工作区前置条件。
 - `<sardir>/scripts/collect-security-alerts.mjs`：单仓库告警采集。
 - `<sardir>/scripts/update-pnpm-dependency.mjs`：执行 pnpm 依赖升级。
-- `<sardir>/scripts/repair-frozen-lockfile.mjs`：修复 lockfile 不一致问题。
+- `<sardir>/scripts/repair-frozen-lockfile.mjs`：修复 lockfile 不一致、损坏及 `ERR_PNPM_IGNORED_BUILDS` 问题。
 - `<sardir>/scripts/remove-pnpm-override.mjs`：在用户显式要求时移除过时 override。
 
 ## 参考文档
@@ -96,6 +96,7 @@ description: 批量拉取当前用户所有 GitHub 仓库的 Dependabot / Code S
 - 在某个仓库修复失败时，不清除残留的未提交变更就跳到下一个仓库。
 - 提交临时告警快照文件到 Git。
 - 在仓库中不存在 pnpm lockfile 时仍然机械运行升级脚本。
+- 跨仓库批量修复时，某仓库出现 `ERR_PNPM_IGNORED_BUILDS` 后只跳过不修复 `allowBuilds` 配置，导致该仓库后续 CI 持续失败。
 
 ## 交付前检查
 
