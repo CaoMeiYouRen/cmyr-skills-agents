@@ -75,12 +75,16 @@ function discoverTargetDir() {
     return null
 }
 
+// ── 被忽略的目录 ──────────────────────────────────────
+
+const IGNORED_DIRS = new Set(['research-output'])
+
 // ── 收集技能目录 ──────────────────────────────────────
 
 function collectSourceSkills(sourceDir) {
     const entries = readdirSync(sourceDir, { withFileTypes: true })
     return entries
-        .filter((e) => e.isDirectory())
+        .filter((e) => e.isDirectory() && !IGNORED_DIRS.has(e.name))
         .map((e) => {
             const skillDir = join(sourceDir, e.name)
             const skillMd = join(skillDir, 'SKILL.md')
@@ -108,6 +112,7 @@ function collectFileTimestamps(dir) {
 function walkDir(dir, callback) {
     const entries = readdirSync(dir, { withFileTypes: true })
     for (const entry of entries) {
+        if (IGNORED_DIRS.has(entry.name)) continue
         const fullPath = join(dir, entry.name)
         if (entry.isDirectory()) {
             walkDir(fullPath, callback)
