@@ -66,6 +66,15 @@ description: 批量拉取当前用户所有 GitHub 仓库的 Dependabot / Code S
 - **仓库内分批提交**：如果单个仓库内有多个独立的安全升级，可按 `security-alert-remediator` 的 Step 6 规则分批提交。
 - **提交消息规范**：优先使用 Conventional Commit 格式，如 `fix(deps): upgrade lodash to 4.17.21 for CVE-2024-XXXXX`。
 
+## 批量执行超时与并发策略
+
+- **仓库分类**：修复前先根据项目规模（依赖数量、是否包含 Nuxt/Electron）分类。
+  - 大仓库（依赖 > 500，如 Nuxt/Electron 项目）：**串行执行**，超时 600s。
+  - 小仓库（依赖 < 200，纯库/工具包）：可并行 3–4 个，超时 120s。
+- **避免全量并行**：Windows 下 5+ 个仓库同时 `pnpm install`（1000+ 包/仓库）极易在 10 分钟内超时，必须分批串行或小批量并行。
+- **`--ignore-scripts` 加速**：如果质量门后续会真实执行构建验证，可在 `pnpm install` 时加 `--ignore-scripts` 跳过构建脚本以节省时间。
+- **超时不可无限等**：任一仓库 `pnpm install` 超过 10 分钟仍无结果，立即标记为 `blocked`，不要阻塞整个批处理流程。
+
 ## 可用脚本
 
 - `<skill-dir>/scripts/collect-multi-repo-alerts.mjs`：批量拉取用户所有仓库的 Dependabot alerts，输出 JSON 和 Markdown 报告。
@@ -97,6 +106,7 @@ description: 批量拉取当前用户所有 GitHub 仓库的 Dependabot / Code S
 - 提交临时告警快照文件到 Git。
 - 在仓库中不存在 pnpm lockfile 时仍然机械运行升级脚本。
 - 跨仓库批量修复时，某仓库出现 `ERR_PNPM_IGNORED_BUILDS` 后只跳过不修复 `allowBuilds` 配置，导致该仓库后续 CI 持续失败。
+- 大仓库（Nuxt/Electron）与小仓库无差别并行执行 `pnpm install`，导致所有任务都因超时而失败。
 
 ## 交付前检查
 
