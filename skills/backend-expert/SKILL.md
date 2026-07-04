@@ -34,7 +34,7 @@ description: 设计或实现后端 API、服务层、数据库读写、鉴权权
 ## 项目特化提示
 
 - 如果项目使用 Nuxt server routes，优先遵循 defineEventHandler 和 createError 的惯用模式。
-- 如果项目已有 Zod、Drizzle ORM、Better-Auth 或权限中间件，优先复用，而不是临时发明另一套接口层。
+- 如果项目已有 Zod、Drizzle ORM、TypeORM、Better-Auth 或权限中间件，优先复用，而不是临时发明另一套接口层。
 - 列表接口要考虑 ApiResponse 风格、分页和可扩展过滤条件。
 - 权限检查优先放在 handler 或服务入口，而不是散落在内部步骤中。
 

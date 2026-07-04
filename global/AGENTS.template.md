@@ -41,7 +41,7 @@
 
 - **API 框架**：纯 API 优先 Hono；全栈项目优先 Nuxt Server Routes。
 - **数据校验**：优先 Zod。
-- **ORM**：优先 Drizzle ORM，兼容 Prisma。
+- **ORM**：优先 TypeORM，兼容 Prisma。
 - **数据库**：优先 PostgreSQL，兼容 MySQL / SQLite，可选 MongoDB。
 - **缓存**：优先 Redis。
 

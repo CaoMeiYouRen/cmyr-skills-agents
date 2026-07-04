@@ -36,6 +36,40 @@ node scripts/sync-skills.mjs --force
 3. `~/.config/opencode/skills`
 4. 若均不存在 → 提示通过 `--target` 手动指定
 
+### `sync-agents-md.mjs`
+
+将 `global/AGENTS.md` 同步到各 AI 工具的全局配置目录。只在源文件比目标文件更新时才覆盖。
+
+```bash
+# 预览同步计划（不实际复制）
+node scripts/sync-agents-md.mjs --dry-run
+
+# 执行同步（自动发现所有已安装工具的配置目录）
+node scripts/sync-agents-md.mjs
+
+# 指定单个目标文件
+node scripts/sync-agents-md.mjs --target ~/.config/opencode/AGENTS.md
+
+# 强制覆盖（忽略文件时间比较）
+node scripts/sync-agents-md.mjs --force
+```
+
+**参数**：
+
+| 参数 | 说明 |
+|------|------|
+| `--target, -t <path>` | 手动指定目标文件路径（默认同步到所有已发现的目录） |
+| `--dry-run, -n` | 预览模式，不实际复制文件 |
+| `--force, -f` | 强制覆盖，忽略文件时间比较 |
+| `--help, -h` | 显示帮助信息 |
+
+**自动发现的目标**：
+
+1. `~/.claude/CLAUDE.md`
+2. `~/.config/opencode/AGENTS.md`
+3. `~/.copilot/AGENTS.md`
+4. `~/.cursorrules`
+
 ### `setup-ai.ps1`
 
 创建符号链接，将项目中的 agents / skills 目录映射到常见 AI 助手的配置目录。
