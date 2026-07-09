@@ -96,6 +96,7 @@
 ### 交付与运维
 -   **[Git Flow Manager](./skills/git-flow-manager/SKILL.md)**：拆分提交边界、维护提交顺序与冲突预判。
 -   **[Conventional Committer](./skills/conventional-committer/SKILL.md)**：生成并执行符合 commitlint 预期的提交消息。
+-   **[GitHub CLI](./skills/gh-cli/SKILL.md)**：通过 `gh` 命令行管理仓库、Issue、PR、Workflow、Release、Project、Codespace、API 与认证配置。
 -   **[DevOps Specialist](./skills/devops-specialist/SKILL.md)**：部署、CI/CD、容器和运行时配置变更。
 -   **[Pnpm Major Migrator](./skills/pnpm-major-migrator/SKILL.md)**：迁移 pnpm 大版本及相关配置，当前优先覆盖 v10 到 v11，并保留后续版本迁移扩展位。
 
