@@ -110,6 +110,10 @@
 - **提交粒度**：每个提交对应一个逻辑变更，避免"大杂烩"提交。
 - **提交语言**：使用中文或用户使用的语言。
 
+### GitHub 规范
+
+- **GitHub 操作优先 gh-cli**：涉及仓库、Issue、PR、Actions、Release、Project、API 等 GitHub 能力时，优先通过 `gh-cli` skill 实现；仅在该 skill 不适配时再选择其他路径。
+
 ---
 
 ## 安全准则
