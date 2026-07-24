@@ -128,13 +128,16 @@ description: 自动处理 GitHub security alerts 的依赖修复工作流。用�
 - 如果移除后重新引入目标包告警，或新增达到阈值的依赖告警，立即停止并回滚本次清理。
 - 无论脚本是否通过，仍然需要补跑仓库真实存在的 lint/test/build/typecheck 质量门。
 
-## Step 5: 验证与放行
+## Step 5: 验证与放行（本地验证）
 
 - 快速验证优先使用项目现有的 lint、test、build、typecheck 脚本，不要臆造命令。
 - 单包升级默认跑最小充分检查；多包升级、major 升级或伴随代码修复时，升级为完整检查。
 - 如果失败原因来自上游依赖缺陷、peer 约束或不可接受的 API 破坏，保留证据并停止该批次。
 - ⚠️ 添加 override 后务必执行完整的 `pnpm test`，不限于 lint/build。如果项目内有对依赖版本做断言的测试（如 `opentelemetry-deps.test.ts`），只跑 lint 无法发现兼容性问题。
-- ⚠️ **推送后 CI 检查**：推送后检查 GitHub Actions CI 状态。使用 `gh run list -R <owner>/<repo> --json conclusion,displayTitle,event,headBranch` 确认 push 事件触发的 CI 通过。区分三类失败：
+
+## Step 6: 推送后 CI 检查 ⚠️ REQUIRED（推送后执行）
+
+- 推送后检查 GitHub Actions CI 状态。使用 `<skill-dir>/scripts/check-ci-status.mjs` 或 `gh run list -R <owner>/<repo> --json conclusion,displayTitle,event,headBranch` 确认 push 事件触发的 CI 通过。区分三类失败：
   1. **本次变更导致的失败**（如 minimumReleaseAge 违规、Docker 配置缺失、commitlint 升级后 hook 出错）→ 立即修复
   2. **Dependabot 自动更新失败**（event=dynamic）→ 预存问题，非本次引起
   3. **基础设施问题**（如 NPM_TOKEN 过期、Docker registry 认证失败）→ 记录并通知用户
@@ -147,6 +150,11 @@ description: 自动处理 GitHub security alerts 的依赖修复工作流。用�
 - <skill-dir>/scripts/update-pnpm-dependency.mjs：执行 pnpm up，并在需要时补做非 frozen 安装与 frozen 校验。
 - <skill-dir>/scripts/repair-frozen-lockfile.mjs：自动修复 pnpm install 失败（frozen-lockfile 不同步、lockfile 损坏、ERR_PNPM_IGNORED_BUILDS 等），尝试重生成锁文件并补充 allowBuilds 配置。
 - <skill-dir>/scripts/resolve-pnpm-rebase-conflict.mjs：自动解决 git rebase 过程中 pnpm-lock.yaml 的合并冲突。检测 rebase 状态 → 接受远端 lockfile → 继续 rebase。适用场景：分支分叉且只有 lockfile 冲突时。
+- <skill-dir>/scripts/check-ci-status.mjs：检查单个或多个仓库的 GitHub Actions CI 状态，区分 push 触发和 Dependabot 触发的运行，标记待处理的失败。
+  ```
+  node <skill-dir>/scripts/check-ci-status.mjs repo1 repo2 repo3
+  node <skill-dir>/scripts/check-ci-status.mjs --owner MyOrg repo1 repo2
+  ```
 
 ## 反模式
 

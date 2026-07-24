@@ -99,9 +99,10 @@ description: 批量拉取当前用户所有 GitHub 仓库的 Dependabot / Code S
 - `<sardir>/scripts/update-pnpm-dependency.mjs`：执行 pnpm 依赖升级。
 - `<sardir>/scripts/repair-frozen-lockfile.mjs`：修复 lockfile 不一致、损坏及 `ERR_PNPM_IGNORED_BUILDS` 问题。
 - `<sardir>/scripts/remove-pnpm-override.mjs`：在用户显式要求时移除过时 override。
-- `<skill-dir>/scripts/check-ci-status.mjs`：批量检查多个仓库的 GitHub Actions CI 状态，区分 push 触发和 Dependabot 触发的运行，标记待处理的失败。
+- `<sardir>/scripts/check-ci-status.mjs`：批量检查多个仓库的 GitHub Actions CI 状态，区分 push 触发和 Dependabot 触发的运行，标记待处理的失败。
   ```
-  node <skill-dir>/scripts/check-ci-status.mjs repo1 repo2 repo3
+  node <sardir>/scripts/check-ci-status.mjs repo1 repo2 repo3
+  node <sardir>/scripts/check-ci-status.mjs --owner MyOrg repo1 repo2
   ```
 
 ## 参考文档

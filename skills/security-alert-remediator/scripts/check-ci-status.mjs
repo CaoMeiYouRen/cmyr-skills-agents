@@ -23,27 +23,30 @@ function runGh(args) {
   });
 }
 
-async function getLatestRun(repo) {
+async function getLatestRun(repo, owner) {
   try {
-    const runs = JSON.parse(await runGh(['run', 'list', '-R', `CaoMeiYouRen/${repo}`, '--limit', '5', '--json', 'databaseId,conclusion,displayTitle,event,headBranch,createdAt']));
+    const runs = JSON.parse(await runGh(['run', 'list', '-R', `${owner}/${repo}`, '--limit', '5', '--json', 'databaseId,conclusion,displayTitle,event,headBranch,createdAt']));
     return runs || [];
-  } catch {
+  } catch (e) {
+    console.error(`[check-ci-status] Warning: failed to fetch runs for ${repo}: ${e.message}`);
     return [];
   }
 }
 
 function categorize(runs) {
-  const pushRuns = runs.filter(r => r.event === 'push' && r.headBranch === 'master');
+  const defaultBranches = ['master', 'main'];
+  const pushRuns = runs.filter(r => r.event === 'push' && defaultBranches.includes(r.headBranch));
+  pushRuns.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   const latestPush = pushRuns[0] || null;
 
-  const dynamicRuns = runs.filter(r => r.event === 'dynamic' && r.headBranch === 'master');
+  const dynamicRuns = runs.filter(r => r.event === 'dynamic' && defaultBranches.includes(r.headBranch));
   const failedDynamic = dynamicRuns.filter(r => r.conclusion === 'failure');
 
   return { latestPush, failedDynamic, all: runs };
 }
 
 async function main() {
-  const { positionals } = parseArgs({
+  const { positionals, values } = parseArgs({
     args: process.argv.slice(2),
     allowPositionals: true,
     options: {
@@ -57,17 +60,18 @@ async function main() {
     process.exit(1);
   }
 
-  const owner = 'CaoMeiYouRen';
+  const owner = values.owner || 'CaoMeiYouRen';
   const results = [];
 
   for (const repo of positionals) {
-    const runs = await getLatestRun(repo);
+    const runs = await getLatestRun(repo, owner);
     const { latestPush, failedDynamic } = categorize(runs);
     results.push({
       repo,
       push: latestPush ? {
         conclusion: latestPush.conclusion || 'in_progress',
         title: latestPush.displayTitle,
+        branch: latestPush.headBranch,
         url: `https://github.com/${owner}/${repo}/actions/runs/${latestPush.databaseId}`,
       } : null,
       dependabotFailures: failedDynamic.length,
@@ -93,7 +97,7 @@ async function main() {
   console.log('\n### Failures requiring attention\n');
   for (const r of results) {
     if (r.push && r.push.conclusion === 'failure') {
-      console.log(`- ❌ **${r.repo}/master**: ${r.push.title}`);
+      console.log(`- ❌ **${r.repo}/${r.push.branch}**: ${r.push.title}`);
       console.log(`  ${r.push.url}`);
     }
   }
