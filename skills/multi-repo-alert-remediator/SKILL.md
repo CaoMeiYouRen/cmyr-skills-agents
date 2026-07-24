@@ -37,9 +37,13 @@ description: 批量拉取当前用户所有 GitHub 仓库的 Dependabot / Code S
 - [ ] Step 4: 建立仓库映射 ⚠️ REQUIRED
   - [ ] 4.1 对 Step 3 确认后的每个远程仓库，尝试在本地文件系统中找到对应目录。
   - [ ] 4.2 映射发现策略详见 `references/repo-mapping-guide.md`：先按 `{repoName}` 在常用根目录下搜索；找不到时请用户指定搜索根目录；仍无法匹配则 skip 并通知用户。
-  - [ ] 4.3 将映射结果整理为 `[{ remoteName, remoteUrl, localPath, status }]` 列表，status 为 `mapped | skipped | manual-needed`。
+  - [ ] 4.3 ⚠️ 注意非标准路径：部分仓库可能在非常用根目录下（如 `D:\Projects\electron\electron-vite-template`、`D:\Projects\rss-impact\rss-impact-server`）。如果 glob 找不到，用 `Get-ChildItem -Recurse -Depth 3 -Directory` 在上级搜索目录中深度查找。
+  - [ ] 4.4 将映射结果整理为 `[{ remoteName, remoteUrl, localPath, status }]` 列表，status 为 `mapped | skipped | manual-needed`。
 - [ ] Step 5: 逐仓库修复 ⚠️ REQUIRED
-  - [ ] 5.1 按 Step 2 确定的优先级顺序遍历仓库列表。
+  - [ ] 5.1 按 Step 2 确定的优先级顺序遍历仓库列表。建议将仓库分为两组以利用并行处理：
+    - **简单组**：仅需添加 `brace-expansion`、`ini`、`esbuild` 等通用 overrides 的仓库（模式高度一致），使用 sub-agent 并行处理 5-6 个。
+    - **复杂组**：每个仓库需要不同 overrides 配置（如 `unplugin-dynamic-import`、`afdian-linker`），也使用 sub-agent 分组并行。
+    - 每个 sub-agent 负责：读配置 → 写 override → `pnpm install` → lint/build → commit。返回结果供汇总。
   - [ ] 5.2 对每个已映射到本地的仓库，按 `security-alert-remediator` 的单仓库修复流程执行：
     - [ ] 5.2.1 运行 `<sardir>/scripts/check-git-preflight.mjs` 做仓库预检。
     - [ ] 5.2.2 运行 `<sardir>/scripts/collect-security-alerts.mjs` 收集当前仓库告警（若已有从 Step 2 的全局告警数据可复用，则跳过此步）。
@@ -52,12 +56,21 @@ description: 批量拉取当前用户所有 GitHub 仓库的 Dependabot / Code S
     - [ ] 5.3.2 生成 Conventional Commit 格式的提交消息（推荐使用 `conventional-committer` skill）。
     - [ ] 5.3.3 `git commit` 提交，**不执行 `git push`**。
   - [ ] 5.4 如果某个仓库的修复引入破坏性变更：记录该仓库为 `blocked`，回退变更，继续处理下一个仓库。
+  - [ ] 5.5 ⚠️ 分支分叉处理：如果 `git pull --rebase` 因分叉失败（pnpm-lock.yaml 冲突），尝试 `git checkout --theirs pnpm-lock.yaml` 接受远端锁文件，然后 `GIT_EDITOR=true git rebase --continue`。仍失败则标记为 `blocked`。
 - [ ] Step 6: 汇总报告 ⚠️ REQUIRED
   - [ ] 6.1 汇总所有仓库的处理结果：成功修复数、跳过数、阻塞数。
   - [ ] 6.2 列出所有已 commit 但未 push 的仓库及对应的 commit hash，提醒用户 review。
   - [ ] 6.3 对 `blocked` 仓库列出阻塞原因和建议的下一步。
   - [ ] 6.4 对 `skipped`（无法映射到本地）的仓库，列出仓库名与 URL，提醒用户手动处理或指定本地路径后重新运行。
   - [ ] 6.5 删除临时告警快照文件。
+- [ ] Step 7: 推送与 CI 验证 ⚠️ REQUIRED（用户要求推送时才执行）
+  - [ ] 7.1 逐一推送每个仓库的 commit：`git push`（在仓库目录内执行）。
+  - [ ] 7.2 检查每个仓库的 GitHub Actions CI 状态：`gh run list -R <owner>/<repo> --json conclusion,displayTitle,event,headBranch`。
+  - [ ] 7.3 将 CI 失败分为三类：
+    - **本次变更导致**（minimumReleaseAge 违规、Dockerfile 缺少 pnpm-workspace.yaml、commitlint hook 因升级损坏）→ 立即修复
+    - **Dependabot 自动更新失败**（event=dynamic）→ 预存问题，非本次引起
+    - **基础设施问题**（NPM_TOKEN 过期、Docker 认证失败）→ 记录并通知用户
+  - [ ] 7.4 修复后重新推送，直至对应仓库的最新 push 触发 CI 通过。
 
 ## 提交策略
 
@@ -86,6 +99,10 @@ description: 批量拉取当前用户所有 GitHub 仓库的 Dependabot / Code S
 - `<sardir>/scripts/update-pnpm-dependency.mjs`：执行 pnpm 依赖升级。
 - `<sardir>/scripts/repair-frozen-lockfile.mjs`：修复 lockfile 不一致、损坏及 `ERR_PNPM_IGNORED_BUILDS` 问题。
 - `<sardir>/scripts/remove-pnpm-override.mjs`：在用户显式要求时移除过时 override。
+- `<skill-dir>/scripts/check-ci-status.mjs`：批量检查多个仓库的 GitHub Actions CI 状态，区分 push 触发和 Dependabot 触发的运行，标记待处理的失败。
+  ```
+  node <skill-dir>/scripts/check-ci-status.mjs repo1 repo2 repo3
+  ```
 
 ## 参考文档
 
@@ -107,6 +124,10 @@ description: 批量拉取当前用户所有 GitHub 仓库的 Dependabot / Code S
 - 在仓库中不存在 pnpm lockfile 时仍然机械运行升级脚本。
 - 跨仓库批量修复时，某仓库出现 `ERR_PNPM_IGNORED_BUILDS` 后只跳过不修复 `allowBuilds` 配置，导致该仓库后续 CI 持续失败。
 - 大仓库（Nuxt/Electron）与小仓库无差别并行执行 `pnpm install`，导致所有任务都因超时而失败。
+- 添加 override 前不检查项目中是否有测试对依赖版本做断言，提交后 CI 测试阶段才暴露。
+- 修改 `minimumReleaseAgeExclude` 后不同步更新 Dockerfile，导致 Docker 构建时报 `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH`。
+- 推送后只看 Dependabot 自动更新失败（event=dynamic）的邮件通知就认为自己的变更引入了问题，跳过排查就回退。
+- 串行处理所有仓库，不考虑使用 sub-agent 并行加速简单组仓库的修复。
 
 ## 交付前检查
 
@@ -118,3 +139,5 @@ description: 批量拉取当前用户所有 GitHub 仓库的 Dependabot / Code S
 - [ ] 所有 commit 均未推送到远程。
 - [ ] 已汇总 blocked / skipped 仓库及其原因。
 - [ ] 临时告警快照文件已删除。
+- [ ] 推送后已检查各仓库的 CI 状态，区分了 "本次变更导致" vs "预存问题" vs "基础设施问题"。
+- [ ] 本次变更导致的 CI 失败已全部修复。

@@ -19,6 +19,7 @@ description: 自动处理 GitHub security alerts 的依赖修复工作流。用�
   - [ ] 1.1 运行 <skill-dir>/scripts/check-git-preflight.mjs，确认当前仓库干净。
   - [ ] 1.2 若远端存在可快进更新，则先拉取；若已分叉、冲突或存在用户未提交改动，立即停止并让用户先处理。
   - [ ] 1.3 读取 package.json、pnpm-workspace.yaml（含 allowBuilds 配置）、锁文件和现有质量门脚本，确认真实可用的 lint/test/build 命令。
+  - [ ] 1.4 ⚠️ 搜索项目中的测试文件，检查是否有对特定依赖版本或 override 的断言（如 `not.toMatch` / `notToContain` 配合包名）。示例：`rg -l 'not.toMatch|notToContain' --include '*.ts' --include '*.spec.*' | xargs rg -l 'opentelemetry|override|version'`。此类测试会阻止 override 生效，需先评估兼容性再做修改。
 - [ ] Step 2: 收集并排序安全告警 ⚠️ REQUIRED
   - [ ] 2.1 运行 <skill-dir>/scripts/collect-security-alerts.mjs。优先使用 GITHUB_TOKEN 或 GH_TOKEN 拉取 Dependabot / Code Scanning；没有 token 时回退到 pnpm audit 获取依赖告警。
   - [ ] 2.2 按 <skill-dir>/references/severity-policy.md 的规则决定当前聚焦级别：critical 优先于 high，high 优先于 medium，只有没有更高等级时才下探。
@@ -91,6 +92,7 @@ description: 自动处理 GitHub security alerts 的依赖修复工作流。用�
 - 加载 <skill-dir>/references/severity-policy.md，决定当前轮次应该聚焦的最低严重级别。
 - 加载 <skill-dir>/references/remediation-playbook.md，判断哪些包必须一起升级、哪些必须拆开。
 - 同级别依赖不强制排序，但有关联的依赖必须放在同一决策里，按先后关系执行。
+- ⚠️ 在添加 override 前，检查项目中是否有测试对依赖版本做断言。用 `rg -l 'not.toMatch|notToContain'` 配合包名搜索，先评估兼容性。
 
 ## Step 4: 升级执行
 
@@ -106,6 +108,16 @@ description: 自动处理 GitHub security alerts 的依赖修复工作流。用�
 - 关联包升级示例：node <skill-dir>/scripts/update-pnpm-dependency.mjs react react-dom
 - 如果只是 lockfile 与 package.json 脱节，先运行 node <skill-dir>/scripts/repair-frozen-lockfile.mjs，再决定是否继续升级。
 - 如果出现 `ERR_PNPM_IGNORED_BUILDS`，说明 pnpm v11 缺少必要的 `allowBuilds` 配置，运行修复脚本或手动将受阻包添加到 `pnpm-workspace.yaml` 的 `allowBuilds` 中。
+- ⚠️ 如果出现 `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION`，说明某个依赖发布时间过新（超出 CI 的 minimumReleaseAge 策略）。将该包和版本号添加到 `pnpm-workspace.yaml` 的 `minimumReleaseAgeExclude` 列表中，重新运行 install。
+  ```yaml
+  minimumReleaseAgeExclude:
+    - es-toolkit@1.50.0
+  ```
+  **注意**：修改 `minimumReleaseAgeExclude` 后，如果项目使用 Docker 构建且 Dockerfile 未复制 `pnpm-workspace.yaml`，会触发 `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH`。详见下方 Docker 注意事项。
+- ⚠️ **Docker 构建提示**：如果项目使用 Docker，检查 Dockerfile 是否复制了 `pnpm-workspace.yaml`。缺少该文件且 lockfile 中包含了 `overrides` / `minimumReleaseAgeExclude` 元数据时，`pnpm i --frozen-lockfile` 会报 `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH`。确保 Dockerfile 包含：
+  ```dockerfile
+  COPY package.json .npmrc pnpm-lock.yaml pnpm-workspace.yaml /app/
+  ```
 
 ## Optional Override Cleanup: 执行与放行
 
@@ -121,6 +133,11 @@ description: 自动处理 GitHub security alerts 的依赖修复工作流。用�
 - 快速验证优先使用项目现有的 lint、test、build、typecheck 脚本，不要臆造命令。
 - 单包升级默认跑最小充分检查；多包升级、major 升级或伴随代码修复时，升级为完整检查。
 - 如果失败原因来自上游依赖缺陷、peer 约束或不可接受的 API 破坏，保留证据并停止该批次。
+- ⚠️ 添加 override 后务必执行完整的 `pnpm test`，不限于 lint/build。如果项目内有对依赖版本做断言的测试（如 `opentelemetry-deps.test.ts`），只跑 lint 无法发现兼容性问题。
+- ⚠️ **推送后 CI 检查**：推送后检查 GitHub Actions CI 状态。使用 `gh run list -R <owner>/<repo> --json conclusion,displayTitle,event,headBranch` 确认 push 事件触发的 CI 通过。区分三类失败：
+  1. **本次变更导致的失败**（如 minimumReleaseAge 违规、Docker 配置缺失、commitlint 升级后 hook 出错）→ 立即修复
+  2. **Dependabot 自动更新失败**（event=dynamic）→ 预存问题，非本次引起
+  3. **基础设施问题**（如 NPM_TOKEN 过期、Docker registry 认证失败）→ 记录并通知用户
 
 ## 可用脚本
 
@@ -129,6 +146,7 @@ description: 自动处理 GitHub security alerts 的依赖修复工作流。用�
 - <skill-dir>/scripts/remove-pnpm-override.mjs：在显式启用时移除一个或一组 pnpm override，并用前后告警快照、防回归比较和 lockfile 校验保护这次清理。
 - <skill-dir>/scripts/update-pnpm-dependency.mjs：执行 pnpm up，并在需要时补做非 frozen 安装与 frozen 校验。
 - <skill-dir>/scripts/repair-frozen-lockfile.mjs：自动修复 pnpm install 失败（frozen-lockfile 不同步、lockfile 损坏、ERR_PNPM_IGNORED_BUILDS 等），尝试重生成锁文件并补充 allowBuilds 配置。
+- <skill-dir>/scripts/resolve-pnpm-rebase-conflict.mjs：自动解决 git rebase 过程中 pnpm-lock.yaml 的合并冲突。检测 rebase 状态 → 接受远端 lockfile → 继续 rebase。适用场景：分支分叉且只有 lockfile 冲突时。
 
 ## 反模式
 
@@ -146,6 +164,10 @@ description: 自动处理 GitHub security alerts 的依赖修复工作流。用�
 - 只修复了 lockfile 但忘记同步提交 `pnpm-workspace.yaml` 中新增的 `allowBuilds` 条目。
 - 添加到 `allowBuilds` 时 value 保留了占位符文本（如 `"set this to true or false"`），YAML 语法合法但 pnpm 不识别，等同于未允许构建。
 - 用字符串操作（如 `-replace`）修改 `pnpm-workspace.yaml` 中的 overrides，导致缩进错误使整个 YAML 解析失败。安全做法：先检查 key 是否已存在，插入时确保缩进对齐（2 空格），或使用 Write 工具全量覆写。
+- 在添加 override 前，不检查项目中是否有测试对依赖版本做断言，导致测试失败。
+- 修改 `minimumReleaseAgeExclude` 后不同步更新 Dockerfile（缺少 `pnpm-workspace.yaml` 复制），导致 Docker 构建时报 `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH`。
+- 只跑 lint/build 就认为验证已通过，忽略 `pnpm test` 范围内对依赖版本的断言测试。
+- 推送后不看 CI 结果，或把 Dependabot 预存问题误当成自己的变更导致的失败。
 
 ## 交付前检查
 
@@ -160,3 +182,6 @@ description: 自动处理 GitHub security alerts 的依赖修复工作流。用�
 - [ ] 升级后的版本范围使用 `^` 或精确版本号，不存在 `>=` 范围。
 - [ ] 已确认 `pnpm-workspace.yaml` 中的 `allowBuilds` 配置覆盖了所有需要构建脚本的依赖（如 esbuild、sharp、workerd 等），且配置已纳入提交。
 - [ ] `allowBuilds` 的所有 value 均为合法 boolean（`true`/`false`），无占位符字符串残留。
+- [ ] 已检查项目中是否有对依赖版本做断言的测试，并验证了兼容性。
+- [ ] 如果项目使用 Docker，已确认 Dockerfile 复制了 `pnpm-workspace.yaml`，或 `minimumReleaseAgeExclude` 未变更。
+- [ ] 推送后已检查 CI 运行状态，区分了 "本次变更导致" vs "预存问题" 的失败。
