@@ -38,3 +38,5 @@ dist
 temp
 .copilot-tmp
 artifacts
+# dependfix
+dependfix-reports/
