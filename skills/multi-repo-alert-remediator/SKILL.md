@@ -1,16 +1,21 @@
 ---
 name: multi-repo-alert-remediator
-description: 批量拉取当前用户所有 GitHub 仓库的 Dependabot / Code Scanning 安全告警，并按仓库落地到本地逐仓库修复。用户提到 batch fix security alerts、multi-repo security、批量修复告警、多仓库安全告警、跨仓库 Dependabot 修复、扫描所有仓库安全漏洞、all repos security alerts、GitHub security alerts 批量处理时都应触发。适用于同时在多个项目中维护依赖安全、定期巡检所有个人仓库安全状况、或需要在多仓库间按优先级逐仓库修复告警的场景。
+description: 批量拉取当前用户所有 GitHub 仓库的 Dependabot / Code Scanning 安全告警，并按仓库落地到本地逐仓库修复。用户提到 batch fix security alerts、multi-repo security、批量修复告警、多仓库安全告警、跨仓库 Dependabot 修复、扫描所有仓库安全漏洞、all repos security alerts、GitHub security alerts 批量处理时都应触发。多仓库跑时默认委托子 agent 逐仓库执行以避免主上下文膨胀；环境中存在 dependfix-remediator 技能时优先使用 dependfix 进行依赖修复，否则复用 security-alert-remediator 流程。适用于同时在多个项目中维护依赖安全、定期巡检所有个人仓库安全状况、或需要在多仓库间按优先级逐仓库修复告警的场景。
 ---
 
 # Multi-Repo Alert Remediator
 
 铁律：先汇总、再排序、逐仓库修、每仓一提交、绝不推送。不要在一个脏工作区里开始，也不要把多仓库修复结果混进一个提交。
 
+铁律二：**子 agent 优先**。主 agent 只负责收集告警、排序、确认列表、映射仓库与汇总报告；逐仓库修复细节一律委托子 agent 执行，禁止主 agent 亲自进入每个仓库操作，避免主上下文过度膨胀。主 agent 只保留每个子 agent 返回的结果摘要。
+
+铁律三：**dependfix 优先**。环境中存在 `dependfix-remediator` 技能时，单仓库依赖修复优先使用 dependfix-remediator（`npx dependfix fix`）；不存在时回退到 `security-alert-remediator` 的脚本流程。两条后端都遵守"每仓一提交、绝不推送"。
+
 ## 路径解析约定
 
 - 本技能中出现的 `scripts/` 和 `references/` 都是相对于本技能目录的路径。
-- `../security-alert-remediator/` 指向同仓库下的单仓库安全告警修复 skill 目录，本技能复用其修复脚本。
+- `../security-alert-remediator/` 指向同仓库下的单仓库安全告警修复 skill 目录，作为 dependfix-remediator 不可用时的回退后端。
+- `dependfix-remediator` 是环境级技能（不在本仓库内），基于 `npx dependfix` CLI。探测方式：检查当前会话技能列表，或全局技能目录（如 `~/.config/opencode/skills/dependfix-remediator/`、`~/.copilot/skills/dependfix-remediator/`）是否存在。存在即优先使用，详见「执行后端选择（dependfix 优先）」。
 - 下文命令示例里的 `<skill-dir>` 表示本技能目录；`<sardir>` 表示 `../security-alert-remediator` 目录。
 
 ## 工作流
@@ -39,24 +44,32 @@ description: 批量拉取当前用户所有 GitHub 仓库的 Dependabot / Code S
   - [ ] 4.2 映射发现策略详见 `references/repo-mapping-guide.md`：先按 `{repoName}` 在常用根目录下搜索；找不到时请用户指定搜索根目录；仍无法匹配则 skip 并通知用户。
   - [ ] 4.3 ⚠️ 注意非标准路径：部分仓库可能在非常用根目录下（如 `D:\Projects\electron\electron-vite-template`、`D:\Projects\rss-impact\rss-impact-server`）。如果 glob 找不到，用 `Get-ChildItem -Recurse -Depth 3 -Directory` 在上级搜索目录中深度查找。
   - [ ] 4.4 将映射结果整理为 `[{ remoteName, remoteUrl, localPath, status }]` 列表，status 为 `mapped | skipped | manual-needed`。
-- [ ] Step 5: 逐仓库修复 ⚠️ REQUIRED
-  - [ ] 5.1 按 Step 2 确定的优先级顺序遍历仓库列表。建议将仓库分为两组以利用并行处理：
-    - **简单组**：仅需添加 `brace-expansion`、`ini`、`esbuild` 等通用 overrides 的仓库（模式高度一致），使用 sub-agent 并行处理 5-6 个。
-    - **复杂组**：每个仓库需要不同 overrides 配置（如 `unplugin-dynamic-import`、`afdian-linker`），也使用 sub-agent 分组并行。
-    - 每个 sub-agent 负责：读配置 → 写 override → `pnpm install` → lint/build → commit。返回结果供汇总。
-  - [ ] 5.2 对每个已映射到本地的仓库，按 `security-alert-remediator` 的单仓库修复流程执行：
-    - [ ] 5.2.1 运行 `<sardir>/scripts/check-git-preflight.mjs` 做仓库预检。
-    - [ ] 5.2.2 运行 `<sardir>/scripts/collect-security-alerts.mjs` 收集当前仓库告警（若已有从 Step 2 的全局告警数据可复用，则跳过此步）。
-    - [ ] 5.2.3 按 `<sardir>/references/severity-policy.md` 决定聚焦级别。
-    - [ ] 5.2.4 使用 `<sardir>/scripts/update-pnpm-dependency.mjs` 执行单包或关联包升级。
-    - [ ] 5.2.5 若遇到 lockfile 不一致或 `ERR_PNPM_IGNORED_BUILDS`，使用 `<sardir>/scripts/repair-frozen-lockfile.mjs` 修复。
-    - [ ] 5.2.6 每次升级后运行项目真实存在的 lint / test / build / typecheck 质量门。
-  - [ ] 5.3 每个仓库修复完成后，在**该仓库目录内**执行：
-    - [ ] 5.3.1 `git add` 变更文件。
-    - [ ] 5.3.2 生成 Conventional Commit 格式的提交消息（推荐使用 `conventional-committer` skill）。
-    - [ ] 5.3.3 `git commit` 提交，**不执行 `git push`**。
-  - [ ] 5.4 如果某个仓库的修复引入破坏性变更：记录该仓库为 `blocked`，回退变更，继续处理下一个仓库。
-  - [ ] 5.5 ⚠️ 分支分叉处理：如果 `git pull --rebase` 因分叉失败（pnpm-lock.yaml 冲突），尝试 `git checkout --theirs pnpm-lock.yaml` 接受远端锁文件，然后 `GIT_EDITOR=true git rebase --continue`。仍失败则标记为 `blocked`。
+- [ ] Step 5: 逐仓库修复（子 agent 优先）⚠️ REQUIRED
+  - [ ] 5.1 主 agent 调度：按 Step 2 确定的优先级顺序，将 Step 3 确认后的仓库列表组织成任务队列，为每个仓库创建一个子 agent 任务。主 agent 给子 agent 的输入只包含：`{ remoteName, remoteUrl, localPath, severityFocus }`，并明确告知子 agent「执行后端探测规则」与「返回结果摘要格式」。
+  - [ ] 5.2 分组与并发（延续既有策略）：
+    - **简单组**：仅需添加 `brace-expansion`、`ini`、`esbuild` 等通用 overrides 的仓库（模式高度一致），并行分发 5-6 个子 agent。
+    - **复杂组**：每个仓库需要不同 overrides 配置（如 `unplugin-dynamic-import`、`afdian-linker`），分组并行，每组 3-4 个。
+    - **大仓库**（依赖 > 500，如 Nuxt/Electron）：串行执行，单独一个子 agent，超时 600s。
+    - ⚠️ 并发的是子 agent 任务，不是主 agent 亲自并行操作仓库；主 agent 只等待结果并汇总。
+  - [ ] 5.3 子 agent 任务契约（每个子 agent 对单个仓库执行）：
+    - [ ] 5.3.1 执行仓库预检：运行 `<sardir>/scripts/check-git-preflight.mjs`，确认仓库干净且可快进；异常时返回 `blocked` 状态与原因，不自行深挖。
+    - [ ] 5.3.2 执行后端选择：探测 dependfix-remediator 是否可用（见「执行后端选择（dependfix 优先）」小节）：
+      - **dependfix 可用 → 优先使用**：在仓库目录内运行 `npx dependfix fix --repo <owner>/<repo> --severity-threshold <level>` 完成修复与验证；报告留在 `dependfix-reports/`（已被 .gitignore 忽略，属可审计产物）。
+      - **dependfix 不可用 → 回退 security-alert-remediator**：按 5.3.3 的脚本流程执行。
+    - [ ] 5.3.3 回退流程（`<sardir>` 脚本）：
+      - [ ] 5.3.3.1 运行 `<sardir>/scripts/collect-security-alerts.mjs` 收集当前仓库告警（若已有从 Step 2 的全局告警数据可复用，则跳过此步）。
+      - [ ] 5.3.3.2 按 `<sardir>/references/severity-policy.md` 决定聚焦级别。
+      - [ ] 5.3.3.3 使用 `<sardir>/scripts/update-pnpm-dependency.mjs` 执行单包或关联包升级。
+      - [ ] 5.3.3.4 若遇到 lockfile 不一致或 `ERR_PNPM_IGNORED_BUILDS`，使用 `<sardir>/scripts/repair-frozen-lockfile.mjs` 修复。
+      - [ ] 5.3.3.5 每次升级后运行项目真实存在的 lint / test / build / typecheck 质量门。
+    - [ ] 5.3.4 提交（两条后端通用）：在**该仓库目录内**执行：
+      - [ ] 5.3.4.1 `git add` 变更文件。
+      - [ ] 5.3.4.2 生成 Conventional Commit 格式的提交消息（推荐使用 `conventional-committer` skill）。
+      - [ ] 5.3.4.3 `git commit` 提交，**不执行 `git push`**。
+    - [ ] 5.3.5 返回结构化摘要给主 agent：`{ remoteName, localPath, status: ok | blocked | skipped, fixedAlerts, unfixedHighPlus, commitHash?, qualityGates, reason? }`。⚠️ 子 agent 只返回摘要，不把完整日志/中间输出回传给主 agent。
+  - [ ] 5.4 主 agent 汇总：收集所有子 agent 结果，按 status 分组；`blocked` 与 `skipped` 的仓库记录原因，供 Step 6 报告。
+  - [ ] 5.5 如果某个仓库的修复引入破坏性变更：子 agent 记录该仓库为 `blocked`，回退变更，主 agent 继续调度下一个仓库。
+  - [ ] 5.6 ⚠️ 分支分叉处理：子 agent 执行 `git pull --rebase` 因分叉失败（pnpm-lock.yaml 冲突）时，尝试 `git checkout --theirs pnpm-lock.yaml` 接受远端锁文件，然后 `GIT_EDITOR=true git rebase --continue`。仍失败则标记为 `blocked` 并汇报。
 - [ ] Step 6: 汇总报告 ⚠️ REQUIRED
   - [ ] 6.1 汇总所有仓库的处理结果：成功修复数、跳过数、阻塞数。
   - [ ] 6.2 列出所有已 commit 但未 push 的仓库及对应的 commit hash，提醒用户 review。
@@ -72,6 +85,18 @@ description: 批量拉取当前用户所有 GitHub 仓库的 Dependabot / Code S
     - **基础设施问题**（NPM_TOKEN 过期、Docker 认证失败）→ 记录并通知用户
   - [ ] 7.4 修复后重新推送，直至对应仓库的最新 push 触发 CI 通过。
 
+## 执行后端选择（dependfix 优先）
+
+- **探测时机**：主 agent 在 Step 5 分发前完成一次后端探测，并把结果写进每个子 agent 的输入；子 agent 也可自行复核。
+- **探测方式**：检查当前会话是否加载了 `dependfix-remediator` 技能（技能列表中存在），或全局技能目录存在：`~/.config/opencode/skills/dependfix-remediator/`、`~/.copilot/skills/dependfix-remediator/`。
+- **dependfix 可用 → 优先使用**：
+  - 逐仓库执行：在仓库目录内运行 `npx dependfix fix --repo <owner>/<repo> --severity-threshold <level>`（`<level>` 按 `<sardir>/references/severity-policy.md` 的聚焦级别决定）。
+  - 默认只做本地验证（install + lint + build），不提交不推送；提交仍走 5.3.4 的 Conventional Commit 流程（或 dependfix 的 `--commit`，与 `conventional-committer` 规范一致时可用）。
+  - 报告落盘在仓库的 `dependfix-reports/`，属于可审计产物，保留不删除。
+  - 也可以在用户明确同意时使用 dependfix 的场景 D（`--owner` / `--repos-file`）做整批修复，但仍须遵守"每仓一提交、绝不推送"铁律，且同样建议委托子 agent 执行。
+- **dependfix 不可用 → 回退**：按 Step 5.3.3 的 `<sardir>` 脚本流程执行。
+- **两条后端一致约束**：无论哪条后端，质量门必须跑项目真实存在的 lint/test/build/typecheck；修复结果只回传摘要，不把完整日志回传给主 agent。
+
 ## 提交策略
 
 - **每仓库独立提交**：不同仓库的修复绝对不合并在同一个 commit 里。
@@ -81,6 +106,7 @@ description: 批量拉取当前用户所有 GitHub 仓库的 Dependabot / Code S
 
 ## 批量执行超时与并发策略
 
+- **并发对象是子 agent**：并行/串行均指子 agent 任务的调度，主 agent 不亲自并行操作仓库，只等待结果并汇总；每分配一个子 agent 任务即把该仓库上下文从主 agent 中剥离。
 - **仓库分类**：修复前先根据项目规模（依赖数量、是否包含 Nuxt/Electron）分类。
   - 大仓库（依赖 > 500，如 Nuxt/Electron 项目）：**串行执行**，超时 600s。
   - 小仓库（依赖 < 200，纯库/工具包）：可并行 3–4 个，超时 120s。
@@ -104,6 +130,7 @@ description: 批量拉取当前用户所有 GitHub 仓库的 Dependabot / Code S
   node <sardir>/scripts/check-ci-status.mjs repo1 repo2 repo3
   node <sardir>/scripts/check-ci-status.mjs --owner MyOrg repo1 repo2
   ```
+- 可选后端（dependfix-remediator 存在时优先）：`npx dependfix fix --repo <owner>/<repo> --severity-threshold <level>`，单仓库修复与验证；报告在仓库的 `dependfix-reports/`。
 
 ## 参考文档
 
@@ -129,12 +156,17 @@ description: 批量拉取当前用户所有 GitHub 仓库的 Dependabot / Code S
 - 修改 `minimumReleaseAgeExclude` 后不同步更新 Dockerfile，导致 Docker 构建时报 `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH`。
 - 推送后只看 Dependabot 自动更新失败（event=dynamic）的邮件通知就认为自己的变更引入了问题，跳过排查就回退。
 - 串行处理所有仓库，不考虑使用 sub-agent 并行加速简单组仓库的修复。
+- 主 agent 亲自进入每个仓库执行修复细节，导致主上下文膨胀、子 agent 空闲。
+- 环境中已存在 dependfix-remediator 技能，仍全部走 `<sardir>` 脚本流程，不使用 dependfix 后端。
+- 子 agent 返回后，主 agent 把完整日志/中间输出全量载入上下文，而不是只保留结果摘要。
 
 ## 交付前检查
 
 - [ ] 全局告警 JSON 已成功生成，且覆盖了所有符合条件的仓库。
 - [ ] 仓库优先级已按 severity 排序，critical 优先于 high。
 - [ ] 用户已 review 并确认仓库列表，无未确认的仓库进入修复流程。
+- [ ] 逐仓库修复已由子 agent 执行，主 agent 仅保留结果摘要，未亲自进入仓库操作。
+- [ ] 已探测 dependfix-remediator：存在时优先使用 dependfix 后端，不存在时明确走 `<sardir>` 回退流程。
 - [ ] 每个已修复仓库的质量门（lint / test / build / typecheck）已通过。
 - [ ] 每个仓库的修复已独立提交，提交消息符合 Conventional Commit 格式。
 - [ ] 所有 commit 均未推送到远程。
