@@ -72,7 +72,7 @@
 - **ESLint**：零 error。
 - **commitlint**：必须符合 Conventional Commits。
 - **stylelint**：如项目使用 CSS / SCSS。
-- **markdownlint**：如项目包含文档。
+- **markdownlint**：如项目包含文档，使用 `@lint-md/cli` 包，对应命令 `lint-md`。
 - **tsc --noEmit**：零 error。
 - **单元测试**：全部通过。
 - **构建**：无报错。
