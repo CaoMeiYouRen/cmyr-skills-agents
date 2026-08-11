@@ -16,6 +16,10 @@
 
 ### 项目偏好
 -   **核心语言**：TypeScript、Node.js、JavaScript。
+-   **视觉识别**：需要视觉识别能力（看图问答 / OCR / 文档解析）时，若检测到 vision-augment skill 或 vision-augment MCP，优先使用。
+-   **生态选型**：核心依赖、关键依赖基于 Python 生态时，优先基于 Python 生态开发项目，而不是一定要使用 Node.js 生态。
+-   **Python 生态**：优先 Python 3（不支持 Python 2，覆盖最新几个版本）；包管理优先 uv（兼容 pip），测试优先 pytest，代码检查优先 ruff，打包 exe 优先 PyInstaller。
+-   **Python 构建与发布**：src layout + hatchling + uv，`uv.lock` 提交入库、CI `uv sync --locked`；发布用 `uv build` + `python-semantic-release` + PyPI Trusted Publisher（OIDC 免 token）。
 -   **前端生态**：优先 Vue 3，兼容 React。
 -   **后端生态**：纯 API 倾向 Hono；全栈项目倾向 Nuxt。
 -   **数据存储**：优先 PostgreSQL，兼容 MySQL、SQLite，可选 MongoDB。
@@ -25,7 +29,7 @@
 -   **Docker 镜像发布**：默认同时推送到 docker.io、ghcr.io 和 registry.cn-hangzhou.aliyuncs.com。
 -   **文档站点构建**：优先使用 VitePress。
 -   **测试框架**：优先 Vitest。
--   **质量红线**：ESLint、commitlint、stylelint、Markdown lint 必须通过。
+-   **质量红线**：ESLint、commitlint、stylelint、Markdown lint（`lint-md`，`@lint-md/cli`）必须通过；Python 项目另需 ruff、pytest 通过。
 
 ### 治理规则
 -   **禁止高重叠新增**：如果现有 skill 或 agent 已足够接近，优先补充原有能力。
@@ -35,6 +39,7 @@
 -   **角色收壳原则**：agent 负责身份、边界和接棒关系；具体规则优先下沉到 skill。
 -   **问答能力下沉**：只读问答由 [QA Assistant](./skills/qa-assistant/SKILL.md) skill 承载，不再保留独立 QA agent。
 -   **性能下限原则**：新增或准入的智能体，其基础能力不应低于 Gemini 3 Flash / Claude Sonnet 4.5 / GPT-5 这一档的大模型水平。
+-   **成本纪律原则**：默认低成本模型（如 Flash 档）主力执行，按需切换更强模型；监控渠道/项目用量，防止单一模型消耗失控（历史教训：单月 96% 额度被单一模型消耗）。
 
 ## 项目架构
 -   **[Skills (技能)](./skills/)**：原子化工作流能力，存放在 `skills/` 目录下，每个技能包含一个 `SKILL.md`。
