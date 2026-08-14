@@ -140,6 +140,7 @@
 - **提交消息**：遵循 Conventional Commits。
   - 格式：`<type>(<scope>): <description>`
   - 常用 type：`feat` / `fix` / `docs` / `refactor` / `test` / `chore` / `perf` / `ci`
+- **提交钩子**：提交必须通过 husky 钩子（commitlint / lint-staged），禁止使用 `--no-verify` 跳过。
 - **提交粒度**：每个提交对应一个逻辑变更，避免"大杂烩"提交。
 - **提交语言**：使用中文或用户使用的语言。
 
