@@ -1,0 +1,66 @@
+{
+    "version": 1,
+    "generatedAt": "2026-08-15",
+    "repository": "CaoMeiYouRen/cmyr-skills-agents",
+    "skills": [
+        { "name": "agent-creator", "internal": false },
+        { "name": "backend-expert", "internal": false },
+        { "name": "code-reviewer", "internal": false },
+        { "name": "context-analyzer", "internal": false },
+        { "name": "conventional-committer", "internal": false },
+        { "name": "devops-specialist", "internal": false },
+        { "name": "documentation-specialist", "internal": false },
+        { "name": "find-skills", "internal": false },
+        { "name": "frontend-expert", "internal": false },
+        { "name": "full-stack-master", "internal": true },
+        { "name": "gh-cli", "internal": false },
+        { "name": "git-flow-manager", "internal": false },
+        { "name": "multi-repo-alert-remediator", "internal": true },
+        { "name": "opencode-usage", "internal": true },
+        { "name": "pnpm-major-migrator", "internal": true },
+        { "name": "qa-assistant", "internal": false },
+        { "name": "quality-guardian", "internal": false },
+        { "name": "requirement-analyst", "internal": false },
+        { "name": "security-alert-remediator", "internal": true },
+        { "name": "security-guardian", "internal": false },
+        { "name": "skill-creator", "internal": false },
+        { "name": "super-search", "internal": false },
+        { "name": "technical-architect", "internal": false },
+        { "name": "test-engineer", "internal": false },
+        { "name": "ui-validator", "internal": false }
+    ],
+    "agents": [
+        "backend-developer",
+        "code-reviewer",
+        "documentation-specialist",
+        "frontend-developer",
+        "full-stack-master",
+        "product-manager",
+        "quality-guardian",
+        "release-manager",
+        "skill-agent-governor",
+        "system-architect",
+        "test-engineer",
+        "ui-validator"
+    ],
+    "l0Selection": {
+        "description": "供 cmyr-template-cli 静态植入新项目的 L0 通用 AI 基建资产（模板直出、零改写），详情引用而非复制。",
+        "files": [
+            "global/AGENTS.template.md",
+            "global/AGENTS.md"
+        ],
+        "skills": [
+            "code-reviewer",
+            "context-analyzer",
+            "conventional-committer",
+            "git-flow-manager",
+            "quality-guardian",
+            "requirement-analyst",
+            "security-guardian",
+            "technical-architect"
+        ],
+        "agents": [
+            "full-stack-master"
+        ]
+    }
+}
