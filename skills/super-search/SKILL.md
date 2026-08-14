@@ -29,7 +29,7 @@ IRON LAW: NEVER GENERATE ANSWERS FROM TRAINING DATA. Every factual claim in the 
 大多数搜索不需要完整 9 步流程。实际执行模式：
 
 ```
-加载 skill → 领域探测(references/domain-detector.md) → 3-4 并行搜索 → 1-2 并行抓取 → 手动写报告 → 飞书发送
+加载 skill → 领域探测(references/domain-detector.md) → 3-4 并行搜索 → 1-2 并行抓取 → 手动写报告 → 交付
 ```
 
 脚本（env-check/search/fetch/analyze/report/review）仅在 deep 模式或需要缓存时运行。
@@ -89,7 +89,7 @@ Super Search Progress:
 
 仅 Deep 模式运行。Normal/Quick 模式直接使用可用工具。
 
-**工具可用性铁律**：记录所有可用工具的完整列表（如 tinyfish-search_search、webfetch 等）。后续每个搜索/抓取操作优先使用主要工具；失败时依次切换到列表中的下一个工具，直到成功或全部尝试完毕。
+**工具可用性铁律**：记录所有可用工具的完整列表（如 tinyfish-search_search、webfetch、gh api 等）。后续每个搜索/抓取操作优先使用主要工具；失败时依次切换到列表中的下一个工具，直到成功或全部尝试完毕。
 
 ## Step 2: Plan
 
@@ -136,6 +136,50 @@ Ask: "对以下问题，我应该额外搜索哪些对立面/反面/批评性关
 2. 再执行多语言查询（`multiLanguageQueries` 字段），**不可跳过**
 3. 最后执行对抗查询（`counterQueries` 字段）
 
+### GitHub 项目数据直接查证 ⚠️ Q1 命中时必须执行
+
+当 Q1（涉及 GitHub/开源项目）触发时，在完成网页搜索和抓取后，**必须额外使用 GitHub API 直接查询每个引用项目的精确数据**，不得仅依赖网页搜索片段中的近似值。优先使用 `gh api`（已认证的 GitHub CLI），无 gh 或认证失败时使用 webfetch 抓 `api.github.com/repos/{owner}/{repo}`（匿名限流 60/h，足够查证）。
+
+**必须查证的项目维度**：
+| 维度 | 方式 | 原因 |
+|------|------|------|
+| ⭐ Stars（精确值） | `gh api repos/{owner}/{repo}` 或抓 api.github.com | 网页搜索 snippet 常隐去或四舍五入 stars |
+| 🕐 最后推送日期（pushed_at） | 同上 | web search 不展示此字段 |
+| 🍴 Forks 数 | 同上 | 同上 |
+| 📋 Open Issues 数量 + 内容 | `gh api repos/{owner}/{repo}/issues?state=open` | 网页抓取只能看到首页，需翻页确认 |
+| 📌 Open PRs 数量 + 内容 | `gh api repos/{owner}/{repo}/pulls?state=open` | 评估项目活跃度和方向 |
+| 🔖 最新发布版号 | `gh api repos/{owner}/{repo}/releases/latest` | 确认项目是否仍在发布新版本 |
+| 许可证 | repo 接口 license 字段 | 确认合规 |
+| 是否归档（archived） | repo 接口 archived 字段 | 确认项目是否存活 |
+
+**执行时机**：完成网页搜索和内容抓取后、进入 Step 5 Analyze 之前。对所有报告中引用/对比的 GitHub 项目，逐条使用 API 查证。
+
+**API 失败降级**：GitHub API 返回 401/403/rate-limit 时（token 失效、未认证、超限），改用网页抓取 repo 页（tinyfish fetch 或 webfetch），渲染后的页面顶部导航+About 区含 ⭐/forks/license/archived 信息，Issue/PR 页同样可抓——足以完成大部分查证。
+
+**反模式**：仅凭 web search snippet 中的 star 数（常被缩写为 "k" 或省略）就写入报告；或只抓取 README 页面而不使用 API 查询实际 metrics。
+
+### 社区工具/插件安全验证 ⚠️ 推荐社区方案时必须执行
+
+当调研结果中包含对第三方社区工具、插件、库的推荐时（如搜索"有没有支持 X 的插件"并列出候选），在写入报告前必须对**每个候选项目**进行安全与真实性验证：
+
+| 验证维度 | 方法 | 排查目标 |
+|---|---|---|
+| ⭐ Stars 数 | GitHub API `stargazers_count` | 排除刷星或极小项目 |
+| 📋 Open Issues | `issues?state=open` 查看内容 | 是否有未修复的安全/数据丢失 bug |
+| 🔖 License | `license.spdx_id` | 无许可证的项目谨慎推荐（法律风险） |
+| 🧑‍💻 Owner 类型 | `owner.type` (User vs Organization) | 个人项目 vs 组织级维护 |
+| 🕐 活跃度 | `pushed_at` 对比 `created_at` | 是否仍在维护，还是已弃坑 |
+| 🚫 Archived | `archived` | 归档项目不可推荐 |
+| 🛡️ 网络请求审计 | 扫描源码中 fetch/axios/curl/http 调用 | 是否有向第三方服务器上报数据 |
+| 🔍 权限审计 | 扫描源码的文件读写、数据库操作 | 是否只读访问本地数据，还是可能篡改 |
+
+**执行时机**：在 Step 5 Analyze 之前，对候选列表中的每个 GitHub 项目使用 API 逐条查证。
+
+**判定标准**：
+- **安全**：MIT/Apache/GPL 等明确许可证 + 仅本地只读操作 + 无数据外泄网络请求 + 活跃维护
+- **需留意**：有主动上传/提交数据到远程服务器的功能（需 opt-in 才接受）、或缺少许可证
+- **不推荐**：无许可证 + 不可见源码（预编译二进制）+ 已归档 + 有可疑网络请求
+
 **工具降级策略**：
 - 优先使用主要 search 工具（如 tinyfish-search_search）
 - 该工具返回错误/超时/无结果 → 自动切换到下一可用 search 工具
@@ -169,8 +213,33 @@ Ask: "对以下问题，我应该额外搜索哪些对立面/反面/批评性关
 - 命中缓存 → 直接使用缓存内容（`node dist/cache.mjs get --url "..." --type fetch`）
 - 未命中 → 抓取内容。**工具降级策略**：
   1. 优先使用主要 fetch 工具（如 webfetch 或 tinyfish-search_fetch）
-  2. 返回 403/404/Transport Error/JS 空壳 → 自动切换到下一个可用 fetch 工具
-  3. 全部 fetch 工具失败 → 进入 **搜索引擎替代抓取** 流程（见下方）
+  2. 返回 403/404/Transport Error/JS 空壳/工具不可达 → 自动切换到下一个可用 fetch 工具
+  3. 全部 MCP fetch 工具失败 → **使用 terminal + curl 回退**：
+
+     **优先尝试 `Accept: text/markdown` 头**（适合文档站）：
+     许多文档站点（Cloudflare、GitHub 等）支持直接以 Markdown 格式返回内容。加上该 header 后 curl 输出即为纯净 Markdown，无需 HTML 剥离：
+     ```bash
+     curl -sL -H "Accept: text/markdown" "https://developers.cloudflare.com/cache/how-to/tiered-cache/"
+     ```
+     部分站点还提供 `.md` URL 后缀变体（如 Cloudflare 官方文档会在 HTML 页面提示 `append index.md`），可一并尝试。
+
+     **回退到 HTML 剥离**（文档站无 Markdown 支持时）：
+     ```bash
+     curl -sL "https://example.com" | python3 -c "
+     import sys, re
+     content = sys.stdin.read()
+     text = re.sub(r'<[^>]+>', '', content)  # 去 HTML 标签
+     text = re.sub(r'\\s+', ' ', text).strip()
+     print(text[:3000])  # 限制长度
+     "
+     ```
+     也可搭配 `sed -n 's/<[^>]*>//gp'` 做简单剥离，或 `html2text` 做更干净的转换。
+
+     ⚠️ 注意：curl 输出的 HTML 可能包含 JS 引导的验证墙（如 Cloudflare Challenge），此时需确认使用浏览器工具替代。
+
+     **基础设施/云服务类调研的补充验证**：
+     对于 CDN、DNS、代理等基础设施类服务，在回读文档之外还可以**直接测试其诊断端点**以获取实时运行数据。详见 `references/cdn-infrastructure-research.md`。
+  4. terminal+curl 也失败 → 进入 **搜索引擎替代抓取** 流程（见下方）
 - 抓取后**必须立即**回写缓存：
 
 默认 TTL：搜索结果 30min，网页内容 24h。
@@ -186,7 +255,8 @@ Ask: "对以下问题，我应该额外搜索哪些对立面/反面/批评性关
 - 语言质量（排除机翻/低质内容）
 
 **信源分层检查**：
-- CSDN（csdn.net / blog.csdn.net）在任何场景下都必须排除，不得纳入报告、不得作为引用来源、不得作为参考链接。这不是 tinyfish MCP 才能做的事——`web_search`、`web_extract`、RSS 采集等所有入口都必须过滤 CSDN 域名。
+- CSDN（csdn.net / blog.csdn.net）在任何场景下都必须排除，不得纳入报告、不得作为引用来源、不得作为参考链接。这不是某个 MCP 才能做的事——所有入口（搜索、抓取、RSS 采集等）都必须过滤 CSDN 域名。
+- 需要封禁其他域名时，按 `references/domain-blocking-checklist.md` 逐入口操作，避免遗漏。
 - ⚠️ 层级的来源默认不纳入报告，除非 🥇🥈 层确实找不到信息
 
 评分仅作**相对参考**，评估后明确低价值的内容直接舍弃。
@@ -221,12 +291,29 @@ Ask: "对以下问题，我应该额外搜索哪些对立面/反面/批评性关
 
 **叙事-结构核验（社会议题/分配议题必做）**：
 - 将关键结论拆成三层：叙事主张、结构机制、证据来源。
-- 对每条叙事主张补充“受益-成本-风险”矩阵：谁获益、谁承担成本、谁承担风险。
+- 对每条叙事主张补充"受益-成本-风险"矩阵：谁获益、谁承担成本、谁承担风险。
 - 当叙事与结构证据冲突时，不以话术热度裁决，优先保留结构证据并标注不确定性。
 
 ## Step 7: Review ⚠️ REQUIRED（对抗性审查）
 
 审查不是可选的附加项，而是保证报告质量的必要环节。**以事实为第一要义，不因追加速而牺牲准确性。**
+
+### 🧠 怀疑性认知六条原则（快速自检清单）
+
+来源：Bill Kovach & Tom Rosenstiel《真相：信息超载时代如何知道该相信什么》
+
+每条审查操作前，用这六条快速过一遍你的发现：
+
+1. **我碰到的是什么内容？** — 是新闻、观点、广告、还是 AI 生成的推测？标注类型
+2. **信息完整吗？缺少了什么？** — 检查时间、地点、上下文、数据来源是否完整。数字缺单位？结论缺限定？
+3. **信源是谁/什么？我为什么要相信他们？** — 信源身份/背景自证过吗？有无商业动机（推广/广告/股权投资）？是否受益于你相信他们的结论？
+4. **提供了什么证据？是怎样检验的？** — 证据是二手转述还是一手数据？如果是研究/报告，方法论是否透明？数据来源可否复现？
+5. **其他可能性解释或理解是什么？** — 搜索对立面：我的结论的反面是否也有证据支持？是否存在两个事实都对、但解释路径不同的情况？
+6. **我有必要知道这些信息吗？** — 这个发现是否影响最终判断？不写这条，报告会缺失关键维度吗？如果删掉它报告依然成立，它就是噪音。
+
+**用法**：完成 Step 0-6 后，用六条快速扫描每条关键发现。任何一条回答为"不/不确定"，触发补充搜索或标注置信度降级。
+
+---
 
 **审查的两个维度**：
 
@@ -283,15 +370,14 @@ Ask:
 
 **来源链接格式要求 ⚠️**：报告中每条关键数据声明必须附带 **可点击的 Markdown 链接** 指向原始来源 URL。格式：`[来源名称](https://...)`，不可仅写名称不加链接。方便读者一键核实。
 
-### Step 8.5: Deliver ⚠️ 飞书用户必读
+### Step 8.5: Deliver
 
-> 详细发送方法见 `references/feishu-file-delivery.md`
-
-**飞书消息不渲染 Markdown**。交付报告时：
+**交付原则**（飞书场景适用）：
 1. 将报告写入 `.md` 文件（已在 Step 8 完成）
-2. 使用 `send_message` 工具以附件形式发送：`MEDIA:/absolute/path/to/report.md`
-3. 消息正文仅保留 **≤5 行简短摘要**，不要粘贴报告 Markdown 正文
-4. 若报告很短（<10 行），可在消息中直接输出；超过 10 行必须走文件发送
+2. 长内容（≥10 行）**或**含有表格/对比表 → 附件发送（`MEDIA:/absolute/path/to/report.md`），消息正文仅保留 **≤5 行简短摘要**
+3. 短内容（<10 行）且无表格 → 可在消息正文中以 Markdown 格式输出
+4. 若交付平台支持 Markdown 渲染（如飞书）：表格分隔符两侧必须加空格：`| :--- | :--- |`，否则渲染为纯文本；含表格的内容仍建议走附件
+5. 部署/教程类技术内容（含大量代码块）直接走附件，不先内联再补附件
 
 ## Step 9: Verify
 
@@ -300,20 +386,20 @@ Ask:
 - [ ] 报告中每条事实声明都有可追溯的 URL
 - [ ] 低质量来源（评分低于阈值）已排除
 - [ ] 信源多样性达标：≥1 个 🥇（一手/官方），🥇+🥈 ≥50%，聚合 ≤30%（见 `references/source-priority.md`）
-- [ ] GitHub 项目类搜索：已抓取所有引用项目的 Issues 前 2 页、LICENSE、last commit 日期
+- [ ] GitHub 项目类搜索：已通过 API（`gh api` / api.github.com）直接查证所有引用项目的 ⭐ Stars、🕐 最后推送、📋 Open Issues 数量及内容、📌 Open PRs、许可证、是否归档，**非仅依赖网页搜索 snippet 估算**
 - [ ] 所有引用的 URL 已通过来源可信度核查（高风险 TLD 已标注/排除）
 - [ ] 矛盾点已通过官方来源核查并标注结论
 - [ ] 关键数值/定价/费率数据有 2 个以上独立来源确认
 - [ ] 时效性审查已通过：所有数据的来源日期在可接受范围内
 - [ ] 输出文件已写入指定位置
-- [ ] 飞书用户：报告通过 `MEDIA:` 附件发送，消息正文仅含简短摘要
+- [ ] 交付：长内容/含表格报告通过附件发送，消息正文仅含简短摘要
 - [ ] 对比表/关键数据优先链向官方页面而非第三方文章
 - [ ] 竞品对比场景：每个竞品的 CVE 和供应链安全已检查（`references/competitive-analysis.md`）
 - [ ] 第三方转载数据已满足 2 源交叉比对要求，并在报告中明确标注数据来源类型
 - [ ] 推广性质内容已在来源表中标注（`⚠️ 推广性质`）
 - [ ] 无 `_（请手动填写）_` 类占位符
-- [ ] 社会议题/分配议题：已输出“叙事主张-结构机制-证据来源”三列表
-- [ ] 社会议题/分配议题：已输出“受益-成本-风险”矩阵，且每项有可追溯来源
+- [ ] 社会议题/分配议题：已输出"叙事主张-结构机制-证据来源"三列表
+- [ ] 社会议题/分配议题：已输出"受益-成本-风险"矩阵，且每项有可追溯来源
 
 ### 事实优先原则
 
@@ -332,11 +418,16 @@ Ask:
 - 在搜索日韩内容时仅使用中文关键词，未添加日文/韩文和英文搜索
 - 搜索条目只取 5 条，不翻页，遗漏后续页面的关键信息
 - 不按信源优先级定向搜索，混入大量低质转载内容
+- **用训练数据回答包管理器安装命令**：当用户问特定包管理器（scoop/brew/apt/pip/npm 等）的安装命令时，必须先搜索该包的 manifest/包名/bucket 核实，不能凭训练数据记忆直接回答。包名、bucket、渠道信息经常在源码仓库中改变，训练数据可能是过时的。
+- **未确认工具/产品的具体仓库就深入搜索**：当用户提到一个工具名称（如"opencode"）时，可能存在多个同名或相似名的项目（如已归档的 Go 项目 vs 活跃的 TypeScript 项目）。必须先通过 GitHub API（查 stars、archived 状态、活跃度、语言栈）确认正确的仓库 URL，再开始调研。错误的仓库会导致方向完全偏离。不确定时应先问用户确认，而非自己猜测一个。在 Step 0 的 Q1 触发后，增加一步自问：*"这个工具名称是否有多个同名仓库？用户指的是哪一个？"*
 
 ### 抓取阶段 (Step 4)
 - 跳过缓存检查重复抓取同一 URL
 - 抓取失败的直接用 AI 训练数据中的记忆"补全"数据
 - 发现关键维度数据缺失时不通过搜索引擎补充搜索，直接标注为"信息不足"放过
+- **MCP fetch 工具不可用时忘记尝试 terminal + curl 回退** —— curl 是最后兜底的万能抓取手段，应始终作为 fallback 候选
+- **忽略 JS 挑战墙信号** —— curl 返回的 HTML 如果包含 Cloudflare/CloudFront Challenge 等验证脚本（`__cf_chl_opt`、`window._cf_chl_opt` 等），说明该页面对 CLI 层有防爬保护，此时应采用浏览器工具替代尝试
+- **查"某工具创建哪些表/数据库对象"不抓源码** —— 用 `raw.githubusercontent.com/{owner}/{repo}/main/{path}` 直接抓迁移文件（`alembic/versions/*.py` 等）、存储驱动源码和建表 SQL，不要凭经验猜表名。列目录用匿名 GitHub API `api.github.com/repos/{owner}/{repo}/contents/{path}`（限流 60/h 够用；token 失效 401 时同样走此路）
 
 ### 分析阶段 (Step 5-6)
 - 在报告中声称用户"已有 X 工具/系统/配置"而不先检查实际环境（无 docker 运行就写"你已有 Miniflux"）
@@ -352,6 +443,7 @@ Ask:
 - 在对比表/详情中优先使用第三方链接而非官方链接
 - **开源项目调研不检查 Issues 就写推荐** —— Issues 是最真实的使用反馈
 - **不区分信源质量就均匀采纳** —— 5 个 CSDN 转载 ≠ 5 个独立来源；CSDN 必须无条件排除
+- **在报告中仅写估算的 Stars/Issues 数而不使用 API 直接查证** —— 网页搜索 snippet 显示的 star 数常被省略、四舍五入或标注为旧值，无法反映实时状态。涉及 GitHub 项目时必须使用 `gh api` / api.github.com 获取精确 metrics。参见上文 Step 3 的「GitHub 项目数据直接查证」子步骤。
 - **在对比报告中只比较功能不比较安全** —— CVE、供应链攻击史、安全审计是竞品对比的硬性检查项，跳过等于遗漏关键决策维度
 - **在报告中使用 CSDN 链接** —— csdn.net / blog.csdn.net / ask.csdn.net 域名一律封禁，忽略该来源的结果，无论标题多相关
 
@@ -365,6 +457,9 @@ Ask:
 - 报告中遗留 `_（请手动填写）_` 占位符
 - 报告中仅写来源名称而不给可点击 URL（如"Bessemer"而不给 `https://...` 链接）
 - 对用户环境状态做推测（如"你已有 X"），而非先检查事实
+- **复用旧调研结论不重新验证版本敏感信息**：主题若已有历史报告，版本敏感信息（部署拓扑/功能可用性/认证方式/API 路径）必须重新抓官方迁移与变更文档核实。工具类项目迭代极快，旧报告只能当线索，不能当事实。
+- **把官方博客当最新文档**：官方博客常滞后于仓库 main 分支代码。官方文档与官方博客矛盾时以**最新 docs + GitHub main 分支实际代码文件**（docker-compose.yaml/.env.example/Dockerfile，用 raw.githubusercontent.com 抓取）为准，并在报告中标注"官方博客已过时"。
+- **视觉/UI 细节凭空猜测**：当用户提供截图并质疑 UI 颜色/外观/细节时，禁止仅凭图像文字描述或训练记忆推断。必须：① 用视觉模型实际核查截图（本地为 vision-augment MCP，`mcp_vision_augment_vision`，reasoning 模式）；② 用 GitHub API/raw 抓取官方源码（如 VS Code 主题 JSON：`extensions/theme-defaults/themes/*.json`）核实真实色值；③ 输出可对比的色号表 + 明确推荐。
 
 ## 输出路径维护注意事项 ⚠️
 
@@ -379,7 +474,7 @@ Ask:
 | 5 | `scripts/pipeline.ts` | TypeScript 源码中的 pipeline 指令 |
 | 6 | `dist/report.mjs` | 编译后 JS 中的默认路径 + 碰撞检测 |
 | 7 | `dist/pipeline.mjs` | 编译后 JS 中的 pipeline 指令 |
-| 8 | `.gitignore` | git 忽略规则（禁止 workspace/ 入版本控制） |
+| 8 | `.gitignore` | git 忽略规则（禁止 research-output/ 入版本控制） |
 
 **仅修改 SKILL.md 而遗漏代码文件**会导致 AI 指令与脚本行为不一致，实际报告仍会写入旧路径。
 
@@ -388,7 +483,7 @@ Ask:
 ## 事实和来源优先原则
 
 - **来源可核实**：报告中每条关键数据声明必须附带可点击的原始来源链接（`[来源](URL)` 格式）。不可仅写来源名称而不给链接。这是 Step 6 交叉验证和 Step 9 交付前检查的硬性要求。
-- **事实和证据优先**：禁止凭空推测用户\"已有 X\"或假设未经验证的状态。所有关于用户环境、资产、能力的断言必须先检查实际环境再下结论。报告中的案例数据必须追溯到一手来源（官方页面/创始人博客/原始采访），第三方聚合报告中的转述数据不可直接采信。
+- **事实和证据优先**：禁止凭空推测用户"已有 X"或假设未经验证的状态。所有关于用户环境、资产、能力的断言必须先检查实际环境再下结论。报告中的案例数据必须追溯到一手来源（官方页面/创始人博客/原始采访），第三方聚合报告中的转述数据不可直接采信。
 
 ## 脚本设计原则
 
