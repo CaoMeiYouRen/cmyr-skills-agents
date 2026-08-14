@@ -1,52 +1,52 @@
-# Removal and Iteration Plan Template
+# 删除与迭代计划模板
 
-## Priority Levels
+## 优先级分级
 
-- [ ] **P0**: Immediate removal needed (security risk, significant cost, blocking other work)
-- [ ] **P1**: Remove in current sprint
-- [ ] **P2**: Backlog / next iteration
+- [ ] **P0**：立即删除（安全风险、显著成本、阻塞其他工作）
+- [ ] **P1**：当前迭代删除
+- [ ] **P2**：backlog / 下一迭代
 
 ---
 
-## Safe to Remove Now
+## 可安全删除（现在）
 
-### Item: [Name/Description]
+### 条目：[名称/描述]
 
-| Field | Details |
+| 字段 | 详情 |
 |-------|---------|
-| **Location** | `path/to/file.ts:line` |
-| **Rationale** | Why this should be removed |
-| **Evidence** | Unused (no references), dead feature flag, deprecated API |
-| **Impact** | None / Low - no active consumers |
-| **Deletion steps** | 1. Remove code 2. Remove tests 3. Remove config |
-| **Verification** | Run tests, check no runtime errors, monitor logs |
+| **位置** | `path/to/file.ts:line` |
+| **理由** | 为什么应该删除 |
+| **证据** | 未使用（无引用）、死特性开关、废弃 API |
+| **影响** | 无 / 低 - 无活跃消费者 |
+| **删除步骤** | 1. 删代码 2. 删测试 3. 删配置 |
+| **验证** | 运行测试、检查无运行时错误、监控日志 |
 
 ---
 
-## Defer Removal (Plan Required)
+## 延迟删除（需要计划）
 
-### Item: [Name/Description]
+### 条目：[名称/描述]
 
-| Field | Details |
+| 字段 | 详情 |
 |-------|---------|
-| **Location** | `path/to/file.ts:line` |
-| **Why defer** | Active consumers, needs migration, stakeholder sign-off |
-| **Preconditions** | Feature flag off for 2 weeks, telemetry shows 0 usage |
-| **Breaking changes** | List any API/contract changes |
-| **Migration plan** | Steps for consumers to migrate |
-| **Timeline** | Target date or sprint |
-| **Owner** | Person/team responsible |
-| **Validation** | Metrics to confirm safe removal (error rates, usage counts) |
-| **Rollback plan** | How to restore if issues found |
+| **位置** | `path/to/file.ts:line` |
+| **为什么延迟** | 有活跃消费者、需要迁移、需要干系人批准 |
+| **前置条件** | 特性开关关闭 2 周、遥测显示 0 使用 |
+| **破坏性变更** | 列出所有 API/契约变更 |
+| **迁移计划** | 消费者迁移步骤 |
+| **时间线** | 目标日期或迭代 |
+| **负责人** | 负责的个人/团队 |
+| **验证** | 确认安全删除的指标（错误率、使用计数） |
+| **回滚计划** | 出问题时如何恢复 |
 
 ---
 
-## Checklist Before Removal
+## 删除前检查清单
 
-- [ ] Searched codebase for all references (`rg`, `grep`)
-- [ ] Checked for dynamic/reflection-based usage
-- [ ] Verified no external consumers (APIs, SDKs, docs)
-- [ ] Feature flag telemetry reviewed (if applicable)
-- [ ] Tests updated/removed
-- [ ] Documentation updated
-- [ ] Team notified (if shared code)
+- [ ] 搜索代码库所有引用（`rg`、`grep`）
+- [ ] 检查动态/反射式使用
+- [ ] 确认无外部消费者（API、SDK、文档）
+- [ ] 特性开关遥测已审查（如适用）
+- [ ] 测试已更新/删除
+- [ ] 文档已更新
+- [ ] 团队已通知（如为共享代码）
