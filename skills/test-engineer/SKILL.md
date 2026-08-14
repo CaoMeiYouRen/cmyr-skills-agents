@@ -1,6 +1,9 @@
 ---
 name: test-engineer
 description: 编写、补齐、运行和优化测试时使用，优先覆盖 Vitest 场景，也适用于组件逻辑、工具函数、状态管理和服务层的测试设计。用户提到 test、unit test、integration test、coverage、mock、Vitest、补测试时都应触发。
+
+metadata:
+  internal: false
 ---
 
 # Test Engineer

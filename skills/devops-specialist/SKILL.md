@@ -1,6 +1,9 @@
 ---
 name: devops-specialist
 description: 修改 Docker、CI/CD、部署配置、环境变量、运行时参数、构建脚本和发布流程时使用。优先覆盖 Docker、Vercel、Cloudflare 与 GitHub Actions 场景。用户提到 deploy、Dockerfile、workflow、CI、CD、environment variables、build pipeline、release config 时都应触发。
+
+metadata:
+  internal: false
 ---
 
 # DevOps Specialist

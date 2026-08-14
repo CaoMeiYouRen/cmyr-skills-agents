@@ -1,6 +1,9 @@
 ---
 name: gh-cli
 description: 使用 GitHub CLI（gh）处理仓库、issue、pull request、workflow、project、release、codespace、gist、search、api、auth、config、alias、secret、variable、extension、ruleset 和 status 等命令行操作时使用。用户提到 gh、gh cli、GitHub CLI、gh auth、gh repo、gh issue、gh pr、gh workflow、gh project、gh release、gh api、gh search、gh codespace、gh secret、gh variable、gh alias 时都应触发。
+
+metadata:
+  internal: false
 ---
 
 # GitHub CLI

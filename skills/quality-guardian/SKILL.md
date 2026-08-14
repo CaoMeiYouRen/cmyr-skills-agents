@@ -1,6 +1,9 @@
 ---
 name: quality-guardian
 description: 运行并解读 lint、类型检查、测试等质量门时使用。它不只是执行命令，还要根据变更范围选择最小充分检查、分析失败原因，并给出是否允许继续提交或发布的判断。用户提到 lint、typecheck、tests、quality gate、验证改动时都应触发。
+
+metadata:
+  internal: false
 ---
 
 # Quality Guardian

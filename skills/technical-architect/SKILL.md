@@ -1,6 +1,9 @@
 ---
 name: technical-architect
 description: 在进入实现前做技术方案、文件映射、模块边界设计、接口契约和变更影响分析时使用。用户提到 architecture、design plan、file mapping、implementation plan、技术方案、模块拆分、接口设计时都应触发。
+
+metadata:
+  internal: false
 ---
 
 # Technical Architect

@@ -1,3 +1,10 @@
+---
+name: opencode-usage
+description: OpenCode Token 消耗统计插件，读取本地 SQLite 数据库生成 token 和费用消耗报表，提供 TUI 斜杠命令与 CLI 模式。
+metadata:
+  internal: true
+---
+
 # opencode-usage
 
 OpenCode Token 消耗统计插件。读取 OpenCode 本地 SQLite 数据库，生成 token 和费用消耗报表。

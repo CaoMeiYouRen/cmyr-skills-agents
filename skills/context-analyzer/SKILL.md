@@ -1,6 +1,9 @@
 ---
 name: context-analyzer
 description: 在动手规划、修改、调试或回答复杂项目问题前使用。用于快速扫描项目结构、依赖、约束文档、关键文件和调用链，输出任务相关上下文，而不是直接改代码。用户提到 analyze context、scan repo、understand project、定位实现、找规范、排查调用链时都应触发。
+
+metadata:
+  internal: false
 ---
 
 # Context Analyzer

@@ -1,6 +1,9 @@
 ---
 name: documentation-specialist
 description: 查阅、生成、更新、对齐和审校项目文档时使用。适用于 README、设计说明、变更说明、技能文档、计划文档与规范文档，不假设文档一定在 docs/ 目录下。用户提到 docs、documentation、README、设计文档、同步文档、更新说明时都应触发。
+
+metadata:
+  internal: false
 ---
 
 # Documentation Specialist

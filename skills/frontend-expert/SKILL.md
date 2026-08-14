@@ -1,6 +1,9 @@
 ---
 name: frontend-expert
 description: 设计或实现 Vue 3、Nuxt、React 兼容组件、页面、样式、交互、表单、状态绑定与 i18n 文本时使用。用户提到 component、page、UI、frontend、form、responsive、SCSS、BEM、dark mode、accessibility、i18n、设计落地时都应触发。
+
+metadata:
+  internal: false
 ---
 
 # Frontend Expert

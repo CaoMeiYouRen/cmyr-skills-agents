@@ -1,6 +1,9 @@
 ---
 name: multi-repo-alert-remediator
 description: 批量拉取当前用户所有 GitHub 仓库的 Dependabot / Code Scanning 安全告警，并按仓库落地到本地逐仓库修复。用户提到 batch fix security alerts、multi-repo security、批量修复告警、多仓库安全告警、跨仓库 Dependabot 修复、扫描所有仓库安全漏洞、all repos security alerts、GitHub security alerts 批量处理时都应触发。多仓库跑时默认委托子 agent 逐仓库执行以避免主上下文膨胀；环境中存在 dependfix-remediator 技能时优先使用 dependfix 进行依赖修复，否则复用 security-alert-remediator 流程。适用于同时在多个项目中维护依赖安全、定期巡检所有个人仓库安全状况、或需要在多仓库间按优先级逐仓库修复告警的场景。
+
+metadata:
+  internal: true
 ---
 
 # Multi-Repo Alert Remediator

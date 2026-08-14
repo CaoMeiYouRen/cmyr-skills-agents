@@ -1,6 +1,9 @@
 ---
 name: super-search
 description: "通用网页搜索、爬取、交叉验证与研究报告生成。用户说 search、搜索、查一下、帮我搜、调研、collect information、find sources、verify facts、交叉比对、验证真实性、收集资料、整理信息、查证某个说法、看看网上怎么说、有没有证据支持、信息可信度如何时触发。自动搜索多源内容，抓取并缓存，分析内容质量（评分仅作参考，低质直接舍弃），交叉比对事实一致性，对高严谨度内容（医学、法律、金融等）自动触发对抗性审查。最终输出结构化研究报告到指定目录。≠ hv-analysis（那是深度产品/公司分析框架）。"
+
+metadata:
+  internal: false
 ---
 
 # Super Search

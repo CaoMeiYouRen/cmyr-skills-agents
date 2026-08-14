@@ -1,6 +1,9 @@
 ---
 name: conventional-committer
 description: 需要生成 Conventional Commit 提交消息并执行单次提交时使用。适用于 feat、fix、docs、refactor、test、build、ci、chore 等常规提交场景。先检查质量门，再分析 diff，再生成符合 commitlint 预期的消息。
+
+metadata:
+  internal: false
 ---
 
 # Conventional Committer

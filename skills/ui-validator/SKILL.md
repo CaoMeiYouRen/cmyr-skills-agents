@@ -1,6 +1,9 @@
 ---
 name: ui-validator
 description: 任何可见 UI 改动、交互变更、样式修复、响应式适配、暗色模式适配和浏览器侧回归验证都应使用。它负责在真实页面中验证实际渲染效果，而不是只看代码。用户提到 UI validate、screenshot、browser check、responsive、dark mode、视觉回归时都应触发。
+
+metadata:
+  internal: false
 ---
 
 # UI Validator

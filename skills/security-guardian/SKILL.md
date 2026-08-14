@@ -1,6 +1,9 @@
 ---
 name: security-guardian
 description: 对鉴权、权限、输入处理、数据写入、依赖配置、密钥、日志和外部调用进行安全审计时使用。用户提到 security、auth、permission、vulnerability、secret、injection、审计登录逻辑、权限合规时都应触发。
+
+metadata:
+  internal: false
 ---
 
 # Security Guardian

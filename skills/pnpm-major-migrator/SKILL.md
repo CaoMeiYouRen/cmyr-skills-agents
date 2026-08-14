@@ -1,6 +1,9 @@
 ---
 name: pnpm-major-migrator
 description: 迁移 pnpm 大版本（major）及其项目配置时使用。适用于用户提到 upgrade pnpm major、pnpm v10 to v11、pnpm migration、迁移 pnpm 版本、lockfile 升级、pnpm-workspace.yaml 迁移、.npmrc 配置迁移、GitHub Actions pnpm 版本对齐。当前优先覆盖 v10 到 v11，并保留后续 v12+ 的可扩展流程。
+
+metadata:
+  internal: true
 ---
 
 # Pnpm Major Migrator

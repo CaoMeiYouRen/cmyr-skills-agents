@@ -1,6 +1,9 @@
 ---
 name: backend-expert
 description: 设计或实现后端 API、服务层、数据库读写、鉴权权限控制、输入校验、事务处理与错误处理时使用。用户提到 API、route、handler、server、auth、permission、drizzle、database、zod、Hono、Nuxt server routes、backend bug 修复时都应触发。
+
+metadata:
+  internal: false
 ---
 
 # Backend Expert

@@ -1,6 +1,9 @@
 ---
 name: code-reviewer
 description: 审查当前 git 变更、PR、提交范围、技能定义文件、架构调整或安全敏感代码时使用。覆盖正确性、安全、架构、SOLID、可删除代码、性能、异常处理与测试风险；默认只输出 review，不直接修改代码。用户提到 review、code review、PR 审查、deep review、code review expert、senior review、security audit、merge ready、SOLID、架构审查时都应触发。
+
+metadata:
+  internal: false
 ---
 
 # Code Reviewer

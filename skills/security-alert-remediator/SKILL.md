@@ -1,6 +1,9 @@
 ---
 name: security-alert-remediator
 description: 自动处理 GitHub security alerts 的依赖修复工作流。用户提到 auto fix security alerts、Dependabot alerts、code scanning、pnpm audit、frozen-lockfile、修复依赖漏洞、升级有安全告警的包、按 severity 过滤或优先处理 critical/high 告警时使用。支持从 GITHUB_TOKEN 读取 GitHub alerts，或在无 token 时回退到 pnpm audit；会先检查 Git 仓库是否干净、拉取远端更新、按严重级别和可修复性排序，再逐个依赖升级、修复 frozen-lockfile、执行 lint/test/build 并汇报未解决的 high+ 风险。用户显式要求时，也可启用更严格的过时 pnpm overrides 清理流程。
+
+metadata:
+  internal: true
 ---
 
 # Security Alert Remediator

@@ -1,6 +1,9 @@
 ---
 name: qa-assistant
 description: 只读问答场景使用。适用于从代码、配置、技能和文档中查证事实、解释实现、定位逻辑和总结约束，但不直接修改文件。用户提到“这个项目里哪里实现了 X”“目前规范怎么写”“帮我从代码里找答案”时都应触发。
+
+metadata:
+  internal: false
 ---
 
 # QA Assistant

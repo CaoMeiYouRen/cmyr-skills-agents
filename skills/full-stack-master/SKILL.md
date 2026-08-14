@@ -1,6 +1,9 @@
 ---
 name: full-stack-master
 description: 需要统筹需求澄清、上下文扫描、技术方案、前后端实现、UI 验证、测试、质量审查、文档同步和提交节奏时使用。它负责编排多技能协作，而不是亲自替代所有专业技能。用户提到 end-to-end workflow、全流程开发、从需求到提交、PDTFC+、多技能编排时都应触发。
+
+metadata:
+  internal: true
 ---
 
 # Full Stack Master

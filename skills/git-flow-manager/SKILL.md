@@ -1,6 +1,9 @@
 ---
 name: git-flow-manager
 description: 管理暂存策略、拆分提交、检查变更边界、维护提交顺序、生成变更记录和预判冲突时使用。适合多步交付而不只是单次 commit message 生成。用户提到 staging、split commits、git flow、changelog、release prep、冲突预警时都应触发。
+
+metadata:
+  internal: false
 ---
 
 # Git Flow Manager

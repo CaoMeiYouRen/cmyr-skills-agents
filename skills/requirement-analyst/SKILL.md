@@ -1,6 +1,9 @@
 ---
 name: requirement-analyst
 description: 在用户需求模糊、目标不清、验收标准缺失、范围过大或需要抽离真实意图时使用。它负责把“想做什么”转成可执行的目标、约束、验收标准和优先级。用户提到需求分析、澄清、规划、scope、acceptance criteria、产品目标时都应触发。
+
+metadata:
+  internal: false
 ---
 
 # Requirement Analyst
