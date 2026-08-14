@@ -70,15 +70,15 @@ node scripts/sync-agents-md.mjs --force
 3. `~/.copilot/AGENTS.md`
 4. `~/.cursorrules`
 
-### `setup-ai.ps1`
+### `setup-ai.mjs`
 
-创建符号链接，将项目中的 agents / skills 目录映射到常见 AI 助手的配置目录。
+创建符号链接，将项目中的 agents / skills 目录与 AGENTS.md 映射到常见 AI 助手的配置目录。跨平台（Windows 使用 junction / 文件符号链接，POSIX 使用相对路径符号链接），自动遍历所有 git worktree。
 
-```powershell
-.\scripts\setup-ai.ps1
+```bash
+node scripts/setup-ai.mjs
 ```
 
-创建的链接映射：
+创建的链接映射（权威源为顶层 `agents/`、`skills/`、`AGENTS.md`）：
 
 | 目标 | 源 |
 |------|-----|
@@ -91,3 +91,5 @@ node scripts/sync-agents-md.mjs --force
 | `.opencode/agents` | `agents/` |
 | `.opencode/skills` | `skills/` |
 | `CLAUDE.md` | `AGENTS.md` |
+
+> Windows 下文件符号链接（`CLAUDE.md`）需要开发者模式或管理员权限；目录链接使用 junction 无需特权。
