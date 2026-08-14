@@ -26,6 +26,7 @@
     "release": "semantic-release",
     "lint": "cross-env NODE_ENV=production eslint . --fix",
     "lint:md": "lint-md *.md .github/**/*.md skills/**/*.md --fix",
+    "test": "vitest run",
     "dev:tsdown": "cross-env NODE_ENV=development tsdown --watch",
     "commit": "cz",
     "prepare": "husky"
