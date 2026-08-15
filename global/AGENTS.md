@@ -39,6 +39,7 @@
 - **运行时**：Node.js LTS。
 - **类型检查**：`tsc --noEmit` 必须通过，不允许 `any` 逃逸。
 - **Python**：仅支持 Python 3（不支持 Python 2），覆盖最新几个 Python 3 版本。
+- **Windows Shell**：系统为 Windows 时，执行命令优先使用 PowerShell 7（`pwsh`），不使用 Windows PowerShell 5.1（`powershell.exe`）。
 
 ### 前端
 
