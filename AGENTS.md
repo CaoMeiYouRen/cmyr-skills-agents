@@ -104,6 +104,7 @@
 -   **[GitHub CLI](./skills/gh-cli/SKILL.md)**：通过 `gh` 命令行管理仓库、Issue、PR、Workflow、Release、Project、Codespace、API 与认证配置。
 -   **[DevOps Specialist](./skills/devops-specialist/SKILL.md)**：部署、CI/CD、容器和运行时配置变更。
 -   **[Pnpm Major Migrator](./skills/pnpm-major-migrator/SKILL.md)**：迁移 pnpm 大版本及相关配置，当前优先覆盖 v10 到 v11，并保留后续版本迁移扩展位。
+-   **[Nuxt WSL2 Build](./skills/nuxt-wsl2-build/SKILL.md)**：检测 Nuxt 构建/开发环境是否就绪（Windows 下强制 WSL2 + ext4），就绪则通过 WSL 执行构建/开发，未就绪则提醒配置或自主初始化；项目使用 Nuxt 但任务未涉及构建/开发时仅输出建议性告警。
 
 ## 规范与参考
 -   [About custom agents for GitHub Copilot](https://docs.github.com/en/copilot/concepts/agents/coding-agent/about-custom-agents)

@@ -70,6 +70,7 @@
 
 - **包管理**：优先 pnpm，兼容 npm / yarn。
 - **构建工具**：优先 tsdown（库）/ Vite（应用）。
+- **Nuxt 构建环境**：Windows 上 Nuxt 项目构建/开发必须走 WSL2 + ext4（项目放 WSL 内部文件系统，不使用 `/mnt/c`、`/mnt/d`）；任务涉及构建/开发时先检测 WSL2 环境并初始化或提醒配置，任务不涉及构建/开发时仅输出建议告警，不强制。
 - **发布**：优先 semantic-release 自动化版本发布。
 - **pnpm workspace 依赖同步**：新增运行时依赖包时，同步所有构建链（CI / Dockerfile / action / release）的 `--filter` 列表。
 - **tsdown external**：external 构建期不校验，发布前对实际产物运行冒烟。

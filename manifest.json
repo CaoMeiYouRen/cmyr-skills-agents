@@ -16,6 +16,7 @@
         { "name": "gh-cli", "internal": false },
         { "name": "git-flow-manager", "internal": false },
         { "name": "multi-repo-alert-remediator", "internal": true },
+        { "name": "nuxt-wsl2-build", "internal": true },
         { "name": "opencode-usage", "internal": true },
         { "name": "pnpm-major-migrator", "internal": true },
         { "name": "qa-assistant", "internal": false },
