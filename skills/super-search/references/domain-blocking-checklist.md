@@ -45,7 +45,7 @@ rg -rn "csdn\.net|CSDN" /opt/data/skills/super-search/ /opt/data/scripts/
 
 ## 案例：CSDN 封禁（2026-06-12）
 
-用户指令：「把CSDN屏蔽了，不在任何文章中使用来自CSDN的文章」
+用户指令：「把 CSDN 屏蔽了，不在任何文章中使用来自 CSDN 的文章」
 
 执行结果：
 - 6 个文件修改（analyze.ts / analyze.mjs / quality-criteria.md / source-priority.md / SKILL.md / content-curator.py）
