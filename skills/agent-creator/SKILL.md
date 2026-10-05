@@ -21,6 +21,8 @@ metadata:
 - [ ] Step 3: 设计 agent 边界
   - [ ] 3.1 明确 agent 的职责、输入、输出、接棒关系和不负责的事项。
   - [ ] 3.2 明确它集成哪些 skills，是否需要调用其他 agents。
+  - [ ] 3.3 判断是否需要 Why 层：高复用、有设计债或易被误删的 agent，补 `agents/.rationale/<name>.md`，按 [skill-creator 的 rationale 模板](../skill-creator/references/rationale-template.md) 写（放在点目录，避免被 agent 加载器当成 subagent 扫描）。
+  - [ ] 3.4 标出项目覆盖锚点：把项目可变参数（阈值、路径、角色矩阵）从正文剥离为默认值，声明覆盖读取位置与「默认 < 项目 < 会话」优先级。
 - [ ] Step 4: 编写或更新 .agent.md ⚠️ REQUIRED
   - [ ] 4.1 保持 frontmatter 可触发，正文包含角色设定、集成技能、参考文档、核心职责和协作工作流。
   - [ ] 4.2 不使用不存在的文档路径作为强制参考资料。
@@ -37,6 +39,9 @@ metadata:
 - 需要上下文隔离、多角色协作、分阶段接棒或专门治理职责时，优先考虑 agent。
 - 只是一个可复用工作流、检查清单或带 references/scripts 的任务时，优先考虑 skill。
 - 发现与现有能力高重叠时，默认补充现有 skill 或 agent，而不是创建新项。
+- 执行信息（做什么）与设计理由（为什么）分层：Why 层写入 `agents/.rationale/<name>.md`，只在重构、合并、降级或删除时加载，不内联进正文。
+- 每个 agent 都要能回答"什么条件下应删除或合并"；存在理由消失即进入弃用。
+- 项目可变参数写入项目 `AGENTS.md`（数据多时链到 `docs/standards/*`），agent 只保留默认值，不硬编码、不双写。
 
 ## 反模式
 
@@ -44,10 +49,13 @@ metadata:
 - 为了“看起来完整”创建一个和现有角色几乎重复的新 agent。
 - 把 agent 写成一个没有边界的万能执行器。
 - 在 agent 里引用不存在的 docs/ 路径或虚构流程。
+- 把"为什么"内联进 agent 正文，或把项目阈值、路径硬编码进角色定义。
 
 ## 交付前检查
 
 - [ ] 已明确这是 skill 问题还是 agent 问题。
 - [ ] 已审计现有 skills / agents，确认不是高重叠新增。
 - [ ] .agent.md 中职责、边界、接棒关系和集成技能清晰。
+- [ ] 高复用、高设计债或易被误删的 agent，已补 `agents/.rationale/<name>.md` 并写明失效判据。
+- [ ] 项目可变参数已剥离为默认值，覆盖位置与「默认 < 项目 < 会话」优先级已声明。
 - [ ] 已同步 AGENTS.md 或其他必要索引。

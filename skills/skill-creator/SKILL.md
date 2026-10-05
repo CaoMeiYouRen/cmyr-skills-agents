@@ -22,6 +22,8 @@ metadata:
 - [ ] Step 3: 设计技能架构 ⚠️ REQUIRED
   - [ ] 3.1 先决定 description、铁律、工作流、确认门、反模式和交付前检查。
   - [ ] 3.2 再决定是否需要参数系统、eval、benchmark 和 viewer。
+  - [ ] 3.3 判断是否需要 `references/rationale.md`：高复用、有设计债或容易被误删的技能必须补，按 [rationale-template.md](./references/rationale-template.md) 写；一次性、纯粹能力替代型的技能可以省略，并在正文说明省略理由。
+  - [ ] 3.4 标出项目覆盖锚点：把项目可变参数（阈值、路径、门禁）从正文剥离为默认值，声明覆盖读取位置与优先级。
 - [ ] Step 4: 编写触发面
   - [ ] 4.1 先写 description，覆盖真实触发语句和近义表达。
   - [ ] 4.2 所有 when-to-use 信息都放在 description，不放在正文。
@@ -50,6 +52,7 @@ metadata:
 - references/output-patterns.md：设计输出模板与交付清单时加载。
 - references/parameter-system.md：需要参数系统时加载。
 - references/architecture-guide.md：规划 references/、scripts/、assets/ 分层时加载。
+- references/rationale-template.md：编写 `references/rationale.md` 时加载。
 - references/schemas.md：编写 evals、grading 和 benchmark 数据时加载。
 - scripts/init_skill.mjs：初始化技能骨架。
 - scripts/quick_validate.mjs：快速校验 frontmatter 与目录结构。
@@ -60,8 +63,24 @@ metadata:
 ## 正文与 references 的拆分原则
 
 - 放在 SKILL.md：铁律、工作流主干、确认门、反模式、交付前检查。
-- 放在 references/：长清单、案例、设计理论、schema、评测说明。
+- 放在 references/：长清单、案例、设计理论、schema、评测说明、`rationale.md`。
 - 放在 scripts/：确定性、重复性高且值得节省 token 的操作。
+
+## Why 层与项目覆盖层（治理约定）
+
+技能内容按**读者**分四层，读者决定信息，而不是篇幅：
+
+| 层 | 载体 | 读者 | 加载时机 |
+| :--- | :--- | :--- | :--- |
+| 触发面 | `frontmatter.description` | 调度器 | 每次 |
+| 执行层（what/how） | `SKILL.md` 正文 | 执行者 | 每次 |
+| Why 层 | `references/rationale.md` | 维护者 | 仅重构 / 合并 / 降级 / 删除时 |
+| 项目覆盖层 | 项目 `AGENTS.md`（数据多时链到 `docs/standards/*`） | 项目 | 按需 |
+
+- **Why 层**回答：为什么存在、依赖哪些假设、何时应删除、哪些内容会随模型变强而冗余。它不参与触发，也不出现在执行路径上。
+- **项目覆盖层**只承载可变参数（阈值、路径、门禁、输出格式），默认读项目 `AGENTS.md`；优先级固定为「技能默认 < 项目覆盖 < 会话覆盖」，无覆盖时用技能默认值。
+- **单一事实源**：项目规范不在技能里双写，技能用一行锚点引用；项目规范与技能冲突时以项目规范为准。
+- **存在性判据**：技能的存在理由消失（场景不再存在、能力已被模型或自动化门禁覆盖）时，应进入弃用或删除，而不是以"以后可能用得上"长期保留。
 
 ## 设计原则
 
@@ -70,6 +89,7 @@ metadata:
 - 不要只做骨架改写而丢掉原技能里的项目特化规则。
 - 不要把 benchmark 当成所有技能的必选项。
 - 当需求本质是 agent 时，不要硬塞进 skill-creator 处理。
+- 不要把"为什么"内联进 SKILL.md，也不要把项目阈值、路径硬编码进正文。
 
 ## 反模式
 
@@ -83,6 +103,8 @@ metadata:
 - [ ] 已通过 git diff 或历史版本比对回收有价值的旧文本。
 - [ ] description 已覆盖触发场景和真实语句。
 - [ ] 正文只保留骨架，长文本已合理拆入 references/。
+- [ ] 高复用、高设计债或易被误删的技能，已补 `references/rationale.md`，并写明失效判据。
+- [ ] 项目可变参数已剥离为默认值，覆盖位置与「默认 < 项目 < 会话」优先级已声明。
 - [ ] 如运行 eval，JSON schema 与目录结构已对齐。
 - [ ] benchmark 结果已和真实输出一起分析，而不是只看分数。
 - [ ] 当前目录就是唯一 canonical skill 入口。
