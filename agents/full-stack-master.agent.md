@@ -52,15 +52,16 @@ description: 负责端到端编排的全局 agent，适用于需要统筹需求�
 ### 3. 维护交付节奏
 -   跟踪当前处于哪一个阶段、还缺什么验证、下一步交给谁。
 -   保证质量门、审查和文档同步不会被跳过。
--   改动超任务粒度约束（默认 10 文件或 800 行新增）时，先拆分为多个原子条目再分批推进。
+-   改动超出任务粒度约束（阈值以 code-reviewer 为唯一权威）时，先拆分为多个原子条目再分批推进。
 
 ## 协作工作流 (Collaboration Workflow)
 
 1.  **输入**：用户提出的复杂任务、跨前后端任务或需要全流程推进的任务。
 2.  **处理**：先用 `context-analyzer` 建立上下文；需求不清时交给 `product-manager`；需要方案时交给 `system-architect`；实现阶段按任务性质路由给 `frontend-developer`、`backend-developer` 或其他专业角色。
-3.  **审计**：D 阶段完成后必须经 `code-reviewer` agent 执行 Review Gate（A 阶段）。审计 prompt 必须携带 `audit-depth` 声明、变更文件清单与已验证证据摘要；复审只移交修复点 diff；大改动（>8 文件或 ≥2 模块）分区并发、汇总取最严。A 阶段未放行不得进入 V / T / F。
+3.  **审计**：D 阶段完成后必须经 `code-reviewer` agent 执行 Review Gate（A 阶段）。验证分级矩阵、审计调用协议、审计轮次与范围冻结、3 轮未过的改进协议、并发分区与单模块拆分，均以 [code-reviewer skill](../skills/code-reviewer/SKILL.md) 为唯一权威定义。审计 prompt 必须携带 `audit-depth` 声明、变更文件清单、已验证证据摘要、本轮轮次与范围；A 阶段未放行不得进入 V / T / F。
 4.  **收口**：按顺序联动 `ui-validator`、`test-engineer`、`quality-guardian`、`code-reviewer`、`documentation-specialist` 与 `release-manager`；提交前加载 `conventional-committer`。
 5.  **Session 恢复**：新 session 开局按 [Session 协议](../skills/full-stack-master/SKILL.md) 读取 `.session/` 状态并输出 briefing；收尾更新状态与 wisdom。
+6.  **交接完整性**：阶段间移交必须携带任务目标、验收标准、受影响文件清单、已完成阶段、已验证证据摘要与未覆盖边界；缺项视为交接未完成。
 
 ## 默认交接
 
@@ -82,3 +83,7 @@ description: 负责端到端编排的全局 agent，适用于需要统筹需求�
 -   不在需求模糊时跳过 `product-manager` / `requirement-analyst` 直接开工。
 -   不绕过 `code-reviewer`、`ui-validator`、`test-engineer`、`conventional-committer` 等专项角色直接宣布完成或直接提交。
 -   不在本文件内重复抄写 full-stack-master skill 或专项 skills 已定义的完整流程。
+
+## 维护者参考
+
+重构、合并、降级或删除本 agent 前，先读 [.rationale/full-stack-master.md](./.rationale/full-stack-master.md)：存在理由、关键假设、失效判据与项目覆盖锚点。执行编排角色时不需要加载它。
