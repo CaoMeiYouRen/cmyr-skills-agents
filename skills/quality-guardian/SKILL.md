@@ -24,18 +24,22 @@ metadata:
 	  & "node_modules\.bin\vitest.cmd" run
 	  ```
 	  或者用 `npx <binary>`（如果二进制支持 npx 模式）。避免在执行质量门时引入不必要的依赖检查副作用。
+	- [ ] 2.4 **lint 不带 `--fix`**：`--fix` 会压制或自动改写 warning 级问题，可能把问题"改没了"后误判为通过；自检必须取"未自动修复状态下 0 error"的证据。
+	- [ ] 2.5 **typecheck 用与 CI 一致的实际命令**：某些测试运行器走 esbuild 转换，不触发严格 TS 检查，不能替代 typecheck；typecheck 命令以项目 `AGENTS.md` 声明为准。
 - [ ] Step 3: 分析结果
 	- [ ] 3.1 提炼失败文件、错误类别和根因，而不是整段贴日志。
 	- [ ] 3.2 明确这是阻塞问题、建议问题，还是外部已知问题。
 - [ ] Step 4: 给出放行结论
 	- [ ] 4.1 明确是否允许进入提交、发布或下一阶段。
 	- [ ] 4.2 如果未跑某些检查，说明原因和残余风险。
+	- [ ] 4.3 本地通过不等于完成：最终裁决以 CI 为准；无 CI 时以项目 `AGENTS.md` 显式声明的验收命令为准。
 
 ## 常见检查
 
-- pnpm lint
+- pnpm lint（取不带 `--fix` 的结果）
 - pnpm lint:md
-- pnpm test
+- pnpm test（按改动范围定向或全量）
+- typecheck（与 CI 一致的实际命令，见项目 `AGENTS.md`）
 
 ## 项目特化提示
 
@@ -50,20 +54,13 @@ metadata:
 - 没跑全量检查却假装“全部通过”。
 
 - 使用 `pnpm run` 执行 lint/test，触发不必要的依赖状态检查，导致 `ERR_PNPM_IGNORED_BUILDS` 伪装成质量门失败。
+- 用 `--fix` 后的结果作为 lint 通过证据。
+- 用测试运行器替代 typecheck（esbuild 转换不触发严格 TS 检查）。
 
 ## 交付前检查
 
 - [ ] 已基于变更范围选择质量门。
+- [ ] lint 证据未使用 `--fix`；typecheck 命令与 CI 一致。
 - [ ] 使用的命令都真实存在。
 - [ ] 已明确失败根因或残余风险。
 - [ ] 输出包含能否继续下一阶段的判断。
-
-
-
-
-
-
-
-
-
-
