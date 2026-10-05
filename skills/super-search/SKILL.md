@@ -491,3 +491,7 @@ Ask:
 - 脚本不直接依赖任何具体的 search/fetch API
 - 缓存路径可由用户通过 `--cache-dir` 覆盖
 - 所有时间敏感操作记录时间戳
+
+## 维护者参考
+
+重构、合并、降级或删除本技能前，先读 [references/rationale.md](./references/rationale.md)：两条第一性原理、关键假设、失效判据与项目覆盖锚点。执行搜索时不需要加载它。
