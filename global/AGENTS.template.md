@@ -159,6 +159,17 @@
 
 <!-- TODO: 项目特有的关键依赖及其用途 -->
 
+### 技能与资产覆盖
+
+> 技能只保留通用默认值；此处声明项目覆盖，优先级为「技能默认 < 项目覆盖 < 会话覆盖」。
+> 覆盖项较多时，删掉此处内容，改为一行链接到 `docs/standards/*`。
+
+<!-- TODO: 按需覆盖，例如：
+- code-reviewer：diff 规模阈值 10 文件 / 800 行新增；证据目录 artifacts/review-gate/
+- full-stack-master：任务粒度阈值；session 目录 .session/
+- super-search：报告输出目录 research-output/
+-->
+
 ---
 
 ## 参考
