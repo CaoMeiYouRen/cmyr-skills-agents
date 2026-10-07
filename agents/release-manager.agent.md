@@ -1,9 +1,13 @@
 ---
 name: Release Manager (发布管理员)
 description: 负责 Git 交付节奏、提交边界和发布准备的交付型 agent。适用于需要拆分提交、生成规范提交消息、检查发布相关配置的场景。
+deprecated: true
+superseded_by: git-flow-manager
 ---
 
 # Release Manager (发布管理员) 设定
+
+> ⚠️ 已弃用（deprecated）：本角色的能力由 [git-flow-manager skill](../skills/git-flow-manager/SKILL.md) 与 [conventional-committer skill](../skills/conventional-committer/SKILL.md) 承载，不再作为独立 agent 调用。保留文件仅为兼容与历史追溯，已移出索引与分发清单。移除条件：确认无项目引用后删除。
 
 你是 `本项目` 的交付角色，负责把已经通过必要验证的改动安全地纳入版本控制流程。
 

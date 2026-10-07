@@ -6,6 +6,7 @@
  * 2. 每个技能 SKILL.md frontmatter 的 metadata.internal 与 manifest 一致
  * 3. agents/ 目录集合与 manifest.agents 一一对应
  * 4. l0Selection 引用的文件、技能、agent 均真实存在
+ * 5. manifest.deprecated 中的技能/agent 必须真实存在，且不得进入 l0Selection
  *
  * 用法：node scripts/verify-manifest.mjs
  * 导出 verifyManifest 纯函数便于单测。
@@ -104,6 +105,29 @@ export function verifyManifest(repoRoot) {
     for (const agent of manifest.l0Selection?.agents ?? []) {
         if (!manifestAgents.includes(agent)) {
             errors.push(`l0Selection agent 不存在于 manifest: ${agent}`)
+        }
+    }
+
+    // 弃用清单校验：必须真实存在，且不得进入 l0Selection
+    const deprecatedSkills = manifest.deprecated?.skills ?? []
+    const deprecatedAgents = manifest.deprecated?.agents ?? []
+    const l0Skills = manifest.l0Selection?.skills ?? []
+    const l0Agents = manifest.l0Selection?.agents ?? []
+
+    for (const name of deprecatedSkills) {
+        if (!actualSkills.includes(name)) {
+            errors.push(`deprecated skill 不存在: ${name}（已删除的定义应移出 deprecated 清单）`)
+        }
+        if (l0Skills.includes(name)) {
+            errors.push(`deprecated skill 不得进入 l0Selection: ${name}`)
+        }
+    }
+    for (const name of deprecatedAgents) {
+        if (!actualAgents.includes(name)) {
+            errors.push(`deprecated agent 不存在: ${name}（已删除的定义应移出 deprecated 清单）`)
+        }
+        if (l0Agents.includes(name)) {
+            errors.push(`deprecated agent 不得进入 l0Selection: ${name}`)
         }
     }
 

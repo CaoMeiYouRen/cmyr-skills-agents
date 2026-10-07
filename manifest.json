@@ -44,6 +44,18 @@
         "test-engineer",
         "ui-validator"
     ],
+    "deprecated": {
+        "skills": [],
+        "agents": [
+            "backend-developer",
+            "documentation-specialist",
+            "frontend-developer",
+            "quality-guardian",
+            "release-manager",
+            "system-architect",
+            "test-engineer"
+        ]
+    },
     "l0Selection": {
         "description": "供 cmyr-template-cli 静态植入新项目的 L0 通用 AI 基建资产（模板直出、零改写），详情引用而非复制。",
         "files": [
