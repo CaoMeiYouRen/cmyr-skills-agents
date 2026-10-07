@@ -53,6 +53,7 @@ metadata:
 - references/parameter-system.md：需要参数系统时加载。
 - references/architecture-guide.md：规划 references/、scripts/、assets/ 分层时加载。
 - references/rationale-template.md：编写 `references/rationale.md` 时加载。
+- references/project-overlay.md：设计技能的项目覆盖层、提高跨项目复用时加载。
 - references/schemas.md：编写 evals、grading 和 benchmark 数据时加载。
 - scripts/init_skill.mjs：初始化技能骨架。
 - scripts/quick_validate.mjs：快速校验 frontmatter 与目录结构。
@@ -75,10 +76,10 @@ metadata:
 | 触发面 | `frontmatter.description` | 调度器 | 每次 |
 | 执行层（what/how） | `SKILL.md` 正文 | 执行者 | 每次 |
 | Why 层 | `references/rationale.md` | 维护者 | 仅重构 / 合并 / 降级 / 删除时 |
-| 项目覆盖层 | 项目 `AGENTS.md`（数据多时链到 `docs/standards/*`） | 项目 | 按需 |
+| 项目覆盖层 | 项目 `.ai/overrides/skills/<name>.md`（全局参数写项目 `AGENTS.md`） | 项目 | 每次（存在时） |
 
 - **Why 层**回答：为什么存在、依赖哪些假设、何时应删除、哪些内容会随模型变强而冗余。它不参与触发，也不出现在执行路径上。
-- **项目覆盖层**只承载可变参数（阈值、路径、门禁、输出格式），默认读项目 `AGENTS.md`；优先级固定为「技能默认 < 项目覆盖 < 会话覆盖」，无覆盖时用技能默认值。
+- **项目覆盖层**承载项目差异：单能力的追加规则 / 参数覆盖写入 `.ai/overrides/skills/<name>.md`，只写差异、不抄核心；跨能力全局参数写项目 `AGENTS.md`，项目规范写 `docs/standards/*`。优先级固定为「技能默认 < 项目覆盖 < 会话覆盖」。详见 [project-overlay.md](./references/project-overlay.md)。
 - **单一事实源**：项目规范不在技能里双写，技能用一行锚点引用；项目规范与技能冲突时以项目规范为准。
 - **存在性判据**：技能的存在理由消失（场景不再存在、能力已被模型或自动化门禁覆盖）时，应进入弃用或删除，而不是以"以后可能用得上"长期保留。
 

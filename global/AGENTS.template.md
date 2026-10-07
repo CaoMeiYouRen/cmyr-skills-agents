@@ -161,13 +161,24 @@
 
 ### 技能与资产覆盖
 
-> 技能只保留通用默认值；此处声明项目覆盖，优先级为「技能默认 < 项目覆盖 < 会话覆盖」。
-> 覆盖项较多时，删掉此处内容，改为一行链接到 `docs/standards/*`。
+> 能力（技能 / agent）只保留通用默认值；项目差异分两处承载，优先级为「技能默认 < 项目覆盖 < 会话覆盖」。
+>
+> - **跨能力全局参数**（阈值、命令、路径、门禁）：写在本文件下方。
+> - **单个能力的行为差异**（追加必查项、覆盖某默认参数）：写入 `.ai/overrides/skills/<name>.md` 或 `.ai/overrides/agents/<name>.md`；只写差异，不抄写核心已有条款。
+> - **项目规范本身**：写入 `docs/standards/*`。
 
-<!-- TODO: 按需覆盖，例如：
+<!-- TODO: 按需覆盖。全局参数示例：
 - code-reviewer：diff 规模阈值 10 文件 / 800 行新增；证据目录 artifacts/review-gate/
 - full-stack-master：任务粒度阈值；session 目录 .session/
 - super-search：报告输出目录 research-output/
+-->
+
+<!-- TODO: 单能力覆盖示例（.ai/overrides/skills/code-reviewer.md）：
+# code-reviewer 项目覆盖
+## 追加必查项
+- 浮层 / portal 改动必须核验宿主页面稳定性（见 docs/standards/testing.md）
+## 覆盖默认参数
+- diff 规模阈值 = 8 文件 / 500 行
 -->
 
 ---

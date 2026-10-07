@@ -43,6 +43,9 @@ metadata:
 - 每个 agent 都要能回答"什么条件下应删除或合并"；存在理由消失即进入弃用。
 - 项目可变参数写入项目 `AGENTS.md`（数据多时链到 `docs/standards/*`），agent 只保留默认值，不硬编码、不双写。
 - 项目内已有同名技能时，用相对路径链接到项目内定义，禁止裸名引用（裸名会解析到全局同名技能）。
+- 项目覆盖层：agent 的项目差异写入 `.ai/overrides/agents/<name>.md`，只写差异、不抄核心；约定见 [project-overlay.md](../skill-creator/references/project-overlay.md)。
+- 与同名 skill 能力重叠时，优先保留 skill；agent 降级为 `deprecated`，避免"同一能力两个载体"。
+- 弃用生命周期：存在理由消失（不再需要独立上下文隔离、能力已被 skill 或模型覆盖）时进入 `deprecated`——保留文件、移出索引与分发清单、写明替代方案与移除条件，不直接删除、不以"以后可能用得上"长期保留。
 
 ## 反模式
 
@@ -59,4 +62,5 @@ metadata:
 - [ ] .agent.md 中职责、边界、接棒关系和集成技能清晰。
 - [ ] 高复用、高设计债或易被误删的 agent，已补 `agents/.rationale/<name>.md` 并写明失效判据。
 - [ ] 项目可变参数已剥离为默认值，覆盖位置与「默认 < 项目 < 会话」优先级已声明。
+- [ ] 若与同名 skill 能力重叠，已评估是否应降级为 `deprecated` 而非保留独立 agent。
 - [ ] 已同步 AGENTS.md 或其他必要索引。
