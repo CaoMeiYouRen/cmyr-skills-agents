@@ -10,6 +10,8 @@ metadata:
 
 铁律：不要只给“要改哪些文件”，还要说明为什么改、先后顺序和风险边界。
 
+> 项目覆盖：若存在 `.ai/overrides/skills/technical-architect.md`，先加载并按其规则执行；冲突时以覆盖文件为准（优先级：会话 > 项目覆盖 > 核心默认）。
+
 ## 工作流
 
 - [ ] Step 1: 建立现状模型 ⚠️ REQUIRED

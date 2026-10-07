@@ -7,6 +7,7 @@
  * 3. agents/ 目录集合与 manifest.agents 一一对应
  * 4. l0Selection 引用的文件、技能、agent 均真实存在
  * 5. manifest.deprecated 中的技能/agent 必须真实存在，且不得进入 l0Selection
+ * 6. l0Selection 中的技能/agent 必须声明项目覆盖锚点（.ai/overrides/...），保证覆盖层可被加载
  *
  * 用法：node scripts/verify-manifest.mjs
  * 导出 verifyManifest 纯函数便于单测。
@@ -128,6 +129,26 @@ export function verifyManifest(repoRoot) {
         }
         if (l0Agents.includes(name)) {
             errors.push(`deprecated agent 不得进入 l0Selection: ${name}`)
+        }
+    }
+
+    // L0 能力必须声明项目覆盖锚点，否则覆盖层无法被加载
+    for (const skill of l0Skills) {
+        const skillMdPath = path.join(skillsDir, skill, 'SKILL.md')
+        if (!existsSync(skillMdPath)) {
+            continue
+        }
+        if (!readFileSync(skillMdPath, 'utf8').includes(`.ai/overrides/skills/${skill}.md`)) {
+            errors.push(`L0 技能缺少项目覆盖锚点: ${skill}（应声明 .ai/overrides/skills/${skill}.md）`)
+        }
+    }
+    for (const agent of l0Agents) {
+        const agentPath = path.join(agentsDir, `${agent}.agent.md`)
+        if (!existsSync(agentPath)) {
+            continue
+        }
+        if (!readFileSync(agentPath, 'utf8').includes(`.ai/overrides/agents/${agent}.md`)) {
+            errors.push(`L0 agent 缺少项目覆盖锚点: ${agent}（应声明 .ai/overrides/agents/${agent}.md）`)
         }
     }
 

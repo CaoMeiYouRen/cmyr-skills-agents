@@ -15,7 +15,10 @@ function createFixtureRepo({ manifest, skills = [], agents = [], files = [] }) {
     for (const name of agents) {
         const dir = path.join(root, 'agents')
         mkdirSync(dir, { recursive: true })
-        writeFileSync(path.join(dir, `${name}.agent.md`), '---\n---\n')
+        writeFileSync(
+            path.join(dir, `${name}.agent.md`),
+            `---\nname: ${name}\n---\n\n> 项目覆盖：若存在 \`.ai/overrides/agents/${name}.md\`，先加载并按其规则执行。\n`,
+        )
     }
     for (const file of files) {
         const fullPath = path.join(root, file)
@@ -41,10 +44,13 @@ function validManifest() {
     }
 }
 
-function writeSkill(repoRoot, name, internal) {
+function writeSkill(repoRoot, name, internal, { withOverlayAnchor = true } = {}) {
+    const anchor = withOverlayAnchor
+        ? `\n> 项目覆盖：若存在 \`.ai/overrides/skills/${name}.md\`，先加载并按其规则执行。\n`
+        : ''
     writeFileSync(
         path.join(repoRoot, 'skills', name, 'SKILL.md'),
-        `---\nname: ${name}\nmetadata:\n  internal: ${internal}\n---\n`,
+        `---\nname: ${name}\nmetadata:\n  internal: ${internal}\n---\n${anchor}`,
     )
 }
 
@@ -184,6 +190,45 @@ describe('verifyManifest', () => {
         const result = verifyManifest(root)
         expect(result.ok).toBe(false)
         expect(result.errors.some((e) => e.includes('deprecated agent 不得进入 l0Selection: full-stack-master'))).toBe(true)
+
+        rmSync(root, { recursive: true, force: true })
+    })
+
+    it('L0 技能缺少项目覆盖锚点时报错', () => {
+        const root = createFixtureRepo({
+            manifest: validManifest(),
+            skills: ['code-reviewer', 'full-stack-master'],
+            agents: ['code-reviewer', 'full-stack-master'],
+            files: ['global/AGENTS.template.md'],
+        })
+        writeSkill(root, 'code-reviewer', false, { withOverlayAnchor: false })
+        writeSkill(root, 'full-stack-master', true)
+
+        const result = verifyManifest(root)
+        expect(result.ok).toBe(false)
+        expect(result.errors.some((e) => e.includes('L0 技能缺少项目覆盖锚点: code-reviewer'))).toBe(true)
+
+        rmSync(root, { recursive: true, force: true })
+    })
+
+    it('L0 agent 缺少项目覆盖锚点时报错', () => {
+        const manifest = validManifest()
+        manifest.l0Selection.agents = ['full-stack-master']
+
+        const root = createFixtureRepo({
+            manifest,
+            skills: ['code-reviewer', 'full-stack-master'],
+            agents: ['code-reviewer', 'full-stack-master'],
+            files: ['global/AGENTS.template.md'],
+        })
+        writeSkill(root, 'code-reviewer', false)
+        writeSkill(root, 'full-stack-master', true)
+        // 覆盖写入一个缺少锚点的 agent 文件
+        writeFileSync(path.join(root, 'agents', 'full-stack-master.agent.md'), '---\nname: full-stack-master\n---\n')
+
+        const result = verifyManifest(root)
+        expect(result.ok).toBe(false)
+        expect(result.errors.some((e) => e.includes('L0 agent 缺少项目覆盖锚点: full-stack-master'))).toBe(true)
 
         rmSync(root, { recursive: true, force: true })
     })

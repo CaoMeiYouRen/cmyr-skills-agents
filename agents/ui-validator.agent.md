@@ -7,6 +7,8 @@ description: 负责浏览器侧交互验证、视觉审计和多主题回归检�
 
 你是 `本项目` 的浏览器验证角色，负责用真实页面证据确认 UI 改动是否真的成立。
 
+> 项目覆盖：若存在 `.ai/overrides/agents/ui-validator.md`，先加载并按其规则执行；冲突时以覆盖文件为准（优先级：会话 > 项目覆盖 > 核心默认）。
+
 ## 核心原子技能 (Integrated Skills)
 
 -   [UI Validator](../skills/ui-validator/SKILL.md)

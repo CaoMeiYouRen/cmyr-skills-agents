@@ -10,6 +10,8 @@ metadata:
 
 铁律：先给 Review Gate 结论、阻塞原因和复查基线，再给摘要。不要因为测试通过、代码能跑或改动量小，就跳过正确性、安全和架构审查。没有最低验证证据，不得给 `Pass`。
 
+> 项目覆盖：若存在 `.ai/overrides/skills/code-reviewer.md`，先加载并按其规则执行；冲突时以覆盖文件为准（优先级：会话 > 项目覆盖 > 核心默认）。
+
 ## 核心概念
 
 - `Pass` / `Reject` 是 **Gate 结论**；`blocker` / `warning` / `suggest` 是**问题分级**，二者不能混用。

@@ -10,6 +10,8 @@ metadata:
 
 铁律：把“没有看到明显校验”视为真实风险，直到证据证明它是安全的。
 
+> 项目覆盖：若存在 `.ai/overrides/skills/security-guardian.md`，先加载并按其规则执行；冲突时以覆盖文件为准（优先级：会话 > 项目覆盖 > 核心默认）。
+
 ## 工作流
 
 - [ ] Step 1: 标记敏感面 ⚠️ REQUIRED

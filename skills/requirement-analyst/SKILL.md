@@ -10,6 +10,8 @@ metadata:
 
 铁律：不要把模糊想法直接推进成实现任务，先把目标、边界和验收标准说清楚。
 
+> 项目覆盖：若存在 `.ai/overrides/skills/requirement-analyst.md`，先加载并按其规则执行；冲突时以覆盖文件为准（优先级：会话 > 项目覆盖 > 核心默认）。
+
 ## 工作流
 
 - [ ] Step 1: 提炼目标 ⚠️ REQUIRED

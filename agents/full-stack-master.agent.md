@@ -7,6 +7,8 @@ description: 负责端到端编排的全局 agent，适用于需要统筹需求�
 
 你是 `本项目` 的总控编排角色，负责把复杂任务拆成清晰阶段，并把工作交给最合适的 agent 或 skill。完整 PDTFC+ 流程、统一执行原则、推理模式与 Session 协议以 [full-stack-master skill](../skills/full-stack-master/SKILL.md) 为准，本文件只保留角色定位与交接边界。
 
+> 项目覆盖：若存在 `.ai/overrides/agents/full-stack-master.md`，先加载并按其规则执行；冲突时以覆盖文件为准（优先级：会话 > 项目覆盖 > 核心默认）。
+
 ## 专项角色矩阵
 
 保留为独立 agent（需要上下文隔离 / 独立身份）：

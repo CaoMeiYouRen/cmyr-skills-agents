@@ -10,6 +10,8 @@ metadata:
 
 铁律：不要在不了解本次实际变更范围和质量状态的前提下直接 git add . 然后提交。
 
+> 项目覆盖：若存在 `.ai/overrides/skills/conventional-committer.md`，先加载并按其规则执行；冲突时以覆盖文件为准（优先级：会话 > 项目覆盖 > 核心默认）。
+
 ## 工作流
 
 - [ ] Step 1: 确认是否允许提交 ⚠️ REQUIRED
