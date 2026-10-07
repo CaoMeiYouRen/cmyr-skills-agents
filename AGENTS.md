@@ -44,6 +44,9 @@
 -   **Why 层原则**：技能/agent 的执行信息（做什么）与设计理由（为什么）分层。执行只读正文；高复用、有设计债或易被误删的能力补 Why 层文件（技能 `references/rationale.md`，agent `agents/.rationale/<name>.md`），记录存在理由、关键假设、失效判据与取舍，仅在重构、合并、降级或删除时加载。
 -   **存在性判据原则**：每个技能/agent 都要能回答"什么条件下应删除或合并"。存在理由消失（场景不再存在，或能力已被模型、自动化门禁覆盖）即进入弃用，不以"以后可能用得上"长期保留。
 -   **项目配置外置原则**：技能只保留通用默认；项目特有的阈值、路径、门禁、输出格式写入项目 `AGENTS.md`（数据多时由它一行链到 `docs/standards/*`），技能以锚点引用，不硬编码、不双写。优先级为「技能默认 < 项目覆盖 < 会话覆盖」。
+-   **项目覆盖层原则**：通用能力只在本仓库维护；对单个能力的行为差异写入项目 `.ai/overrides/skills/<name>.md` 或 `.ai/overrides/agents/<name>.md`，只写差异、不抄核心条款。跨能力全局参数写项目 `AGENTS.md`，项目规范写 `docs/standards/*`。约定见 [project-overlay.md](./skills/skill-creator/references/project-overlay.md)。
+-   **上游反馈原则**：下游项目发现通用改进时向本仓库提 issue，由上游更新 canonical 定义；不在下游 fork 中长期保留通用改动。
+-   **弃用生命周期**：能力存在理由消失（不再需要独立载体、已被模型或自动化覆盖）时进入 `deprecated`——保留文件、移出索引与分发清单，写明替代方案与移除条件，见 `manifest.json` 的 `deprecated` 字段。
 
 ## 项目架构
 -   **[Skills (技能)](./skills/)**：原子化工作流能力，存放在 `skills/` 目录下，每个技能包含一个 `SKILL.md`。
@@ -56,23 +59,22 @@
 -   **[Skill & Agent Governor](./agents/skill-agent-governor.agent.md)**：skills 与 agents 的准入判断、创建编排、规范审计与安全治理入口。
 -   **[Full Stack Master](./agents/full-stack-master.agent.md)**：跨阶段、跨角色的端到端编排者。
 
-### 规划与设计
+### 保留角色
 -   **[Product Manager](./agents/product-manager.agent.md)**：负责需求澄清、范围收敛与验收标准定义。
--   **[System Architect](./agents/system-architect.agent.md)**：负责技术方案、文件映射与风险预判。
-
-### 开发执行
--   **[Frontend Developer](./agents/frontend-developer.agent.md)**：负责前端实现，适用于只有前端或前端为主的开发任务。
--   **[Backend Developer](./agents/backend-developer.agent.md)**：负责后端实现，适用于只有后端或后端为主的开发任务。
-
-### 验证与审查
 -   **[UI Validator](./agents/ui-validator.agent.md)**：负责浏览器侧视觉与交互验证。
--   **[Test Engineer](./agents/test-engineer.agent.md)**：负责测试设计、补齐与失败分析。
--   **[Quality Guardian](./agents/quality-guardian.agent.md)**：负责质量门执行与放行判断。
 -   **[Code Reviewer](./agents/code-reviewer.agent.md)**：负责结构化代码审查与安全审计。
 
-### 文档与交付
--   **[Documentation Specialist](./agents/documentation-specialist.agent.md)**：负责文档同步、对齐和审校。
--   **[Release Manager](./agents/release-manager.agent.md)**：负责提交边界、提交消息与发布准备。
+### 已弃用（deprecated）
+
+以下 agent 的能力已由同名 skill 直接承载，保留文件但移出索引与分发清单（详见 `manifest.json` 的 `deprecated` 字段）：
+
+-   System Architect → `technical-architect` skill
+-   Frontend Developer → `frontend-expert` skill
+-   Backend Developer → `backend-expert` skill
+-   Test Engineer → `test-engineer` skill
+-   Quality Guardian → `quality-guardian` skill
+-   Documentation Specialist → `documentation-specialist` skill
+-   Release Manager → `git-flow-manager` / `conventional-committer` skill
 
 ## Skills 索引
 
@@ -112,6 +114,8 @@
 -   **[Nuxt WSL2 Build](./skills/nuxt-wsl2-build/SKILL.md)**：检测 Nuxt 构建/开发环境是否就绪（Windows 下强制 WSL2 + ext4），就绪则通过 WSL 执行构建/开发，未就绪则提醒配置或自主初始化；项目使用 Nuxt 但任务未涉及构建/开发时仅输出建议性告警。
 
 ## 规范与参考
+-   [下游项目迁移参考方案](./docs/downstream-migration.md)：把项目内 fork 的能力迁移到「核心 + 覆盖层」，提高跨项目复用率。
+-   [项目覆盖层约定](./skills/skill-creator/references/project-overlay.md)：`.ai/overrides/{skills,agents}/<name>.md` 的写法与组合语义。
 -   [About custom agents for GitHub Copilot](https://docs.github.com/en/copilot/concepts/agents/coding-agent/about-custom-agents)
 -   [About agent skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills?versionId=free-pro-team%40latest&productId=copilot&restPage=concepts%2Cagents%2Ccoding-agent%2Cabout-custom-agents)
 
