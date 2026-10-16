@@ -5,7 +5,7 @@ packages: []
 overrides:
   vite: ^7.3.5
   piscina: ^4.9.4
-  undici: ^7.29.1
+  undici: 7.29.1
   fast-uri: ^3.1.7
   semver: ^7.7.3
   "@typescript-eslint/parser": ^8.54.0
@@ -16,7 +16,7 @@ overrides:
   "@typescript-eslint/visitor-keys": ^8.54.0
   "@typescript-eslint/typescript-estree": ^8.54.0
   compare-func: ^2.0.0
-  katex: ^0.16.21
+  katex: ^0.18.2
   esbuild: ^0.25.0
   "@octokit/plugin-paginate-rest": ^11.4.1
   "@octokit/request": ^9.2.1
@@ -39,6 +39,7 @@ overrides:
   tmp: ^0.2.6
   js-yaml: ^4.3.2
   postcss: ^8.5.23
+  source-map-js: ^1.2.2
 onlyBuiltDependencies:
   - esbuild
   - nice-napi
