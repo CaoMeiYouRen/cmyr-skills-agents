@@ -6,6 +6,8 @@ metadata:
   internal: true
 ---
 
+> ⚠️ 已弃用（deprecated）：保留文件仅供回溯，不再进入索引、L0 分发与推荐路径。替代：dependfix 项目本体能力（`@dependfix/skills` 的 `dependfix-remediator`）。
+
 # Security Alert Remediator
 
 铁律：不要在脏工作区里批量升级依赖，也不要把多个无关安全升级塞进同一批修复并跳过验证。

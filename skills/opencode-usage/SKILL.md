@@ -5,6 +5,8 @@ metadata:
   internal: true
 ---
 
+> ⚠️ 已弃用（deprecated）：保留文件仅供回溯，不再进入索引、L0 分发与推荐路径。替代：直接使用对应的 CLI / 插件，不需要技能封装。
+
 # opencode-usage
 
 OpenCode Token 消耗统计插件。读取 OpenCode 本地 SQLite 数据库，生成 token 和费用消耗报表。

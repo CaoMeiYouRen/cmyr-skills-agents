@@ -6,6 +6,8 @@ metadata:
   internal: false
 ---
 
+> ⚠️ 已弃用（deprecated）：保留文件仅供回溯，不再进入索引、L0 分发与推荐路径。替代：项目特化技能（`nuxt-code-editor` / `vue-component-expert` / `vue-frontend-expert`）与项目 `docs/standards`；Nuxt 构建走 nuxt-wsl2-build。
+
 # Frontend Expert
 
 铁律：不要在没有确认信息结构、设计约束和文本国际化策略前直接堆界面代码。

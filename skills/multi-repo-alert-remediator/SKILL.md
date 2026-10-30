@@ -6,6 +6,8 @@ metadata:
   internal: true
 ---
 
+> ⚠️ 已弃用（deprecated）：保留文件仅供回溯，不再进入索引、L0 分发与推荐路径。替代：dependfix 的多仓库模式（`@dependfix/skills` 的 `dependfix-remediator`）。
+
 # Multi-Repo Alert Remediator
 
 铁律：先汇总、再排序、逐仓库修、每仓一提交、绝不推送。不要在一个脏工作区里开始，也不要把多仓库修复结果混进一个提交。
