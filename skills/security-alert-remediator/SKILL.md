@@ -6,7 +6,7 @@ metadata:
   internal: true
 ---
 
-> ⚠️ 已弃用（deprecated）：保留文件仅供回溯，不再进入索引、L0 分发与推荐路径。替代：dependfix 项目本体能力（`@dependfix/skills` 的 `dependfix-remediator`）。
+> ⚠️ 已弃用（deprecated）：保留文件仅供回溯，不再进入索引、L0 分发与推荐路径。替代：dependfix 项目本体能力（`@dependfix/skills` 的 `dependfix-remediator`）。移除条件：下游项目一个发布周期内无回退需求后再物理删除。
 
 # Security Alert Remediator
 

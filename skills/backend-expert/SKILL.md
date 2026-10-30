@@ -6,7 +6,7 @@ metadata:
   internal: false
 ---
 
-> ⚠️ 已弃用（deprecated）：保留文件仅供回溯，不再进入索引、L0 分发与推荐路径。替代：项目特化技能（如 `backend-logic-expert`）与项目 `docs/standards`；通用实现指导由项目覆盖层承载。
+> ⚠️ 已弃用（deprecated）：保留文件仅供回溯，不再进入索引、L0 分发与推荐路径。替代：项目特化技能（如 `backend-logic-expert`）与项目 `docs/standards`；通用实现指导由项目覆盖层承载。移除条件：下游项目一个发布周期内无回退需求后再物理删除。
 
 # Backend Expert
 

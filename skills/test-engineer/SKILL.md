@@ -10,6 +10,8 @@ metadata:
 
 铁律：测试要证明行为，而不是机械复刻实现细节。
 
+> 项目覆盖：若存在 `.ai/overrides/skills/test-engineer.md`，先加载并按其规则执行；冲突时以覆盖文件为准（优先级：会话 > 项目覆盖 > 核心默认）。
+
 ## 工作流
 
 - [ ] Step 1: 理解被测对象 ⚠️ REQUIRED

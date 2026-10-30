@@ -83,6 +83,8 @@
 - 校验：`.ai/manifest.json` 的哈希与项目 `.github/skills|agents` 逐文件比对，不一致即失败。
 - 覆盖层**不纳入**快照哈希（它是项目自有）。
 
+> 规范上游 `standards/` 目前不参与 L0 自动分发：项目按需复制到 `docs/standards/` 或与自有规范合并，见 [standards/README.md](../standards/README.md) §4。
+
 ---
 
 ## 6. 上游反馈（GitHub issue）

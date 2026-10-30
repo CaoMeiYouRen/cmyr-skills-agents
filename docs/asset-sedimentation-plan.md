@@ -107,7 +107,7 @@ flowchart LR
 
 ### 批次 A：Why 层补齐（P0）
 
-- **对象**：7 个 L0 技能（`context-analyzer`、`requirement-analyst`、`technical-architect`、`quality-guardian`、`security-guardian`、`conventional-committer`、`git-flow-manager`）+ 3 个活跃 agent（`skill-agent-governor`、`product-manager`、`ui-validator`）。
+- **对象**：当时的 7 个 L0 技能（`context-analyzer`、`requirement-analyst`、`technical-architect`、`quality-guardian`、`security-guardian`、`conventional-committer`、`git-flow-manager`）+ 3 个活跃 agent（`skill-agent-governor`、`product-manager`、`ui-validator`）。L0 清单已于 2026-10-30 调整，当前以 `manifest.json` 的 `l0Selection` 为准。
 - **动作**：按 [rationale-template.md](../skills/skill-creator/references/rationale-template.md) 编写，必须含 §5「能力替代 vs 不可推断」与 §6「项目覆盖锚点」。
 - **附带产出**：各技能 §6 的锚点表汇总为规范索引初稿。
 - **判据**：每个技能都能回答"什么条件下应删除或合并"。
@@ -118,7 +118,7 @@ flowchart LR
 - **决策点**：是否将 Review Gate 协议作为第一个"上游规范"。
 - **前置**：批次 A 的两份既有 Why（`full-stack-master`、`code-reviewer`）可作为范式。
 
-### 批次 C：规范体系地基
+### 批次 C：规范体系地基（2026-10-30：骨架已落在 `standards/`）
 
 - **C1 别名映射表**：登记同义不同名的技能 / 规范（如 `code-quality-auditor ↔ code-reviewer`、`backend-logic-expert ↔ backend-expert`）。这是自动 diff 的前置。
 - **C2 沉淀探针**：基于播种快照基线做 drift 检测，输出"该上移 / 该留项目"候选。必须与**播种时基线**比对，而非最新上游。

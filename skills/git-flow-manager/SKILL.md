@@ -6,6 +6,8 @@ metadata:
   internal: false
 ---
 
+> ⚠️ 已弃用（deprecated）：提交拆分与顺序已并入 conventional-committer 的 [references/commit-splitting.md](../conventional-committer/references/commit-splitting.md)；本文件保留供回溯，不再分发。移除条件：下游项目一个发布周期内无回退需求后再物理删除。
+
 # Git Flow Manager
 
 铁律：不要把一串无关改动塞进同一次提交，也不要在没有质量门结果时安排提交流程。

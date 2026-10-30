@@ -38,7 +38,7 @@
 -   **技能引用路径**：项目内已有同名技能时，技能/agent 必须用相对路径链接到项目内定义，禁止裸名引用（裸名会解析到全局同名技能）。
 -   **脚本内聚原则**：script 是 skill 的实现资产，不应要求用户在任务入口层面单独理解和选择。
 -   **角色收壳原则**：agent 负责身份、边界和接棒关系；具体规则优先下沉到 skill。
--   **问答能力下沉**：只读问答由 [QA Assistant](./skills/qa-assistant/SKILL.md) skill 承载，不再保留独立 QA agent。
+-   **问答能力下沉**：只读问答由 [Context Analyzer](./skills/context-analyzer/SKILL.md) 的「问答模式（只读）」承载，不再保留独立 QA agent。
 -   **性能下限原则**：新增或准入的智能体，其基础能力不应低于 Gemini 3 Flash / Claude Sonnet 4.5 / GPT-5 这一档的大模型水平。
 -   **成本纪律原则**：默认低成本模型（如 Flash 档）主力执行，按需切换更强模型；监控渠道/项目用量，防止单一模型消耗失控（历史教训：单月 96% 额度被单一模型消耗）。
 -   **Why 层原则**：技能/agent 的执行信息（做什么）与设计理由（为什么）分层。执行只读正文；高复用、有设计债或易被误删的能力补 Why 层文件（技能 `references/rationale.md`，agent `agents/.rationale/<name>.md`），记录存在理由、关键假设、失效判据与取舍，仅在重构、合并、降级或删除时加载。
@@ -69,12 +69,11 @@
 以下 agent 的能力已由同名 skill 直接承载，保留文件但移出索引与分发清单（详见 `manifest.json` 的 `deprecated` 字段）：
 
 -   System Architect → `technical-architect` skill
--   Frontend Developer → `frontend-expert` skill
--   Backend Developer → `backend-expert` skill
+-   Frontend Developer / Backend Developer → 项目特化实现技能（上游通用版已弃用）
 -   Test Engineer → `test-engineer` skill
 -   Quality Guardian → `quality-guardian` skill
 -   Documentation Specialist → `documentation-specialist` skill
--   Release Manager → `git-flow-manager` / `conventional-committer` skill
+-   Release Manager → `conventional-committer` skill
 
 ## Skills 索引
 
@@ -87,7 +86,6 @@
 -   **[Context Analyzer](./skills/context-analyzer/SKILL.md)**：扫描上下文、约束与关键文件。
 -   **[Requirement Analyst](./skills/requirement-analyst/SKILL.md)**：把模糊需求转成清晰目标与验收标准。
 -   **[Technical Architect](./skills/technical-architect/SKILL.md)**：输出技术方案、文件映射和风险边界。
--   **[QA Assistant](./skills/qa-assistant/SKILL.md)**：只读问答、查证事实与解释实现。
 -   **[Documentation Specialist](./skills/documentation-specialist/SKILL.md)**：文档生成、更新、对齐与审校。
 -   **[Full Stack Master](./skills/full-stack-master/SKILL.md)**：多技能协作的全流程编排 skill。
 -   **[Super Search](./skills/super-search/SKILL.md)**：通用网页搜索、爬取、交叉验证、对抗审查与研究报告生成。
@@ -102,7 +100,6 @@
 -   **[Code Reviewer](./skills/code-reviewer/SKILL.md)**：结构化代码审查与技能设计审查。
 
 ### 交付与运维
--   **[Git Flow Manager](./skills/git-flow-manager/SKILL.md)**：拆分提交边界、维护提交顺序与冲突预判。
 -   **[Conventional Committer](./skills/conventional-committer/SKILL.md)**：生成并执行符合 commitlint 预期的提交消息。
 -   **[GitHub CLI](./skills/gh-cli/SKILL.md)**：通过 `gh` 命令行管理仓库、Issue、PR、Workflow、Release、Project、Codespace、API 与认证配置。
 -   **[DevOps Specialist](./skills/devops-specialist/SKILL.md)**：部署、CI/CD、容器和运行时配置变更；含反代 / 网关层（nginx / OpenResty / NPM）迁移评估。
@@ -115,11 +112,14 @@
 
 -   **Frontend Expert** → 项目特化技能（`nuxt-code-editor` / `vue-component-expert` / `vue-frontend-expert`）与项目 `docs/standards`；Nuxt 构建走 [Nuxt WSL2 Build](./skills/nuxt-wsl2-build/SKILL.md)。
 -   **Backend Expert** → 项目特化技能（如 `backend-logic-expert`）与项目 `docs/standards`。
+-   **Git Flow Manager** → 提交拆分、顺序与锁文件冲突处理已并入 [Conventional Committer](./skills/conventional-committer/SKILL.md) 的 `references/commit-splitting.md`。
+-   **QA Assistant** → 只读问答已并入 [Context Analyzer](./skills/context-analyzer/SKILL.md) 的「问答模式（只读）」。
 -   **Security Alert Remediator** → dependfix 项目本体能力（`@dependfix/skills` 的 `dependfix-remediator`）。
 -   **Multi-Repo Alert Remediator** → 同上（dependfix 的多仓库模式）。
 -   **Opencode Usage** → 直接使用对应 CLI / 插件，不需要技能封装。
 
 ## 规范与参考
+-   [规范上游 standards](./standards/README.md)：事实源与冲突顺序、角色矩阵与阶段去重、门禁与证据、外部技能准入、经验沉淀。项目按骨架填充正文，同一规则只写一次。
 -   [下游项目迁移参考方案](./docs/downstream-migration.md)：把项目内 fork 的能力迁移到「核心 + 覆盖层」，提高跨项目复用率。
 -   [项目覆盖层约定](./skills/skill-creator/references/project-overlay.md)：`.ai/overrides/{skills,agents}/<name>.md` 的写法与组合语义。
 -   [About custom agents for GitHub Copilot](https://docs.github.com/en/copilot/concepts/agents/coding-agent/about-custom-agents)

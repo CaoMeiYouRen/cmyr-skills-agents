@@ -1,6 +1,6 @@
 ---
 name: conventional-committer
-description: 需要生成 Conventional Commit 提交消息并执行单次提交时使用。适用于 feat、fix、docs、refactor、test、build、ci、chore 等常规提交场景。先检查质量门，再分析 diff，再生成符合 commitlint 预期的消息。
+description: 需要生成 Conventional Commit 提交消息并执行单次提交时使用；多步交付需要拆分提交、安排顺序、预判冲突、整理 changelog 或准备 release 时也使用。适用于 feat、fix、docs、refactor、test、build、ci、chore 等常规提交场景。用户提到 staging、split commits、changelog、release prep、冲突预警时也应触发。
 
 metadata:
   internal: false
@@ -29,8 +29,15 @@ metadata:
 - [ ] Step 4: 执行提交 (conditional)
 	- [ ] 4.1 只有在用户明确允许时才执行 git add / git commit。
 	- [ ] 4.2 提交后复查消息是否符合 commitlint 习惯。
-	- [ ] 4.3 若环境中的 husky hook 依赖旧版 Node 或工具链不兼容，使用 `--no-verify` 跳过 hook（如 `git commit --no-verify -m "..."`）。仅在已知 hook 不兼容当前环境时使用，不可滥用。
+	- [ ] 4.3 若 husky hook 因旧版 Node 或工具链不兼容失败，先修 hook 本身；确无替代时需用户明确同意才可 `--no-verify`，并在交付说明里写明原因。
 	- [ ] 4.4 依赖类批量修复统一使用中文格式：`chore(deps): xxx`，让提交消息能跨项目复用。
+
+## 多提交交付
+
+一次交付包含多个逻辑变更时，先拆分、再逐条生成消息：
+
+- 拆分粒度、依赖顺序、锁文件冲突与变更记录见 [references/commit-splitting.md](./references/commit-splitting.md)。
+- 单次提交不需要加载它；拆出的每个提交仍按本文件的消息格式规范生成。
 
 ## 常见 type
 

@@ -19,7 +19,7 @@ metadata:
 - **A. 审计正在写 / 正在改的代码**（鉴权、权限、输入处理、写入、密钥、日志、外部调用）→ 走下面「工作流」的 Step 1–3。
 - **B. 给定一条已发布的运行时 / 依赖公告，判定自家项目与线上站点是否命中**（「这个洞影响我吗」）→ 走 `references/runtime-cve-impact-check.md` 的五步法，**不能用泛代码审计代替**：它靠真实版本与真实可达路径，而不是看代码写了什么。
 
-不适用：批量处理 GitHub 告警（Dependabot / Code Scanning）→ 交 [security-alert-remediator](../security-alert-remediator/SKILL.md)；持续监控与分层通知属运维侧动作，不在本技能。
+不适用：批量处理 GitHub 告警（Dependabot / Code Scanning）→ 用 dependfix 的 `dependfix-remediator`（本仓库不再单独维护该技能）；持续监控与分层通知属运维侧动作，不在本技能。
 
 B 类的两把尺（其余判据见 reference）：版本以**线上实际**为准（声明 `engines` ≠ lockfile ≠ 镜像 / 容器内 `-v`，拿不到就写「需核对部署版本」）；**区间查不到 ≠ 安全**（改看落后度），命中 CISA KEV 则优先于任何 CVSS 分数。
 

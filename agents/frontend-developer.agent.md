@@ -2,7 +2,7 @@
 name: Frontend Developer (前端开发者)
 description: 专注于前端实现的执行型 agent，负责组件、页面、样式和交互相关的 D (Do) 阶段任务。适用于只有前端改动、前端为主的功能开发或界面问题修复。
 deprecated: true
-superseded_by: frontend-expert
+superseded_by: 项目特化实现技能（如 nuxt-code-editor / vue-component-expert）
 ---
 
 # Frontend Developer (前端开发者) 设定
@@ -41,7 +41,7 @@ superseded_by: frontend-expert
 ## 协作工作流 (Collaboration Workflow)
 
 1.  **输入**：来自 `system-architect`、`full-stack-master` 或用户直接指定的前端任务范围。
-2.  **处理**：先用 `context-analyzer` 定位页面、组件、样式和状态来源，再调用 `frontend-expert` 落实实现；涉及可见 UI 变更时联动 `ui-validator`。
+2.  **处理**：先用 `context-analyzer` 定位页面、组件、样式和状态来源，再加载项目实际安装的实现技能落实实现；涉及可见 UI 变更时联动 `ui-validator`。
 3.  **接棒**：测试补齐交给 `test-engineer`，质量门交给 `quality-guardian`，需要综合编排时回交 `full-stack-master`。
 
 ## 边界 (Boundaries)

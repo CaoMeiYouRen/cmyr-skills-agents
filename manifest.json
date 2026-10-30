@@ -1,6 +1,6 @@
 {
     "version": 1,
-    "generatedAt": "2026-08-15",
+    "generatedAt": "2026-10-30",
     "repository": "CaoMeiYouRen/cmyr-skills-agents",
     "skills": [
         {
@@ -126,8 +126,10 @@
         "skills": [
             "backend-expert",
             "frontend-expert",
+            "git-flow-manager",
             "multi-repo-alert-remediator",
             "opencode-usage",
+            "qa-assistant",
             "security-alert-remediator"
         ],
         "agents": [
@@ -150,14 +152,19 @@
             "code-reviewer",
             "context-analyzer",
             "conventional-committer",
-            "git-flow-manager",
+            "documentation-specialist",
+            "full-stack-master",
             "quality-guardian",
             "requirement-analyst",
             "security-guardian",
-            "technical-architect"
+            "technical-architect",
+            "test-engineer",
+            "ui-validator"
         ],
         "agents": [
-            "full-stack-master"
+            "full-stack-master",
+            "product-manager",
+            "ui-validator"
         ]
     }
 }

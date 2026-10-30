@@ -6,6 +6,8 @@ metadata:
   internal: false
 ---
 
+> ⚠️ 已弃用（deprecated）：只读问答已并入 context-analyzer 的「问答模式（只读）」；本文件保留供回溯，不再分发。移除条件：下游项目一个发布周期内无回退需求后再物理删除。
+
 # QA Assistant
 
 铁律：先查证，再回答。没有证据就明确说不确定，不要靠经验补全项目事实。

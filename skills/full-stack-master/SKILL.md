@@ -10,6 +10,8 @@ metadata:
 
 铁律：不要跳过规划和质量门，直接从需求冲到实现和提交。全链路编排的价值就在于减少返工，而不是增加速度幻觉。
 
+> 项目覆盖：若存在 `.ai/overrides/skills/full-stack-master.md`，先加载并按其规则执行；冲突时以覆盖文件为准（优先级：会话 > 项目覆盖 > 核心默认）。
+
 ## 能力定位
 
 - **工作流自动编排**：串联需求 → 设计 → 开发 → 审计 → 测试 → 文档 → 提交的全链路。
@@ -26,6 +28,8 @@ metadata:
 3. **选最小方案**：默认选择满足当前验收标准的最小实现，不引入无关抽象。
 4. **限制改动范围**：改动范围与 Todo 验收点或 blocker 一一对应，发现无关问题只记录不顺手扩写。
 5. **目标驱动验证**：完成首个实质改动后先做最小充分验证，再决定是否继续扩写。
+
+角色矩阵（谁主责哪阶段、什么时候不能并行、默认推荐路径）见仓库 `standards/roles.md`；项目侧的启用角色以项目 `AGENTS.md` 为准，本技能不复述矩阵。
 
 ## 子代理编排纪律
 
@@ -51,12 +55,12 @@ metadata:
 ### D (Do) — 开发实现
 
 - 同一事项同一时点只保留一个实现主责。
-- 按方案映射把改动交给对应技能：后端 backend-expert、前端 frontend-expert、文档 documentation-specialist。
+- 按方案映射把改动交给对应技能：实现用项目实际安装的实现技能，文档用 documentation-specialist。
 - 实现收尾须通过本地自检（lint + typecheck + 定向测试）。
 - 预计改动超出任务粒度约束（阈值以 code-reviewer 为唯一权威，项目可调整）时，先返回 P 拆分为多个原子条目，分批实现、分批审计、分批提交。
 - **范围闸门**：开发中发现新事项时按"迭代中途发现事项"处理，返回 P 重新分流，不静默扩写。
 
-- **技能**：backend-expert、frontend-expert、devops-specialist 等按需
+- **技能**：项目特化实现技能按需；部署 / CI 用项目自有能力（上游 devops-specialist 若已安装）
 
 ### A (Audit) — 质量门与审计放行（强制）
 
@@ -86,11 +90,11 @@ metadata:
 ### F (Finish) — 交付与提交
 
 - 更新任务状态，按需同步相关文档。
-- 需要提交时，先让 git-flow-manager 规划批次，再由 conventional-committer 生成并执行提交。
+- 需要提交时，先按 conventional-committer 的 `references/commit-splitting.md` 规划批次，再由它生成并执行提交。
 - 每个原子条目独立提交；A 阶段未放行的改动不得提交。
 - 不自动 push。
 
-- **技能**：documentation-specialist、git-flow-manager、conventional-committer
+- **技能**：documentation-specialist、conventional-committer
 
 ## 交接协议
 
@@ -154,14 +158,14 @@ D / A / V / T 任一阶段发现新增事项时，先暂停扩写，判断是否
 - context-analyzer：建立上下文。
 - requirement-analyst：澄清需求。
 - technical-architect：设计方案。
-- backend-expert / frontend-expert：实施改动。
+- 项目特化实现技能：实施改动（按项目实际安装的角色 / 技能，不假定具体名称）。
 - documentation-specialist：同步文档。
 - ui-validator：验证界面。
 - test-engineer：补测试与查失败。
 - security-guardian：补安全审计。
 - quality-guardian：运行质量门。
 - code-reviewer：做结构化审查（Review Gate）。
-- git-flow-manager / conventional-committer：管理交付和提交。
+- conventional-committer：拆分批次、生成消息与提交。
 
 ## 反模式
 

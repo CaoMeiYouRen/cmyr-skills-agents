@@ -24,7 +24,7 @@
 这是一个面向 AI 编码助手的 Skills 与 Agents 仓库，重点覆盖以下两类能力：
 
 - 项目治理：skill-creator、agent-creator、code-reviewer、quality-guardian
-- 开发执行：frontend-expert、backend-expert、test-engineer、devops-specialist
+- 开发执行：项目特化实现技能、test-engineer、devops-specialist（按需）
 
 如果你想快速查看仓库里已经有哪些能力，先看 [AGENTS.md](./AGENTS.md)。其中包含当前可用的 agents、skills、治理规则与项目偏好。
 
@@ -113,7 +113,7 @@ npx skills update
 - `帮我做一次 code review，重点看安全和架构风险` → 触发 `code-reviewer`
 - `帮我创建一个新的 skill，并按当前仓库规范设计` → 触发 `skill-creator`
 - `帮我判断这件事应该做成 skill 还是 agent` → 触发 `agent-creator`
-- `帮我找找这个项目里哪里实现了权限检查` → 触发 `qa-assistant`
+- `帮我找找这个项目里哪里实现了权限检查` → 触发 `context-analyzer`
 - `帮我补齐这个模块的 Vitest 测试` → 触发 `test-engineer`
 - `帮我检查这个页面的响应式和暗色模式` → 触发 `ui-validator`
 

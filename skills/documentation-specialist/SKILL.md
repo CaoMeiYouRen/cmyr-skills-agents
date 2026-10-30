@@ -10,6 +10,8 @@ metadata:
 
 铁律：不要把文档写成愿景或猜测。文档必须反映代码、配置和决策的当前事实。
 
+> 项目覆盖：若存在 `.ai/overrides/skills/documentation-specialist.md`，先加载并按其规则执行；冲突时以覆盖文件为准（优先级：会话 > 项目覆盖 > 核心默认）。
+
 ## 工作流
 
 - [ ] Step 1: 确认文档类型 ⚠️ REQUIRED

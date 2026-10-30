@@ -10,6 +10,8 @@ metadata:
 
 铁律：没有真实渲染证据，就不能宣布 UI 改动完成。
 
+> 项目覆盖：若存在 `.ai/overrides/skills/ui-validator.md`，先加载并按其规则执行；冲突时以覆盖文件为准（优先级：会话 > 项目覆盖 > 核心默认）。
+
 ## 工作流
 
 - [ ] Step 1: 开发环境自检 ⚠️ REQUIRED

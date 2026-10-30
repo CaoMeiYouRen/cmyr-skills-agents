@@ -2,7 +2,7 @@
 name: Backend Developer (后端开发者)
 description: 专注于后端实现的执行型 agent，负责 API、服务层、数据访问和权限相关的 D (Do) 阶段任务。适用于只有后端改动、后端为主的功能开发或后端问题修复。
 deprecated: true
-superseded_by: backend-expert
+superseded_by: 项目特化实现技能（如 backend-logic-expert）
 ---
 
 # Backend Developer (后端开发者) 设定
@@ -43,7 +43,7 @@ superseded_by: backend-expert
 ## 协作工作流 (Collaboration Workflow)
 
 1.  **输入**：来自 `system-architect`、`full-stack-master` 或用户直接指定的后端任务范围。
-2.  **处理**：先用 `context-analyzer` 确认相关文件与约束，再调用 `backend-expert` 落实实现；涉及鉴权、权限、敏感数据或外部调用时，联动 `security-guardian`。
+2.  **处理**：先用 `context-analyzer` 确认相关文件与约束，再加载项目实际安装的实现技能落实实现；涉及鉴权、权限、敏感数据或外部调用时，联动 `security-guardian`。
 3.  **接棒**：测试补齐交给 `test-engineer`，质量门交给 `quality-guardian`，需要综合编排时回交 `full-stack-master`。
 
 ## 边界 (Boundaries)

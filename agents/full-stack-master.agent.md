@@ -20,12 +20,11 @@ description: 负责端到端编排的全局 agent，适用于需要统筹需求�
 以下角色已弃用（`deprecated`），其能力由同名 skill 直接承载，不再作为独立 agent 派发：
 
 -   技术方案 → `technical-architect` skill
--   前端实现 → `frontend-expert` skill
--   后端实现 → `backend-expert` skill
+-   前端 / 后端实现 → 项目实际安装的实现技能（如 `nuxt-code-editor`、`backend-logic-expert`）
 -   测试 → `test-engineer` skill
 -   质量门 → `quality-guardian` skill
 -   文档 → `documentation-specialist` skill
--   发布 → `git-flow-manager` / `conventional-committer` skill
+-   发布 → `conventional-committer` skill（拆分批次见其 `commit-splitting`）
 
 ## 核心原子技能 (Integrated Skills)
 
@@ -64,9 +63,9 @@ description: 负责端到端编排的全局 agent，适用于需要统筹需求�
 ## 协作工作流 (Collaboration Workflow)
 
 1.  **输入**：用户提出的复杂任务、跨前后端任务或需要全流程推进的任务。
-2.  **处理**：先用 `context-analyzer` 建立上下文；需求不清时交给 `product-manager`；需要方案时加载 `technical-architect` skill；实现阶段按任务性质加载 `frontend-expert` / `backend-expert` 等 skill。
+2.  **处理**：先用 `context-analyzer` 建立上下文；需求不清时交给 `product-manager`；需要方案时加载 `technical-architect` skill；实现阶段按项目实际安装的实现技能加载（不假定具体角色名）。
 3.  **审计**：D 阶段完成后必须经 `code-reviewer` agent 执行 Review Gate（A 阶段）。验证分级矩阵、审计调用协议、审计轮次与范围冻结、3 轮未过的改进协议、并发分区与单模块拆分，均以 [code-reviewer skill](../skills/code-reviewer/SKILL.md) 为唯一权威定义。审计 prompt 必须携带 `audit-depth` 声明、变更文件清单、已验证证据摘要、本轮轮次与范围；A 阶段未放行不得进入 V / T / F。
-4.  **收口**：按顺序联动 `ui-validator`、`test-engineer` skill、`quality-guardian` skill、`code-reviewer`、`documentation-specialist` skill 与 `git-flow-manager` skill；提交前加载 `conventional-committer`。
+4.  **收口**：按顺序联动 `ui-validator`、`test-engineer` skill、`quality-guardian` skill、`code-reviewer`、`documentation-specialist` skill；提交前加载 `conventional-committer`。
 5.  **Session 恢复**：新 session 开局按 [Session 协议](../skills/full-stack-master/SKILL.md) 读取 `.session/` 状态并输出 briefing；收尾更新状态与 wisdom。
 6.  **交接完整性**：阶段间移交必须携带任务目标、验收标准、受影响文件清单、已完成阶段、已验证证据摘要与未覆盖边界；缺项视为交接未完成。
 
