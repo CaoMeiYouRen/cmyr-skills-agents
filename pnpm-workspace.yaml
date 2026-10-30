@@ -3,7 +3,7 @@ trustPolicy: no-downgrade
 packageLock: true
 packages: []
 overrides:
-  vite: ^7.3.5
+  vite: ^7.3.7
   piscina: ^4.9.4
   undici: 7.29.1
   fast-uri: ^3.1.7
@@ -40,6 +40,7 @@ overrides:
   js-yaml: ^4.3.2
   postcss: ^8.5.23
   source-map-js: ^1.2.2
+  "@vitest/mocker": ^4.1.12
 onlyBuiltDependencies:
   - esbuild
   - nice-napi
