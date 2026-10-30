@@ -35,6 +35,7 @@ metadata:
 - 工具链必须用 WSL 内的 Linux 版 Node/pnpm，不跨边界调用 Windows 的 node.exe / pnpm.cmd。
 - 实测基线（caomei-auth）：WSL2 构建 12-24s vs Windows 原生 13-15min（约 60-70×）；npm install 8min → 25s（19×）。
 - 解除条件：nitro v3 / Nuxt 5 发布并验证 Windows 原生构建恢复正常后，重新评估是否保留本规范。
+- 性能原理与实测基准（ext4 vs 9P 协议开销、各操作耗时对比）见 references/performance-background.md，用于向用户解释"为什么必须放 WSL 内部"；具体数值以该 reference 为准。
 
 ## 反模式
 

@@ -8,6 +8,9 @@
  * 4. l0Selection 引用的文件、技能、agent 均真实存在
  * 5. manifest.deprecated 中的技能/agent 必须真实存在，且不得进入 l0Selection
  * 6. l0Selection 中的技能/agent 必须声明项目覆盖锚点（.ai/overrides/...），保证覆盖层可被加载
+ * 7. skills/<name>/references/ 下的 .md 必须被执行入口索引（本技能 SKILL.md 或 agents/<name>.agent.md 写 `references/<相对路径>`，
+ *    或根索引文件以 `skills/<name>/references/...` 全路径引用），否则该文件对执行者不可达
+ *    （历史问题：孤儿 reference 连续多轮无人发现）。仅校验平铺与嵌套的 .md，不覆盖 json/ps1 等资产。
  *
  * 用法：node scripts/verify-manifest.mjs
  * 导出 verifyManifest 纯函数便于单测。
@@ -34,6 +37,58 @@ function listAgentNames(agentsDir) {
         .filter((file) => file.endsWith('.agent.md'))
         .map((file) => file.replace(/\.agent\.md$/, ''))
         .sort()
+}
+
+function listMarkdownFiles(dirPath) {
+    if (!existsSync(dirPath)) {
+        return []
+    }
+    const files = []
+    for (const entry of readdirSync(dirPath, { withFileTypes: true })) {
+        const fullPath = path.join(dirPath, entry.name)
+        if (entry.isDirectory()) {
+            files.push(...listMarkdownFiles(fullPath))
+        } else if (entry.name.endsWith('.md')) {
+            files.push(fullPath)
+        }
+    }
+    return files
+}
+
+/**
+ * 技能自身的执行入口：本技能 SKILL.md + 同名 agent（agents/<name>.agent.md）。
+ * 只认这两个位置，避免通用文案（如 AGENTS.md 里的 `references/rationale.md`）
+ * 或别的技能把这一个 reference 顶包成"已索引"。
+ */
+function collectSkillEntryTexts(repoRoot, skill) {
+    const files = [
+        path.join(repoRoot, SKILLS_DIR, skill, 'SKILL.md'),
+        path.join(repoRoot, AGENTS_DIR, `${skill}.agent.md`),
+    ]
+    return files.filter((file) => existsSync(file)).map((file) => readFileSync(file, 'utf8'))
+}
+
+/** 仓库级索引文件：只接受带技能名的全路径引用（skills/<name>/references/...）。 */
+function collectRepoEntryTexts(repoRoot) {
+    const files = [path.join(repoRoot, 'AGENTS.md'), path.join(repoRoot, 'README.md')]
+    files.push(...listMarkdownFiles(path.join(repoRoot, 'global')))
+    return files.filter((file) => existsSync(file)).map((file) => readFileSync(file, 'utf8'))
+}
+
+const REGEXP_SPECIAL_PATTERN = /[.*+?^${}()|[\]\\]/g
+
+/**
+ * 生成锚点匹配式：不允许 `../` 跨技能引用，也不允许 `x.md` 命中 `x.mdx`。
+ * 允许 `./references/x.md` 与行内代码包裹等常见写法。
+ */
+function buildAnchorPattern(anchor) {
+    const escaped = anchor.replace(REGEXP_SPECIAL_PATTERN, '\\$&')
+    return new RegExp(`(?<!\\.\\./)(?<![\\w-])${escaped}(?![\\w-])`)
+}
+
+function mentionsAnchor(texts, anchor) {
+    const pattern = buildAnchorPattern(anchor)
+    return texts.some((text) => pattern.test(text))
 }
 
 function diffLists(expected, actual) {
@@ -149,6 +204,26 @@ export function verifyManifest(repoRoot) {
         }
         if (!readFileSync(agentPath, 'utf8').includes(`.ai/overrides/agents/${agent}.md`)) {
             errors.push(`L0 agent 缺少项目覆盖锚点: ${agent}（应声明 .ai/overrides/agents/${agent}.md）`)
+        }
+    }
+
+    // references 可达性校验：未被执行入口索引的 reference 等于死文件
+    const repoEntryTexts = collectRepoEntryTexts(repoRoot)
+    for (const skill of actualSkills) {
+        const referenceDir = path.join(skillsDir, skill, 'references')
+        if (!existsSync(referenceDir)) {
+            continue
+        }
+        const skillEntryTexts = collectSkillEntryTexts(repoRoot, skill)
+        for (const filePath of listMarkdownFiles(referenceDir)) {
+            const relativePath = path.relative(referenceDir, filePath).split(path.sep).join('/')
+            const anchor = `references/${relativePath}`
+            const qualifiedAnchor = `skills/${skill}/${anchor}`
+            const indexed = mentionsAnchor(skillEntryTexts, anchor)
+                || mentionsAnchor(repoEntryTexts, qualifiedAnchor)
+            if (!indexed) {
+                errors.push(`${skill}: references/${relativePath} 未被索引引用（在本技能 SKILL.md 或 agents/${skill}.agent.md 增加 \`${anchor}\` 指引，或删除该文件）`)
+            }
         }
     }
 

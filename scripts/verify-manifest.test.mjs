@@ -1,4 +1,4 @@
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync, appendFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -211,6 +211,47 @@ describe('verifyManifest', () => {
         rmSync(root, { recursive: true, force: true })
     })
 
+    it('references 未被执行入口索引时报错', () => {
+        const root = createFixtureRepo({
+            manifest: validManifest(),
+            skills: ['code-reviewer', 'full-stack-master'],
+            agents: ['code-reviewer', 'full-stack-master'],
+            files: ['global/AGENTS.template.md'],
+        })
+        writeSkill(root, 'code-reviewer', false)
+        writeSkill(root, 'full-stack-master', true)
+        const referencePath = path.join(root, 'skills', 'code-reviewer', 'references', 'orphan.md')
+        mkdirSync(path.dirname(referencePath), { recursive: true })
+        writeFileSync(referencePath, '# orphan\n')
+
+        const result = verifyManifest(root)
+        expect(result.ok).toBe(false)
+        expect(result.errors.some((e) => e.includes('references/orphan.md 未被索引引用'))).toBe(true)
+
+        rmSync(root, { recursive: true, force: true })
+    })
+
+    it('references 被 SKILL.md 索引时校验通过', () => {
+        const root = createFixtureRepo({
+            manifest: validManifest(),
+            skills: ['code-reviewer', 'full-stack-master'],
+            agents: ['code-reviewer', 'full-stack-master'],
+            files: ['global/AGENTS.template.md'],
+        })
+        writeSkill(root, 'code-reviewer', false)
+        writeSkill(root, 'full-stack-master', true)
+        const referencePath = path.join(root, 'skills', 'code-reviewer', 'references', 'indexed.md')
+        mkdirSync(path.dirname(referencePath), { recursive: true })
+        writeFileSync(referencePath, '# indexed\n')
+        appendFileSync(path.join(root, 'skills', 'code-reviewer', 'SKILL.md'), '\n详见 references/indexed.md。\n')
+
+        const result = verifyManifest(root)
+        expect(result.ok).toBe(true)
+        expect(result.errors).toEqual([])
+
+        rmSync(root, { recursive: true, force: true })
+    })
+
     it('L0 agent 缺少项目覆盖锚点时报错', () => {
         const manifest = validManifest()
         manifest.l0Selection.agents = ['full-stack-master']
@@ -229,6 +270,114 @@ describe('verifyManifest', () => {
         const result = verifyManifest(root)
         expect(result.ok).toBe(false)
         expect(result.errors.some((e) => e.includes('L0 agent 缺少项目覆盖锚点: full-stack-master'))).toBe(true)
+
+        rmSync(root, { recursive: true, force: true })
+    })
+
+    it('其他技能 SKILL.md 提及不算本技能 reference 已索引', () => {
+        const root = createFixtureRepo({
+            manifest: validManifest(),
+            skills: ['code-reviewer', 'full-stack-master'],
+            agents: ['code-reviewer', 'full-stack-master'],
+            files: ['global/AGENTS.template.md'],
+        })
+        writeSkill(root, 'code-reviewer', false)
+        writeSkill(root, 'full-stack-master', true)
+        const referencePath = path.join(root, 'skills', 'code-reviewer', 'references', 'orphan.md')
+        mkdirSync(path.dirname(referencePath), { recursive: true })
+        writeFileSync(referencePath, '# orphan\n')
+        appendFileSync(path.join(root, 'skills', 'full-stack-master', 'SKILL.md'), '\n见 references/orphan.md\n')
+
+        const result = verifyManifest(root)
+        expect(result.ok).toBe(false)
+        expect(result.errors.some((e) => e.includes('code-reviewer: references/orphan.md 未被索引引用'))).toBe(true)
+
+        rmSync(root, { recursive: true, force: true })
+    })
+
+    it('AGENTS.md 的通用 rationale 文案不算索引', () => {
+        const root = createFixtureRepo({
+            manifest: validManifest(),
+            skills: ['code-reviewer', 'full-stack-master'],
+            agents: ['code-reviewer', 'full-stack-master'],
+            files: ['global/AGENTS.template.md'],
+        })
+        writeSkill(root, 'code-reviewer', false)
+        writeSkill(root, 'full-stack-master', true)
+        const referencePath = path.join(root, 'skills', 'code-reviewer', 'references', 'rationale.md')
+        mkdirSync(path.dirname(referencePath), { recursive: true })
+        writeFileSync(referencePath, '# rationale\n')
+        writeFileSync(path.join(root, 'AGENTS.md'), 'Why 层文件：技能 `references/rationale.md`，不参与触发。\n')
+
+        const result = verifyManifest(root)
+        expect(result.ok).toBe(false)
+        expect(result.errors.some((e) => e.includes('code-reviewer: references/rationale.md 未被索引引用'))).toBe(true)
+
+        rmSync(root, { recursive: true, force: true })
+    })
+
+    it('references 子目录内的孤儿文件也会被检出', () => {
+        const root = createFixtureRepo({
+            manifest: validManifest(),
+            skills: ['code-reviewer', 'full-stack-master'],
+            agents: ['code-reviewer', 'full-stack-master'],
+            files: ['global/AGENTS.template.md'],
+        })
+        writeSkill(root, 'code-reviewer', false)
+        writeSkill(root, 'full-stack-master', true)
+        const referencePath = path.join(root, 'skills', 'code-reviewer', 'references', 'sub', 'nested.md')
+        mkdirSync(path.dirname(referencePath), { recursive: true })
+        writeFileSync(referencePath, '# nested\n')
+
+        const result = verifyManifest(root)
+        expect(result.ok).toBe(false)
+        expect(result.errors.some((e) => e.includes('references/sub/nested.md 未被索引引用'))).toBe(true)
+
+        rmSync(root, { recursive: true, force: true })
+    })
+
+    it('根索引以全路径或同名 agent 引用时可放行', () => {
+        const root = createFixtureRepo({
+            manifest: validManifest(),
+            skills: ['code-reviewer', 'full-stack-master'],
+            agents: ['code-reviewer', 'full-stack-master'],
+            files: ['global/AGENTS.template.md'],
+        })
+        writeSkill(root, 'code-reviewer', false)
+        writeSkill(root, 'full-stack-master', true)
+        const byRootIndex = path.join(root, 'skills', 'code-reviewer', 'references', 'root-indexed.md')
+        mkdirSync(path.dirname(byRootIndex), { recursive: true })
+        writeFileSync(byRootIndex, '# root-indexed\n')
+        writeFileSync(path.join(root, 'AGENTS.md'), '详见 skills/code-reviewer/references/root-indexed.md\n')
+        const byAgent = path.join(root, 'skills', 'full-stack-master', 'references', 'by-agent.md')
+        mkdirSync(path.dirname(byAgent), { recursive: true })
+        writeFileSync(byAgent, '# by-agent\n')
+        appendFileSync(path.join(root, 'agents', 'full-stack-master.agent.md'), '\n参考 references/by-agent.md\n')
+
+        const result = verifyManifest(root)
+        expect(result.ok).toBe(true)
+        expect(result.errors).toEqual([])
+
+        rmSync(root, { recursive: true, force: true })
+    })
+
+    it('不把 references/report.md 误判为被 references/report.mdx 索引', () => {
+        const root = createFixtureRepo({
+            manifest: validManifest(),
+            skills: ['code-reviewer', 'full-stack-master'],
+            agents: ['code-reviewer', 'full-stack-master'],
+            files: ['global/AGENTS.template.md'],
+        })
+        writeSkill(root, 'code-reviewer', false)
+        writeSkill(root, 'full-stack-master', true)
+        const referencePath = path.join(root, 'skills', 'code-reviewer', 'references', 'report.md')
+        mkdirSync(path.dirname(referencePath), { recursive: true })
+        writeFileSync(referencePath, '# report\n')
+        appendFileSync(path.join(root, 'skills', 'code-reviewer', 'SKILL.md'), '\n见 references/report.mdx\n')
+
+        const result = verifyManifest(root)
+        expect(result.ok).toBe(false)
+        expect(result.errors.some((e) => e.includes('references/report.md 未被索引引用'))).toBe(true)
 
         rmSync(root, { recursive: true, force: true })
     })

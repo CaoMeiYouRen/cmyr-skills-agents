@@ -101,6 +101,12 @@ Super Search Progress:
 - 输出文件路径（用户指定或默认 `./research-output/{date}-{topic-slug}.md`，若文件已存在自动追加 `-v2`/`-v3` 后缀）
 - 缓存目录（用户指定或默认 `~/.super-search-cache/`）
 
+**按主题加载专项工作流**（决定取证路径，须在 Step 3 搜索前完成）：
+
+- AI/LLM 模型本身（发布、能力、定价、开源状态、社区反馈）→ `references/ai-model-research.md`，按官方博客 → 开发者文档 → 官方仓库 → 模型卡 → 论文的顺序取证。
+- AI 编程订阅套餐（Coding Plan）→ `references/coding-plan-research.md`，覆盖定价多源确认、额度倍率计算、区域价格差异处理。
+- 成本/收入/转化率估算、收支平衡或敏感性分析 → `references/financial-modeling-with-real-data.md`，用真实行业基准校验估算，不凭假设参数直接下结论。
+
 Ask: "对以下问题，我应该额外搜索哪些对立面/反面/批评性关键词？"
 例如：搜索"AI 取代程序员"时，同时搜索"AI 不会取代程序员的理由""AI 编程工具的局限性"。
 
@@ -347,6 +353,8 @@ Ask:
 - 标注遗漏风险
 - 如发现重大疏漏，回到 Step 3 补充搜索
 
+> 需要一份完整的逐条核查样本时，见 `references/verification-case-study-opc-report.md`：哪些声明被删除、哪些被降级、判断依据是什么。
+
 ### Step 7.5: Template Selection ⚠️ 生成报告前必须执行
 
 根据主题特征，对照 `references/report-templates.md` **模板选择指南**确定报告模板：
@@ -359,8 +367,6 @@ Ask:
 | 简单事实查证 | **快速摘要模板** | 仅需确认 1-2 个事实 |
 
 选定模板后，按模板结构组织报告内容。**不允许跨类型混用模板结构**，**不允许使用 `_（请手动填写）_` 类占位符**。
-
-> **调研 AI 编程订阅套餐（Coding Plan）时**：请加载 `references/coding-plan-research.md` 获取专门的工作流、数据交叉验证方法和避坑指南。该文件覆盖了定价多源确认、额度倍率计算、区域价格差异处理等模型调研中不含的内容。
 
 ## Step 8: Report
 
