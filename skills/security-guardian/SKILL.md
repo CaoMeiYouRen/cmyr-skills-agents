@@ -1,6 +1,6 @@
 ---
 name: security-guardian
-description: 对鉴权、权限、输入处理、数据写入、依赖配置、密钥、日志和外部调用进行安全审计时使用。用户提到 security、auth、permission、vulnerability、secret、injection、审计登录逻辑、权限合规时都应触发。
+description: 对鉴权、权限、输入处理、数据写入、依赖配置、密钥、日志和外部调用进行安全审计时使用；也用于判定一条已发布的运行时/依赖安全公告（CVE、GHSA、advisory）是否影响自家项目与线上服务。用户提到 security、auth、permission、vulnerability、secret、injection、CVE、安全公告、这个漏洞影响我吗、影响面、审计登录逻辑、权限合规时都应触发。
 
 metadata:
   internal: false
@@ -11,6 +11,17 @@ metadata:
 铁律：把“没有看到明显校验”视为真实风险，直到证据证明它是安全的。
 
 > 项目覆盖：若存在 `.ai/overrides/skills/security-guardian.md`，先加载并按其规则执行；冲突时以覆盖文件为准（优先级：会话 > 项目覆盖 > 核心默认）。
+
+## 两类任务路由
+
+两类任务都进本技能，但流程不同：
+
+- **A. 审计正在写 / 正在改的代码**（鉴权、权限、输入处理、写入、密钥、日志、外部调用）→ 走下面「工作流」的 Step 1–3。
+- **B. 给定一条已发布的运行时 / 依赖公告，判定自家项目与线上站点是否命中**（「这个洞影响我吗」）→ 走 `references/runtime-cve-impact-check.md` 的五步法，**不能用泛代码审计代替**：它靠真实版本与真实可达路径，而不是看代码写了什么。
+
+不适用：批量处理 GitHub 告警（Dependabot / Code Scanning）→ 交 [security-alert-remediator](../security-alert-remediator/SKILL.md)；持续监控与分层通知属运维侧动作，不在本技能。
+
+B 类的两把尺（其余判据见 reference）：版本以**线上实际**为准（声明 `engines` ≠ lockfile ≠ 镜像 / 容器内 `-v`，拿不到就写「需核对部署版本」）；**区间查不到 ≠ 安全**（改看落后度），命中 CISA KEV 则优先于任何 CVSS 分数。
 
 ## 工作流
 
@@ -38,6 +49,7 @@ metadata:
 - [ ] 每个高风险点都说明了利用方式或影响。
 - [ ] 不确定的点已明确标注人工核验需求。
 - [ ] 没有以环境或规模为理由弱化安全结论。
+- [ ] B 类任务已按「确证命中 / 待核 / 未命中」三档给出结论，并附可复现命令。
 
 
 
