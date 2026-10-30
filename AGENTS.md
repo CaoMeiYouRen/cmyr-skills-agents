@@ -95,7 +95,7 @@
 ### 开发与安全
 -   **[Frontend Expert](./skills/frontend-expert/SKILL.md)**：前端页面、组件、样式、交互与 i18n 实现。
 -   **[Backend Expert](./skills/backend-expert/SKILL.md)**：后端 API、服务层、数据库与权限实现。
--   **[Security Guardian](./skills/security-guardian/SKILL.md)**：鉴权、权限、输入处理和数据写入的安全审计。
+-   **[Security Guardian](./skills/security-guardian/SKILL.md)**：鉴权、权限、输入处理和数据写入的安全审计；以及单条 CVE / 安全公告的影响面判定。
 -   **[Security Alert Remediator](./skills/security-alert-remediator/SKILL.md)**：聚合 Dependabot、Code Scanning 与 pnpm audit 告警，按严重级别和可修复性排序，逐批升级依赖、修复 frozen-lockfile，并在用户显式要求时审慎清理已过时的 pnpm overrides，最后汇报未解决的 high+ 风险。
 -   **[Multi-Repo Alert Remediator](./skills/multi-repo-alert-remediator/SKILL.md)**：批量拉取当前用户所有 GitHub 仓库的 Dependabot 安全告警，按优先级排序后逐仓库落地到本地修复。逐仓库修复委托子 agent 执行以保护主上下文；存在 dependfix-remediator 时优先使用，否则复用 Security Alert Remediator 的单仓库修复能力；每仓库独立 commit 但不推送，等待用户 review。
 
@@ -109,7 +109,7 @@
 -   **[Git Flow Manager](./skills/git-flow-manager/SKILL.md)**：拆分提交边界、维护提交顺序与冲突预判。
 -   **[Conventional Committer](./skills/conventional-committer/SKILL.md)**：生成并执行符合 commitlint 预期的提交消息。
 -   **[GitHub CLI](./skills/gh-cli/SKILL.md)**：通过 `gh` 命令行管理仓库、Issue、PR、Workflow、Release、Project、Codespace、API 与认证配置。
--   **[DevOps Specialist](./skills/devops-specialist/SKILL.md)**：部署、CI/CD、容器和运行时配置变更。
+-   **[DevOps Specialist](./skills/devops-specialist/SKILL.md)**：部署、CI/CD、容器和运行时配置变更；含反代 / 网关层（nginx / OpenResty / NPM）迁移评估。
 -   **[Pnpm Major Migrator](./skills/pnpm-major-migrator/SKILL.md)**：迁移 pnpm 大版本及相关配置，当前覆盖 v10 到 v11 与 v11 到 v12，并保留后续版本迁移扩展位。
 -   **[Nuxt WSL2 Build](./skills/nuxt-wsl2-build/SKILL.md)**：检测 Nuxt 构建/开发环境是否就绪（Windows 下强制 WSL2 + ext4），就绪则通过 WSL 执行构建/开发，未就绪则提醒配置或自主初始化；项目使用 Nuxt 但任务未涉及构建/开发时仅输出建议性告警。
 
