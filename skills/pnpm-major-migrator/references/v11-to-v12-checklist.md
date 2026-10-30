@@ -9,6 +9,28 @@
 - **没有 v11 -> v12 的 codemod**。`pnpx codemod run pnpm-v10-to-v11` 只服务于从 v10 起跳的项目（v12 沿用 v11 的配置模型），不要对纯 v11 项目重新跑一遍。
 - 实际工作量 = 改 `packageManager` 一个字段 + 处理一次性 lockfile 重排 + 逐条核对下面的行为差异。
 
+## 0.5) 三分钟预检
+
+先判断“这个项目这次到底要改多少”，再决定投入：
+
+```bash
+# 1) 是否用了 v12 拒绝的命令行写法（命中即必须改，见 §1）
+rg -n -- '--resolution-only|--frozen-lockfile[= ](true|false)'
+
+# 2) CI 是否写死 pnpm 版本（写死就必须与 packageManager 同步，见 §5）
+rg -n 'pnpm/action-setup' -A3 .github/workflows
+```
+
+（没有 `rg` 时用 `grep -rn` 等价替换；无 CI 目录时跳过第 2 条。）
+
+再手工打开 `pnpm-workspace.yaml`，对照 §1 的未识别键清单核对顶层键（`packages`、`catalog`、`allowBuilds` 等属于已知键）。
+
+判定：
+
+- 两条命令均无命中，且 `packageManager` 本来就指向 12.x 或本次只改这一个字段 → 实际改动 = `packageManager` + 一次性 lockfile 重排，按 §6 的顺序走即可。
+- 命中第 1 条或存在未识别键 → 先按 §1 逐条清零，不要“先升版本再猜报错原因”。
+- 命中第 2 条 → 同时核对 workflow 与 `packageManager`，避免两处版本各说各话。
+
 ## 1) 硬失败项（会直接中断安装/构建，必须逐个清零）
 
 - [ ] `pnpm install --resolution-only` 已被移除。实测 12.8.1 报 `error: unexpected argument '--resolution-only' found`。替代方案是 `pnpm peers check`（直接读 lockfile，不需要重新解析或安装）。
@@ -116,7 +138,14 @@
   - lockfile 格式未变，回滚不需要手写 lockfile。实测两者均为 `lockfileVersion: '9.0'`，且 pnpm 11.17.0 能以 `--frozen-lockfile` 直接安装 pnpm 12.8.1 写出的 lockfile。
 - [ ] ⚠️ pin 会反向生效：在 pin 为 `pnpm@12.x` 的项目里执行 pnpm 11，pnpm 会下载并切换到 pin 的版本运行（实测表现为命令结束时打印 `using pnpm v12.8.1`）。因此回滚必须**同时**改 `packageManager` 字段，只降级本地 pnpm 本体无效。
 
-## 8) 来源
+## 8) 没有一手证据时不要断言的两件事
+
+- [ ] **不要断言 `.node` 二进制是 N-API 实现**。发布说明与 npm 上的实际元数据可能不一致；下结论前先查 `npm view pnpm@<version> bin optionalDependencies engines`，并以元数据为准。
+- [ ] **不要照抄官方博客的版本指引**。博客会滞后于 registry 的 `dist-tags`（“latest 仍指向 11 线”这类说明会过期）；迁移前先 `npm view pnpm dist-tags` 实测，事实源约定见 `SKILL.md`。
+
+> 共同点：断言对象是“上游此刻的实际发布物”，只能实测，不能引用二手描述。
+
+## 9) 来源
 
 1. pnpm 12.0 发布说明 <https://pnpm.io/blog/releases/12.0>
 2. What's different in pnpm 12 <https://pnpm.io/blog/whats-different-in-pnpm-12>
