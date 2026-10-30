@@ -10,21 +10,15 @@ metadata:
 
 铁律：不要在脏工作区里批量升级依赖，也不要把多个无关安全升级塞进同一批修复并跳过验证。
 
+## 范围
+
+本技能处理的是 **GitHub security alerts**：Dependabot 依赖告警、Code Scanning，以及其中已公开的 CVE 公告。单条公告「自家是否命中」的判定（真实版本 / 可达性 / 线上实际）不在本技能展开，按 [runtime-cve-impact-check](../security-guardian/references/runtime-cve-impact-check.md) 判完再回到这里做批量修复；环境中没有该技能时，至少按「实装版本 vs 公告区间 + 可达路径」自查，不得跳过判定直接进批量修复。
+
 ## 路径解析约定
 
 - 本技能中出现的 scripts/ 和 references/ 都是相对于当前技能目录的路径，不是相对于用户仓库根目录，也不是相对于执行命令时的当前工作目录。
 - 如果技能是全局安装的，先定位当前 SKILL.md 所在目录，再从该目录解析 ./scripts/* 和 ./references/*。
 - 下文命令示例里的 <skill-dir> 表示当前技能目录；不要假设用户项目根目录下也存在同名脚本或参考文档。
-
-## CVE 公告来了：先判影响面，再决定修不修
-
-用户拿一条已发布公告来问「我的项目 / 线上有没有中」时，先判定，再进依赖升级流程：
-
-- 版本口径（声明 / lockfile / 线上）只有一份：见 [security-guardian 的 runtime-cve-impact-check](../security-guardian/references/runtime-cve-impact-check.md)；本技能只保留一句摘要——**结论以线上为准，拿不到线上就写「需核对部署版本」**（单独安装本技能时，以该摘要为准）。
-- 批量扫描用 `osv-scanner scan source -r --format json <所有仓库的父目录>`（手写 semver 匹配只能覆盖直接依赖，真实暴露常藏在传递依赖里）；仅对**临时浅克隆**刷新：`git -C <clone> fetch --depth 1 && git -C <clone> reset --hard FETCH_HEAD`，用户工作区按 Step 1.1 预检，不得 reset。
-- **生产可达性过滤**：从 lockfile 的 `importers.*.dependencies` / `optionalDependencies` 出发，沿 `snapshots.*.dependencies` / `optionalDependencies` 递归出生产闭包，`pkg@ver` 命中才算生产暴露；否则 vitest / eslint 这类构建期工具链的传递依赖会把紧急项显著抬高（实测 23 → 45）。适用 pnpm 锁文件 v9（pnpm 9–11），v6 没有 `snapshots` 段；`snapshots` 键可能带 peer 后缀（`pkg@1.0.0(react@18.2.0)`），不能只按 `pkg@ver` 字符串直比。
-- **盲区自检**：锁文件损坏会让扫描器整仓静默跳过、只打一行 stderr，结果看起来「这个仓库很干净」。每轮断言「扫到的 lockfile 数 == 预期仓库数」，不等就在结论里点名缺失仓库。
-- 修复顺序按可利用性分层：生产可达且有修复版本 → 进当轮批次；仅构建期可达 → 随工具链一起升；无修复版本 → 单列遗留项并给缓解手段。
 
 ## 工作流
 
@@ -38,6 +32,7 @@ metadata:
   - [ ] 2.2 按 <skill-dir>/references/severity-policy.md 的规则决定当前聚焦级别：critical 优先于 high，high 优先于 medium，只有没有更高等级时才下探。
   - [ ] 2.3 拆分出三类对象：可直接升级的 Dependabot 依赖、需要代码修复的 Code Scanning 告警、无法直接升级但仍为 high+ 的遗留项。
   - [ ] 2.4 ⚠️ 临时报告的清理：collect-security-alerts.mjs 通过 `--output-json` 和 `--output-markdown` 生成的快照文件仅用于当前修复批次的对比，修复完成后必须删除（如 `rm alerts-snapshot.json alerts-snapshot.md`），不得提交到 Git。
+  - [ ] 2.5 排序前先过滤生产可达性：从 lockfile `importers.*.dependencies` / `optionalDependencies` 出发，沿 `snapshots.*.dependencies` / `optionalDependencies` 递归出生产闭包，命中才算生产暴露；构建期工具链（vitest / eslint）的传递依赖单独归组，不占紧急位，随工具链版本一起升。pnpm 锁文件 v9（pnpm 9–11）才有 `snapshots`，v6 不适用；`snapshots` 键可能带 peer 后缀（`pkg@1.0.0(react@18.2.0)`），不能只按 `pkg@ver` 字符串直比。
 - [ ] Step 3: 规划修复批次 ⚠️ REQUIRED
   - [ ] 3.1 默认一次只升级一个依赖。
   - [ ] 3.2 只有在包之间存在明确耦合、peer 约束或顺序依赖时，才允许成组升级。
