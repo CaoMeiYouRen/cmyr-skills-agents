@@ -42,6 +42,10 @@ metadata:
 - 追求最小镜像时，也要兼顾调试可用性和构建稳定性。
 - 当 CI 构建失败且日志中出现 `ERR_PNPM_IGNORED_BUILDS` 时，说明缺少 `allowBuilds` 配置；将受阻包（如 esbuild、sharp、workerd）添加到 `pnpm-workspace.yaml` 的 `allowBuilds` 列表中，并在 PR 中同步提交该变更。
 
+## 参考文档
+
+- 反代 / 网关层（裸机 nginx ↔ OpenResty ↔ Nginx Proxy Manager 的边界、A–E 迁移分类、真实 IP、指纹头剥离、灰度回滚）→ [references/reverse-proxy-gateway.md](./references/reverse-proxy-gateway.md)
+
 ## 反模式
 
 - 改了 workflow 却不核对 package.json 中的真实脚本。
