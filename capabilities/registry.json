@@ -1,0 +1,127 @@
+{
+  "version": 2,
+  "updatedAt": "2026-11-02",
+  "capabilities": [
+    {
+      "id": "task-start-ci-receipt",
+      "title": "任务开局 CI 回执检查",
+      "type": "A-rule",
+      "channel": "l0-reference",
+      "canonical": "skills/full-stack-master/references/task-start.md",
+      "mature": [
+        "dependfix"
+      ],
+      "applies_to": [
+        "node"
+      ],
+      "status": "candidate",
+      "markers": [
+        {
+          "kind": "text",
+          "required": true,
+          "values": [
+            "CI 回执"
+          ]
+        },
+        {
+          "kind": "files",
+          "required": true,
+          "values": [
+            ".session/current-task.yaml"
+          ]
+        }
+      ],
+      "optOut": [],
+      "projectParams": [
+        "defaultBranch",
+        "sessionFile",
+        "briefingLocation"
+      ]
+    },
+    {
+      "id": "release-security-gate",
+      "title": "发布前安全告警门禁",
+      "type": "B-template",
+      "channel": "standard-template",
+      "canonical": "standards/gates.md",
+      "template": "standards/templates/release-security-gate.md",
+      "mature": [
+        "dependfix"
+      ],
+      "applies_to": [
+        "node"
+      ],
+      "status": "candidate",
+      "markers": [
+        {
+          "kind": "files",
+          "required": true,
+          "param": "ledgerPath",
+          "values": [
+            ".github/release-security-exemptions.json",
+            ".github/security-alert-exemptions.json",
+            ".github/security/security-alert-exceptions.json",
+            ".github/security-alerts-exemptions.json"
+          ]
+        },
+        {
+          "kind": "scripts",
+          "required": false,
+          "param": "command",
+          "values": [
+            "check:release-security",
+            "security:alerts",
+            "check:security-alerts"
+          ]
+        },
+        {
+          "kind": "text",
+          "required": false,
+          "values": [
+            "发布前安全告警门禁",
+            "发布前安全检查"
+          ]
+        }
+      ],
+      "optOut": [],
+      "projectParams": [
+        "command",
+        "ledgerPath",
+        "dependabotToken",
+        "codeScanningToken"
+      ]
+    },
+    {
+      "id": "security-auto-fix",
+      "title": "安全告警自动修复（Dependabot / Code Scanning）",
+      "type": "B-implementation",
+      "channel": "action-or-package",
+      "repo": "dependfix/dependfix",
+      "canonical": "action.yml",
+      "note": "权威实现待定：dependfix action 或独立包；本轮只登记，不扩散",
+      "mature": [
+        "dependfix"
+      ],
+      "applies_to": [
+        "node",
+        "pnpm"
+      ],
+      "status": "experiment",
+      "markers": [
+        {
+          "kind": "files",
+          "required": true,
+          "values": [
+            ".github/workflows/security-auto-fix.yml"
+          ]
+        }
+      ],
+      "optOut": [],
+      "projectParams": [
+        "mode",
+        "owner",
+        "repoTopics"
+      ]
+    }
+  ]
+}
