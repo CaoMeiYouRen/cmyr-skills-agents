@@ -6,7 +6,7 @@ overrides:
   vite: ^7.3.7
   piscina: ^4.9.4
   undici: 7.29.1
-  fast-uri: ^3.1.7
+  fast-uri: ^3.1.9
   semver: ^7.7.3
   "@typescript-eslint/parser": ^8.54.0
   "@typescript-eslint/eslint-plugin": ^8.54.0
@@ -41,6 +41,7 @@ overrides:
   postcss: ^8.5.23
   source-map-js: ^1.2.2
   "@vitest/mocker": ^4.1.12
+  postcss-selector-parser: ^6.1.5
 onlyBuiltDependencies:
   - esbuild
   - nice-napi
