@@ -144,7 +144,8 @@ D / A / V / T 任一阶段发现新增事项时，先暂停扩写，判断是否
 ### 新 Session 开局
 
 1. 读取 `.session/current-task.yaml`（当前任务、已完成步骤、下一步）与 `.session/wisdom.md`（跨 session 经验）。
-2. 向用户输出一份 **不超过 10 行** 的 briefing：当前阶段 + 任务、已完成步骤、下一步、上次 session 的认知状态摘要（如有）。
+2. 做开局检查：工作区干净且是新任务时，先按 [references/task-start.md](./references/task-start.md) 看 CI 回执（`gh run list` 过滤 `HEAD` / `@{u}` 的失败）；进行中的任务跳过。
+3. 向用户输出一份 **不超过 10 行** 的 briefing：当前阶段 + 任务、已完成步骤、下一步、上次 session 的认知状态摘要（如有）、CI 回执一行（通过 / 失败 + run 链接 / 不可用 + 原因）。
 
 ### Session 收尾（用户说"收工""结束""今天到这"或切换任务时）
 

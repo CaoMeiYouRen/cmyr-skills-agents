@@ -22,7 +22,8 @@
 | :--- | :--- | :--- |
 | [authority.md](./authority.md) | 事实源层级与冲突顺序 | 3/4 项目（dependfix 无独立章节） |
 | [roles.md](./roles.md) | 角色矩阵、默认路径、阶段去重、主定义/镜像治理 | 3/4 项目（dependfix 无角色矩阵） |
-| [gates.md](./gates.md) | 发布前安全门禁、产物证据、绕过判定 | 4/4 项目有测试门禁；安全门禁 2/4 |
+| [gates.md](./gates.md) | 发布前安全门禁、产物证据、绕过判定 | 4/4 有安全门禁；3/4 已接入 release |
+| [task-start.md](./task-start.md) | 任务开局 CI 回执检查 | 1/4 项目（dependfix） |
 | [intake.md](./intake.md) | 外部技能准入与库存变更同步 | 3/4 项目 |
 | [memory.md](./memory.md) | 经验沉淀载体与蒸馏补充触发 | 2/4 项目 |
 
@@ -37,6 +38,8 @@
 - 提交消息格式与拆分粒度默认值：`skills/conventional-committer`（含 `commit-splitting`）
 
 具体命令、路径、豁免文件与项目实际阈值放项目 `AGENTS.md`；本目录给的是**可被项目覆盖的默认值**。
+
+结构模板放在 [templates/](./templates/)：`release-security-gate.md` 给项目段落骨架与验收，不重写政策。
 
 ## 4 怎么分发（当前不自动）
 
