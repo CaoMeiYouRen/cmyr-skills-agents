@@ -119,7 +119,9 @@
 -   **Opencode Usage** → 直接使用对应 CLI / 插件，不需要技能封装。
 
 ## 规范与参考
--   [规范上游 standards](./standards/README.md)：事实源与冲突顺序、角色矩阵与阶段去重、门禁与证据、外部技能准入、经验沉淀。项目按骨架填充正文，同一规则只写一次。
+-   [规范上游 standards](./standards/README.md)：事实源与冲突顺序、角色矩阵与阶段去重、门禁与证据、任务开局检查、外部技能准入、经验沉淀。项目按骨架填充正文，同一规则只写一次。
+-   [能力台账 capabilities](./capabilities/README.md)：登记能力类型、权威实现、采纳标记与项目参数，用 `scripts/check-capabilities.mjs` 扫描落地状态。
+-   [改动提案 proposals](./docs/proposals/README.md)：面向下游项目的提案（只提案，不直接修改下游）。
 -   [下游项目迁移参考方案](./docs/downstream-migration.md)：把项目内 fork 的能力迁移到「核心 + 覆盖层」，提高跨项目复用率。
 -   [项目覆盖层约定](./skills/skill-creator/references/project-overlay.md)：`.ai/overrides/{skills,agents}/<name>.md` 的写法与组合语义。
 -   [About custom agents for GitHub Copilot](https://docs.github.com/en/copilot/concepts/agents/coding-agent/about-custom-agents)
