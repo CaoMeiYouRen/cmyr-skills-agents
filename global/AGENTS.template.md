@@ -32,7 +32,7 @@
 ### 前端
 
 - **框架**：优先 Vue 3 + Composition API + `<script setup>`，兼容 React。
-- **样式**：优先 UnoCSS / Tailwind CSS，兼容 SCSS + BEM。
+- **样式**：优先纯 CSS + BEM 或 SCSS + BEM，不使用 UnoCSS / Tailwind CSS 等 CSS 框架。
 - **状态管理**：优先 Pinia（Vue）/ Zustand（React）。
 - **路由**：Vue Router 4 / React Router 6+。
 - **构建工具**：优先 Vite。

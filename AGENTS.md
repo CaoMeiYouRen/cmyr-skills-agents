@@ -16,7 +16,7 @@
 
 ### 项目偏好
 -   **核心语言**：TypeScript、Node.js、JavaScript。
--   **视觉识别**：需要视觉识别能力（看图问答 / OCR / 文档解析）时，若检测到 vision-augment skill 或 vision-augment MCP，优先使用。
+-   **视觉识别**：需要视觉识别能力（看图问答 / OCR / 文档解析）时，优先使用模型自身的视觉识别能力；仅当模型不支持时，才使用 vision-augment skill 或 vision-augment MCP 作为补充。
 -   **生态选型**：核心依赖、关键依赖基于 Python 生态时，优先基于 Python 生态开发项目，而不是一定要使用 Node.js 生态。
 -   **Python 生态**：优先 Python 3（不支持 Python 2，覆盖最新几个版本）；包管理优先 uv（兼容 pip），测试优先 pytest，代码检查优先 ruff，打包 exe 优先 PyInstaller。
 -   **Python 构建与发布**：src layout + hatchling + uv，`uv.lock` 提交入库、CI `uv sync --locked`；发布用 `uv build` + `python-semantic-release` + PyPI Trusted Publisher（OIDC 免 token）。

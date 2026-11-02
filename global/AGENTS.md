@@ -44,11 +44,11 @@
 ### 前端
 
 - **框架**：优先 Vue 3 + Composition API + `<script setup>`，兼容 React。
-- **样式**：优先 UnoCSS / Tailwind CSS，兼容 SCSS + BEM。
+- **样式**：优先纯 CSS + BEM 或 SCSS + BEM，不使用 UnoCSS / Tailwind CSS 等 CSS 框架。
 - **状态管理**：优先 Pinia（Vue）/ Zustand（React）。
 - **路由**：Vue Router 4 / React Router 6+。
 - **构建工具**：优先 Vite。
-- **视觉识别**：如果当前模型不支持视觉识别，但又需要视觉识别能力（看图问答 / OCR / 文档解析）时，若检测到 vision-augment 技能或 vision-augment MCP，优先使用。如果当前模型支持视觉识别，可优先使用自身视觉识别能力，vision-augment 作为补充。
+- **视觉识别**：需要视觉识别能力（看图问答 / OCR / 文档解析）时，优先使用当前模型自身的视觉识别能力；仅当模型不支持视觉识别时，才使用 vision-augment 技能或 vision-augment MCP 作为补充。
 
 ### 后端
 
