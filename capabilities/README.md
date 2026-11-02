@@ -41,7 +41,7 @@ node scripts/check-capabilities.mjs \
 
 输出为「能力 × 项目」矩阵（`✅ 证据数` / `— (缺 required 类型)`），并列出检测到的参数。`--json` 供 CI 或脚本消费；退出码 0 成功、2 参数或目录错误、1 运行时错误。
 
-扫描只回答「有没有 / 在哪」，不做代码比对；判断「实现是否漂移」由提案、评审或项目自建检查完成。
+扫描只回答「有没有 / 在哪」，不做代码比对；判断「实现是否漂移」由提案、评审或项目自建检查完成。扫描时机见 [standards/proposals.md](../standards/proposals.md) §4。
 
 扫描范围限于 `AGENTS.md`、`README.md`、`docs/standards/*.md`（规则会被加载的位置）+ `package.json` scripts + 标记文件；不读 `.github/agents`、`.github/skills`，那里的提及不等于项目已采纳规则。
 

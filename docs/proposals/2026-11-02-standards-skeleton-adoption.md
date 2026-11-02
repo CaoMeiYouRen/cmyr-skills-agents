@@ -45,7 +45,7 @@
 
 试点通过后：
 1. 向其余三个项目发正式提案（authority + roles 两节）；
-2. 再评估 `gates` / `memory` / `intake` 是否作为第二批；
+2. 再评估 `gates` / `memory` / `intake` / `proposals` 是否作为第二批；
 3. 决定是否把 `standards/` 纳入 `cmyr-template-cli` 的 `l0Selection.files`。
 
 ## 7 项目研判记录
