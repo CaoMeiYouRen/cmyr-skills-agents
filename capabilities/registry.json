@@ -122,6 +122,140 @@
         "owner",
         "repoTopics"
       ]
+    },
+    {
+      "id": "ai-check",
+      "title": "AI 基建治理检查（ai:check）",
+      "type": "B-template",
+      "channel": "standard-template",
+      "note": "检查项对齐提案阶段；政策定稿后迁到 standards/",
+      "mature": [],
+      "applies_to": [
+        "node"
+      ],
+      "status": "experiment",
+      "markers": [
+        {
+          "kind": "files",
+          "required": true,
+          "values": [
+            "scripts/ai/check-governance.mjs"
+          ]
+        },
+        {
+          "kind": "scripts",
+          "required": false,
+          "param": "command",
+          "values": [
+            "ai:check"
+          ]
+        }
+      ],
+      "projectParams": [
+        "checkItems",
+        "outputFormat"
+      ],
+      "optOut": [],
+      "proposal": "docs/proposals/2026-11-02-governance-check-alignment.md"
+    },
+    {
+      "id": "regression-weekly",
+      "title": "每周回归检查",
+      "type": "B-convention",
+      "channel": "project-workflow",
+      "mature": [
+        "caomei-auth",
+        "caomei-ui",
+        "dependfix",
+        "momei"
+      ],
+      "applies_to": [
+        "node"
+      ],
+      "status": "adopted",
+      "markers": [
+        {
+          "kind": "files",
+          "required": true,
+          "values": [
+            ".github/workflows/regression-weekly.yml"
+          ]
+        }
+      ],
+      "projectParams": [
+        "schedule",
+        "scope"
+      ],
+      "optOut": [],
+      "repo": "CaoMeiYouRen/caomei-auth",
+      "path": ".github/workflows/regression-weekly.yml",
+      "note": "已由模板/项目约定收敛，仅做漂移检测；禁用或空 workflow 也会命中"
+    },
+    {
+      "id": "todo-workflow",
+      "title": "待办同步 workflow",
+      "type": "B-convention",
+      "channel": "project-workflow",
+      "mature": [
+        "caomei-auth",
+        "caomei-ui",
+        "dependfix",
+        "momei"
+      ],
+      "applies_to": [
+        "node"
+      ],
+      "status": "adopted",
+      "markers": [
+        {
+          "kind": "files",
+          "required": true,
+          "values": [
+            ".github/workflows/todo.yml"
+          ]
+        }
+      ],
+      "projectParams": [
+        "todoPath",
+        "schedule"
+      ],
+      "optOut": [],
+      "repo": "CaoMeiYouRen/caomei-auth",
+      "path": ".github/workflows/todo.yml",
+      "note": "已由模板/项目约定收敛，仅做漂移检测；禁用或空 workflow 也会命中"
+    },
+    {
+      "id": "docker-workflow",
+      "title": "容器镜像 workflow",
+      "type": "B-convention",
+      "channel": "project-workflow",
+      "mature": [
+        "caomei-auth",
+        "dependfix",
+        "momei"
+      ],
+      "applies_to": [
+        "node"
+      ],
+      "status": "adopted",
+      "markers": [
+        {
+          "kind": "files",
+          "required": true,
+          "values": [
+            ".github/workflows/docker.yml",
+            ".github/workflows/docker-publish.yml"
+          ]
+        }
+      ],
+      "projectParams": [
+        "registries",
+        "platforms"
+      ],
+      "optOut": [],
+      "repo": "CaoMeiYouRen/dependfix",
+      "path": ".github/workflows/docker.yml",
+      "note": "仅按文件存在判定，禁用或空 workflow 也会命中"
     }
   ]
 }

@@ -10,7 +10,10 @@
 | `A-rule` | 纯流程规则，无部署物 | 随 L0 技能 / 规范自动到达 |
 | `B-template` | 政策 + 项目自建实现（脚本、台账、参数不同） | 规范给政策，模板给结构，项目自行实现 |
 | `B-implementation` | 有可复用实现（action / 包） | 引用统一实现，删本地副本 |
+| `B-convention` | 已由模板或项目约定收敛，没有统一实现 | 只做漂移检测，不要求改造 |
 | `C-project` | 项目特化，不扩散 | 只登记差异与 optOut 理由 |
+
+`channel` 取值：`l0-reference`、`standard-template`、`action-or-package`、`project-workflow`。
 
 ## 2 字段
 
@@ -26,6 +29,7 @@
 | `projectParams` | 项目变量（不自动提取，由项目 `AGENTS.md` 定义）；扫描提取的参数由 marker 上的 `param` 声明（如 `command` / `ledgerPath`） |
 | `optOut` | 明确不采纳的项目与理由 |
 | `repo` / `path` | 权威实现在外部仓库时使用（如 `dependfix/dependfix` + `action.yml`） |
+| `proposal` | 政策尚未定稿时，指向对应提案 |
 
 ## 3 扫描
 
