@@ -27,7 +27,7 @@
 | `status` | `experiment` → `candidate` → `upstream` → `adopted` → `deprecated` |
 | `markers` | 采纳标记数组：`{ kind: scripts\|files\|text, required, values, param? }`；`present` 要求所有 `required` 组命中 |
 | `projectParams` | 项目变量（不自动提取，由项目 `AGENTS.md` 定义）；扫描提取的参数由 marker 上的 `param` 声明（如 `command` / `ledgerPath`） |
-| `optOut` | 明确不采纳的项目与理由 |
+| `optOut` | 明确不采纳的项目与理由，条目形如 `{ project, items?, reason, decidedAt }`；`items` 用于按检查项 / 子能力跳过 |
 | `repo` / `path` | 权威实现在外部仓库时使用（如 `dependfix/dependfix` + `action.yml`） |
 | `proposal` | 政策尚未定稿时，指向对应提案 |
 
@@ -49,7 +49,7 @@ node scripts/check-capabilities.mjs \
 
 - 新增能力：先在成熟项目验证 ≥ 1 个发布周期，再登记为 `candidate`；`markers` 必须能被上面的扫描器命中。
 - 转 `upstream`：政策进 `standards/`，实现进包 / action / 技能，项目侧只留参数。
-- `optOut`：不采纳的项目必须写理由（不适用 / 成本高于收益 / 已有等价实现），否则「没做」和「决定不做」无法区分；字段在 `registry.json` 的能力条目上。
+- `optOut`：不采纳的项目必须写理由（不适用 / 成本高于收益 / 已有等价实现），否则「没做」和「决定不做」无法区分；字段在 `registry.json` 的能力条目上。条目格式固定为 `{ project, items?, reason, decidedAt }`：只跳过部分检查项时写 `items`（如 `#5 弃用引用扫描`），整项不采纳时省略；`decidedAt` 记决策日期，便于复查。
 - 退役：`deprecated` + 移除标记 + 在提案或规范里登记替代。
 
 ## 5 与 standards / experience 的关系

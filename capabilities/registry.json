@@ -155,7 +155,17 @@
         "checkItems",
         "outputFormat"
       ],
-      "optOut": [],
+      "optOut": [
+        {
+          "project": "caomei-auth",
+          "items": [
+            "#5 弃用引用扫描",
+            "#6 能力标记"
+          ],
+          "reason": "无 deprecated 清单概念，无可扫描对象（#5）；能力标记需读取上游 capabilities/registry.json，跨仓且离线不可用，项目侧重复读取会形成第二事实源，该台账由上游 check-capabilities 统一审计（#6）",
+          "decidedAt": "2026-11-02"
+        }
+      ],
       "proposal": "docs/proposals/2026-11-02-governance-check-alignment.md"
     },
     {

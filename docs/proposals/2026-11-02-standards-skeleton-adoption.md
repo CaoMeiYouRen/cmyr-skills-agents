@@ -47,3 +47,12 @@
 1. 向其余三个项目发正式提案（authority + roles 两节）；
 2. 再评估 `gates` / `memory` / `intake` 是否作为第二批；
 3. 决定是否把 `standards/` 纳入 `cmyr-template-cli` 的 `l0Selection.files`。
+
+## 7 项目研判记录
+
+| 项目 | 结论 | 理由 |
+| :--- | :--- | :--- |
+| caomei-auth | 本轮不采纳 | 草案尚未发起正式提案；项目 `AGENTS.md` §2（三层事实源与冲突顺序）与 §6.2（主定义 / 镜像治理）已有等价正文，再引入上游正文会违反「同一规则只有一处正文」。 |
+
+- 复查条件：dependfix 试点结论出来后重新评估；届时只考虑「规范来源可追溯」（记录上游文件路径 + commit）这类低成本标注，不搬运正文。
+- 能力台账：`standards-adoption` 尚未登记，本轮不写入 `capabilities/registry.json`；若试点定稿后登记，结论在本表继续更新。
