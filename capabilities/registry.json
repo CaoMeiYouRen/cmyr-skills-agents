@@ -164,6 +164,16 @@
           ],
           "reason": "无 deprecated 清单概念，无可扫描对象（#5）；能力标记需读取上游 capabilities/registry.json，跨仓且离线不可用，项目侧重复读取会形成第二事实源，该台账由上游 check-capabilities 统一审计（#6）",
           "decidedAt": "2026-11-02"
+        },
+        {
+          "project": "momei",
+          "items": [
+            "#5 弃用引用扫描",
+            "#6 能力标记",
+            "#1 的 manifest 比对子项"
+          ],
+          "reason": "momei 的 ai-governance 只有生命周期表，没有机器可读的 deprecated 标记或清单，当前也无弃用资产（#5）；能力标记需读取上游 capabilities/registry.json，跨仓且离线不可用，重复读取会形成第二事实源（#6）；momei 没有 manifest.json，#1 的本地等价规则已由 name / description / metadata.internal 检查覆盖",
+          "decidedAt": "2026-11-03"
         }
       ],
       "proposal": "docs/proposals/2026-11-02-governance-check-alignment.md"

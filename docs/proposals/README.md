@@ -28,7 +28,13 @@
 
 | 提案 | 能力 | 状态 |
 | :--- | :--- | :--- |
-| [任务开局 CI 回执](./2026-11-02-task-start-ci-receipt.md) | `task-start-ci-receipt` | 待研判（本轮试点） |
-| [发布前安全门禁](./2026-11-02-release-security-gate.md) | `release-security-gate` | 待研判（本轮试点） |
-| [AI 基建治理检查对齐](./2026-11-02-governance-check-alignment.md) | `ai-check` | 待研判（本轮试点） |
-| [standards 骨架接入](./2026-11-02-standards-skeleton-adoption.md) | 未登记（草案） | **草案**（仅 dependfix 试点，未发起） |
+| [任务开局 CI 回执](./2026-11-02-task-start-ci-receipt.md) | `task-start-ci-receipt` | 待研判（本轮试点；momei 已采纳） |
+| [发布前安全门禁](./2026-11-02-release-security-gate.md) | `release-security-gate` | 待研判（本轮试点；momei 已采纳，过渡期） |
+| [AI 基建治理检查对齐](./2026-11-02-governance-check-alignment.md) | `ai-check` | 待研判（本轮试点；momei 部分采纳） |
+| [standards 骨架接入](./2026-11-02-standards-skeleton-adoption.md) | 未登记（草案） | **草案**（仅 dependfix 试点，未发起；momei 本轮不采纳） |
+
+## 下游研判记录
+
+| 项目 | 记录 |
+| :--- | :--- |
+| momei | [2026-11-03 momei 研判记录](./2026-11-03-momei-feedback.md) |
