@@ -48,37 +48,40 @@
 - **状态管理**：优先 Pinia（Vue）/ Zustand（React）。
 - **路由**：Vue Router 4 / React Router 6+。
 - **构建工具**：优先 Vite。
+- **组合式工具**：优先 VueUse。
+- **日期处理**：优先 dayjs。
 - **视觉识别**：需要视觉识别能力（看图问答 / OCR / 文档解析）时，优先使用当前模型自身的视觉识别能力；仅当模型不支持视觉识别时，才使用 vision-augment 技能或 vision-augment MCP 作为补充。
 
 ### 后端
 
-- **API 框架**：纯 API 优先 Hono；全栈项目优先 Nuxt Server Routes。
+- **API 框架**：纯 API 优先 Hono；全栈项目优先 Nuxt Server Routes；NestJS 仅维护既有项目与模板，不作为新项目首选，选用时按 NestJS 对应规范执行。
 - **数据校验**：优先 Zod。
-- **ORM**：优先 TypeORM，兼容 Prisma。
-- **数据库**：优先 PostgreSQL，兼容 MySQL / SQLite，可选 MongoDB。
-- **缓存**：优先 Redis。
-- **Nuxt env 解析**：`NUXT_` 前缀 env 由 destr 解析为布尔/数字，parse 函数声明联合类型并单测布尔形态。
+- **ORM**：优先 TypeORM（NestJS 用 `@nestjs/typeorm`）；Prisma 仅在已有项目或明确需要时使用。
+- **数据库**：默认 SQLite（better-sqlite3，便于自部署）；建议支持 PostgreSQL / MySQL，MongoDB 可选。
+- **缓存**：进程内缓存优先 `lru-cache`；需要跨实例共享时用 `ioredis` 接 Redis 作为外置缓存。
+- **Nuxt env 解析**：`NUXT_` 前缀 env 由 destr 解析为布尔/数字，parse 函数声明联合类型并单测布尔形态；值形如数字时需用引号包裹，否则会被转成 number。
 
 ### 基础设施
 
 - **容器化**：优先 Docker。
 - **部署**：优先 Vercel / Cloudflare Serverless，兼容传统 VPS。
 - **CI/CD**：优先 GitHub Actions。
-- **镜像发布**：默认推送到 docker.io + ghcr.io，可选 registry.cn-hangzhou.aliyuncs.com（阿里云）
+- **镜像发布**：默认推送到 docker.io + ghcr.io，可选 registry.cn-hangzhou.aliyuncs.com（阿里云）；默认构建 linux/amd64 + linux/arm64 多架构镜像。
 
 ### 包管理与构建
 
 - **包管理**：优先 pnpm，兼容 npm / yarn。
 - **构建工具**：优先 tsdown（库）/ Vite（应用）。
 - **Nuxt 构建环境**：Windows 上 Nuxt 项目构建/开发必须走 WSL2 + ext4（项目放 WSL 内部文件系统，不使用 `/mnt/c`、`/mnt/d`）；任务涉及构建/开发时先检测 WSL2 环境并初始化或提醒配置，任务不涉及构建/开发时仅输出建议告警，不强制。
-- **发布**：优先 semantic-release 自动化版本发布。
+- **发布**：优先 semantic-release + semantic-release-cmyr-config 自动化版本发布。
 - **pnpm workspace 依赖同步**：新增运行时依赖包时，同步所有构建链（CI / Dockerfile / action / release）的 `--filter` 列表。
 - **tsdown external**：external 构建期不校验，发布前对实际产物运行冒烟。
 
 ### 测试
 
-- **框架**：优先 Vitest，兼容 Jest。
+- **框架**：优先 Vitest，兼容 Jest（NestJS 沿用 Jest）。
 - **E2E**：优先 Playwright。
+- **覆盖率**：有 CI 的项目上传 codecov，阈值由项目定义。
 
 ### Python 生态
 
@@ -110,6 +113,7 @@
 - **tsc --noEmit**：零 error。
 - **单元测试**：全部通过。
 - **构建**：无报错；库/CLI 发布前对实际产物运行冒烟。
+- **共享配置**：ESLint / stylelint / commitlint 统一复用 eslint-config-cmyr、stylelint-config-cmyr、commitlint-config-cmyr，不在项目内另写规则副本。
 
 ---
 
@@ -149,7 +153,8 @@
 ### GitHub 规范
 
 - **GitHub 操作优先 gh-cli**：涉及仓库、Issue、PR、Actions、Release、Project、API 等 GitHub 能力时，优先通过 `gh-cli` skill 实现；仅在该 skill 不适配时再选择其他路径。
-- **Actions 版本钉定**：使用前到 releases 页实时核验，钉不可变版本。
+- **Actions 版本钉定**：使用前到 releases 页实时核验并钉版本号（如 `@v7`、`@v4.7.0`），不使用 `@master` / `@main` / 分支引用。
+- **依赖告警**：仓库启用 `dependabot.yml`；需要自动修复时使用 dependfix。
 - **Dependabot label**：label 需手动创建（如 Mergify 依赖的 `dependencies`）。
 
 ---
@@ -175,6 +180,7 @@
 
 ### 代码变更
 
+- **工作区边界**：只修改当前项目工作区内的文件，不得改动其他项目；跨项目改动必须得到用户明确授权，或当前工作区本身覆盖目标项目。
 - 修改现有代码前，先理解其上下文和设计意图。
 - 优先复用项目中已有的工具函数和模式，不引入重复实现。
 - 新增依赖前，确认项目中没有功能相近的已有依赖。

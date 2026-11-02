@@ -36,31 +36,33 @@
 - **状态管理**：优先 Pinia（Vue）/ Zustand（React）。
 - **路由**：Vue Router 4 / React Router 6+。
 - **构建工具**：优先 Vite。
+- **组合式工具**：优先 VueUse。
+- **日期处理**：优先 dayjs。
 
 ### 后端
 
-- **API 框架**：纯 API 优先 Hono；全栈项目优先 Nuxt Server Routes。
+- **API 框架**：纯 API 优先 Hono；全栈项目优先 Nuxt Server Routes；NestJS 仅维护既有项目与模板，不作为新项目首选，选用时按 NestJS 对应规范执行。
 - **数据校验**：优先 Zod。
-- **ORM**：优先 TypeORM，兼容 Prisma。
-- **数据库**：优先 PostgreSQL，兼容 MySQL / SQLite，可选 MongoDB。
-- **缓存**：优先 Redis。
+- **ORM**：优先 TypeORM（NestJS 用 `@nestjs/typeorm`）；Prisma 仅在已有项目或明确需要时使用。
+- **数据库**：默认 SQLite（better-sqlite3，便于自部署）；建议支持 PostgreSQL / MySQL，MongoDB 可选。
+- **缓存**：进程内缓存优先 `lru-cache`；需要跨实例共享时用 `ioredis` 接 Redis 作为外置缓存。
 
 ### 基础设施
 
 - **容器化**：优先 Docker。
 - **部署**：优先 Vercel / Cloudflare Serverless，兼容传统 VPS。
 - **CI/CD**：优先 GitHub Actions。
-- **镜像发布**：<!-- TODO: 指定镜像仓库，如 docker.io + ghcr.io -->。
+- **镜像发布**：默认推送到 <!-- TODO: 指定镜像仓库，如 docker.io + ghcr.io -->；默认构建 linux/amd64 + linux/arm64 多架构镜像。
 
 ### 包管理与构建
 
 - **包管理**：优先 pnpm，兼容 npm / yarn。
 - **构建工具**：优先 tsdown（库）/ Vite（应用）。
-- **发布**：优先 semantic-release 自动化版本发布。
+- **发布**：优先 semantic-release + semantic-release-cmyr-config 自动化版本发布。
 
 ### 测试
 
-- **框架**：优先 Vitest，兼容 Jest。
+- **框架**：优先 Vitest，兼容 Jest（NestJS 沿用 Jest）。
 - **E2E**：优先 Playwright。
 - **覆盖率**：<!-- TODO: 指定最低覆盖率阈值，如 80% -->。
 
@@ -84,6 +86,8 @@
 | 类型检查 | tsc --noEmit | 零 error |
 | 单元测试 | vitest / jest | 全部通过 |
 | 构建 | 项目构建命令 | 无报错 |
+
+> ESLint / stylelint / commitlint 统一复用 eslint-config-cmyr、stylelint-config-cmyr、commitlint-config-cmyr，不在项目内另写规则副本。
 
 ---
 
@@ -131,6 +135,7 @@
 
 ### 代码变更
 
+- **工作区边界**：只修改当前项目工作区内的文件，不得改动其他项目；跨项目改动必须得到用户明确授权，或当前工作区本身覆盖目标项目。
 - 修改现有代码前，先理解其上下文和设计意图。
 - 优先复用项目中已有的工具函数和模式，不引入重复实现。
 - 新增依赖前，确认项目中没有功能相近的已有依赖。

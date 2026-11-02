@@ -21,11 +21,12 @@
 -   **Python 生态**：优先 Python 3（不支持 Python 2，覆盖最新几个版本）；包管理优先 uv（兼容 pip），测试优先 pytest，代码检查优先 ruff，打包 exe 优先 PyInstaller。
 -   **Python 构建与发布**：src layout + hatchling + uv，`uv.lock` 提交入库、CI `uv sync --locked`；发布用 `uv build` + `python-semantic-release` + PyPI Trusted Publisher（OIDC 免 token）。
 -   **前端生态**：优先 Vue 3，兼容 React。
--   **后端生态**：纯 API 倾向 Hono；全栈项目倾向 Nuxt。
--   **数据存储**：优先 PostgreSQL，兼容 MySQL、SQLite，可选 MongoDB。
+-   **后端生态**：纯 API 倾向 Hono；全栈项目倾向 Nuxt；NestJS 仅维护既有项目，不作为新项目首选。
+-   **数据存储**：默认 SQLite，建议支持 PostgreSQL / MySQL，MongoDB 可选。
+-   **缓存**：进程内用 `lru-cache`，外置用 `ioredis` 接 Redis。
 -   **基础设施**：优先 Docker，倾向 Vercel 与 Cloudflare Serverless 生态。
 -   **包管理与构建**：优先 pnpm，构建使用 tsdown。
--   **包发布**：优先使用 semantic-release 做自动化版本发布。
+-   **包发布**：优先使用 semantic-release + semantic-release-cmyr-config 做自动化版本发布。
 -   **Docker 镜像发布**：默认同时推送到 docker.io、ghcr.io 和 registry.cn-hangzhou.aliyuncs.com。
 -   **文档站点构建**：优先使用 VitePress。
 -   **测试框架**：优先 Vitest。
