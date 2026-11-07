@@ -1,8 +1,9 @@
 # 提案：Docker 镜像原生多架构构建（去 QEMU）
 
 > 能力：`docker-workflow`（B-convention；本提案细化其「原生多架构」约定，不新增能力）
-> 发起：2026-11-07 ｜ 状态：审查通过，待授权通知
+> 发起：2026-11-07 ｜ 状态：已通知（待各项目研判）
 > 审查：2026-11-07 通过（blocker 0 / warning 0 / suggest 2；三轮独立复核，清单见 [README](./README.md) 的「提交前优化审查」）
+> 通知：2026-11-07 已提交 momei [#1002](https://github.com/CaoMeiYouRen/momei/issues/1002)、dependfix [#222](https://github.com/dependfix/dependfix/issues/222)、caomei-auth [#718](https://github.com/CaoMeiYouRen/caomei-auth/issues/718)
 
 ## 1 变更摘要
 
