@@ -58,6 +58,7 @@
 | [发布前安全门禁](./2026-11-02-release-security-gate.md) | `release-security-gate` | 待研判（本轮试点；momei 已采纳，过渡期） | —（本地批次） |
 | [AI 基建治理检查对齐](./2026-11-02-governance-check-alignment.md) | `ai-check` | 待研判（本轮试点；momei 部分采纳） | —（本地批次） |
 | [standards 骨架接入](./2026-11-02-standards-skeleton-adoption.md) | 未登记（草案） | **草案**（仅 dependfix 试点，未发起；momei 本轮不采纳） | —（未发起） |
+| [Docker 镜像原生多架构构建](./2026-11-07-native-multiarch-docker.md) | `docker-workflow`（细化原生多架构约定） | 审查通过，待授权通知 | 待创建（momei / dependfix / caomei-auth） |
 
 > 多仓库提案在「下游 issue」列按仓库列出链接；「状态」列只写提案级状态，项目级状态以各自 issue 为准。issue 创建后把 `待创建（a / b / c）` 拆成 `a: #1 · b: #2 · c: #3`，项目状态分叉时不再压平到单行。
 

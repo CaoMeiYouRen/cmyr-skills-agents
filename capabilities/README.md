@@ -29,7 +29,7 @@
 | `projectParams` | 项目变量（不自动提取，由项目 `AGENTS.md` 定义）；扫描提取的参数由 marker 上的 `param` 声明（如 `command` / `ledgerPath`） |
 | `optOut` | 明确不采纳的项目与理由，条目形如 `{ project, items?, reason, decidedAt }`；`items` 用于按检查项 / 子能力跳过 |
 | `repo` / `path` | 权威实现在外部仓库时使用（如 `dependfix/dependfix` + `action.yml`） |
-| `proposal` | 政策尚未定稿时，指向对应提案 |
+| `proposal` | 政策尚未定稿时，指向对应提案；指向提案不代表 `mature` 已覆盖该子约定，子项差异用 `optOut.items` 表达 |
 
 ## 3 扫描
 

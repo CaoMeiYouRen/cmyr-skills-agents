@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-02",
+  "updatedAt": "2026-11-07",
   "capabilities": [
     {
       "id": "task-start-ci-receipt",
@@ -258,6 +258,7 @@
         "node"
       ],
       "status": "adopted",
+      "proposal": "docs/proposals/2026-11-07-native-multiarch-docker.md",
       "markers": [
         {
           "kind": "files",
@@ -275,7 +276,7 @@
       "optOut": [],
       "repo": "CaoMeiYouRen/dependfix",
       "path": ".github/workflows/docker.yml",
-      "note": "仅按文件存在判定，禁用或空 workflow 也会命中"
+      "note": "仅按文件存在判定，禁用或空 workflow 也会命中；原生多架构约定见 proposal"
     }
   ]
 }
