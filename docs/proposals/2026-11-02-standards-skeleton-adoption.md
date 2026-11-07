@@ -55,6 +55,7 @@
 | caomei-auth | 本轮不采纳 | 草案尚未发起正式提案；项目 `AGENTS.md` §2（三层事实源与冲突顺序）与 §6.2（主定义 / 镜像治理）已有等价正文，再引入上游正文会违反「同一规则只有一处正文」。 |
 | momei | 本轮不采纳 | 草案尚未发起；`AGENTS.md` §2 已有三层事实源与冲突顺序，§6.3 已有主定义 / 镜像治理，再引入上游正文会形成第二权威。 |
 | caomei-ui | 本轮不采纳 | 草案尚未发起；`AGENTS.md` §2 已有三层事实源与冲突顺序、§8.2 已有主定义 / 镜像治理，且 `check:standards-redundant:strict` 禁止规范重复表述，搬运上游正文会直接触发本仓门禁。 |
+| dependfix | 本轮不采纳 | 试点对象本身：`docs/standards/documentation.md §4` 已有三层事实源、冲突顺序与规范单点声明，`docs/standards/ai-governance.md §2` 已有主定义 / 符号链接镜像治理，`AGENTS.md` 已有角色矩阵；再引入上游正文会形成第二权威，且会触发 `check:standards-redundant:strict`（2026-11-08 研判）。 |
 
-- 复查条件：dependfix 试点结论出来后重新评估；届时只考虑「规范来源可追溯」（记录上游文件路径 + commit）这类低成本标注，不搬运正文。
+- 复查条件：四个项目均已给出结论（dependfix 2026-11-08 不采纳，口径与前三个项目一致）；仅当上游 `standards/` 变为可直接引用（发布为包 / submodule）或项目需要「规范来源可追溯」标注时重新评估，仍不搬运正文。
 - 能力台账：`standards-adoption` 尚未登记，本轮不写入 `capabilities/registry.json`；若试点定稿后登记，结论在本表继续更新。
