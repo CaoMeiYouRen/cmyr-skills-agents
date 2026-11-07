@@ -26,7 +26,7 @@
 | [task-start.md](./task-start.md) | 任务开局 CI 回执检查 | 1/4 项目（dependfix） |
 | [intake.md](./intake.md) | 外部技能准入与库存变更同步 | 3/4 项目 |
 | [memory.md](./memory.md) | 经验沉淀载体与蒸馏补充触发 | 2/4 项目 |
-| [proposals.md](./proposals.md) | 提案接收时机、状态、下游反馈与上游扫描 | —（流程规则，暂不统计） |
+| [proposals.md](./proposals.md) | 提案接收时机、状态、上游 issue 通知、下游反馈与上游扫描 | —（流程规则，暂不统计） |
 
 ## 3 什么不进本目录
 
