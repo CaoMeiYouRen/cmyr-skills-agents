@@ -24,6 +24,7 @@
   },
   "scripts": {
     "release": "semantic-release",
+    "check:proposals": "node scripts/check-proposals.mjs",
     "lint": "cross-env NODE_ENV=production eslint . --fix",
     "lint:md": "lint-md *.md .github/**/*.md skills/**/*.md agents/**/*.md global/**/*.md docs/**/*.md standards/**/*.md capabilities/**/*.md --fix",
     "lint:md:check": "lint-md *.md .github/**/*.md skills/**/*.md agents/**/*.md global/**/*.md docs/**/*.md standards/**/*.md capabilities/**/*.md",

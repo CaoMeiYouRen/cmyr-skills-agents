@@ -93,3 +93,30 @@ node scripts/setup-ai.mjs
 | `CLAUDE.md` | `AGENTS.md` |
 
 > Windows 下文件符号链接（`CLAUDE.md`）需要开发者模式或管理员权限；目录链接使用 junction 无需特权。
+
+### `check-proposals.mjs`
+
+校验 `docs/proposals/status.json`，并在 README 索引与各提案文末渲染「项目研判结论」，保证提案状态只有一个事实源。
+
+```bash
+# 校验状态合法且生成内容与文件一致（CI 执行）
+node scripts/check-proposals.mjs
+
+# 更新 status.json 后重新生成 README 索引与提案结论块
+node scripts/check-proposals.mjs --write
+
+# 输出机器可读结果
+node scripts/check-proposals.mjs --json
+```
+
+**参数**：
+
+| 参数 | 说明 |
+|------|------|
+| `--root <path>` | 仓库根目录，默认当前目录 |
+| `--status <path>` | 状态文件，默认 `docs/proposals/status.json` |
+| `--readme <path>` | 索引文件，默认 `docs/proposals/README.md` |
+| `--write` | 写回生成内容 |
+| `--json` | 输出 JSON 摘要 |
+
+**退出码**：`0` 通过；`1` 状态校验失败或生成内容不一致；`2` 参数、文件或标记错误。

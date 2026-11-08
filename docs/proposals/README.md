@@ -20,7 +20,7 @@
 2. **优化审查**：按「提交前优化审查」完成作者自检 + 独立复核；未通过不进入下一步。
 3. **授权**：由用户确认是否通知、通知哪些项目；agent 不自行开 issue。
 4. **通知**：按 [standards/proposals.md](../../standards/proposals.md) §5，向每个受影响仓库各开一个 issue；标题用 `[提案] <主题>`，正文只带该项目对应的分档与完整提案链接。同一仓库一个提案一个 issue，相关或不可拆分的提案可合并并列出覆盖清单。
-5. **登记**：在本文件索引补 issue 链接；项目状态以 issue 为准。
+5. **登记**：在 `status.json` 登记 issue 链接与项目结论，运行 `node scripts/check-proposals.mjs --write` 生成索引；有 issue 时项目状态以 issue 为准，本地批次以本项目记录为准。
 
 ## 提交前优化审查
 
@@ -44,26 +44,49 @@
 
 接收时机、状态、上游通知、下游反馈与上游扫描见 [standards/proposals.md](../../standards/proposals.md)；本文只定义提案写法、审查、边界与索引。
 
+项目结论登记在 [`status.json`](./status.json)，索引与各提案文末的「项目研判结论」由 `node scripts/check-proposals.mjs --write` 生成。详细项目结论以该文件为准；提案头部只写一句话摘要，不重复逐项目状态。
+
+```bash
+# 校验状态与生成内容一致（CI 执行）
+node scripts/check-proposals.mjs
+
+# 更新状态后重新生成 README 索引与提案结论块
+node scripts/check-proposals.mjs --write
+```
+
+字段口径：
+
+- `stage`：`draft` → `notified` → `concluded`，不再推进的提案（含草案）用 `withdrawn` 并写 `reason`。
+- 项目状态：`pending` / `adopted` / `partial` / `deferred` / `declined`；非 `pending` 必须有 `decidedAt`（项目书面结论）或 `observedAt`（上游扫描核验日期），并用 `basis` 标明来源（`feedback` / `issue` / `scan` / `record`）。
+- `declined` 必须有 `note` 写理由；部分采纳且有明确跳过项时用 `declinedItems` 列出，能力已登记到 `registry` 时与其 `optOut` 对齐。
+- 已结案 / 已撤回不允许残留 `pending`；结案日期记 `concludedAt`。
+- 未开 issue、由用户转交的本地批次用 `notifiedVia: local-batch` 记录，不计入已按 issue 通知。
+
 ## 边界
 
 - 提案不携带补丁、不附带「照做」的命令序列；实现由项目决定。
 - 上游规则（`standards/`）与提案分开：规则是共同基线，提案是「是否/何时采纳」。
-- 项目不采纳时，在能力台账登记 `optOut` 与理由，而不是静默跳过。
+- 项目不采纳时，在能力台账登记 `optOut` 与理由（能力已登记到 `registry` 时），而不是静默跳过。
 
+<!-- proposals-status:start -->
 ## 索引
 
-| 提案 | 能力 | 状态 | 下游 issue |
-| :--- | :--- | :--- | :--- |
-| [任务开局 CI 回执](./2026-11-02-task-start-ci-receipt.md) | `task-start-ci-receipt` | 待研判（本轮试点；momei 已采纳） | —（本地批次） |
-| [发布前安全门禁](./2026-11-02-release-security-gate.md) | `release-security-gate` | 待研判（本轮试点；momei 已采纳，过渡期） | —（本地批次） |
-| [AI 基建治理检查对齐](./2026-11-02-governance-check-alignment.md) | `ai-check` | 待研判（本轮试点；momei 部分采纳） | —（本地批次） |
-| [standards 骨架接入](./2026-11-02-standards-skeleton-adoption.md) | 未登记（草案） | **草案**（仅 dependfix 试点，未发起；momei 本轮不采纳） | —（未发起） |
-| [Docker 镜像原生多架构构建](./2026-11-07-native-multiarch-docker.md) | `docker-workflow`（细化原生多架构约定） | 已通知（待研判） | momei: [#1002](https://github.com/CaoMeiYouRen/momei/issues/1002) · dependfix: [#222](https://github.com/dependfix/dependfix/issues/222) · caomei-auth: [#718](https://github.com/CaoMeiYouRen/caomei-auth/issues/718) |
+> 阶段：草案 / 已通知 / 已结案 / 已撤回。项目结论由 `status.json` 生成；扫描命中的「已采纳 / 部分采纳」只代表标记存在，语义一致性仍需项目研判。
 
-> 多仓库提案在「下游 issue」列按仓库列出链接；「状态」列只写提案级状态，项目级状态以各自 issue 为准。issue 创建后把 `待创建（a / b / c）` 拆成 `a: #1 · b: #2 · c: #3`，项目状态分叉时不再压平到单行。
+| 提案 | 能力 | 阶段 | dependfix | momei | caomei-ui | caomei-auth |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| [任务开局 CI 回执检查](./2026-11-02-task-start-ci-receipt.md) | `task-start-ci-receipt` | 已通知 | 已采纳 | 已采纳 | 已采纳 | 待研判 |
+| [发布前安全告警门禁](./2026-11-02-release-security-gate.md) | `release-security-gate` | 已结案 | 已采纳 | 已采纳 | 已采纳 | 已采纳 |
+| [AI 基建治理检查对齐](./2026-11-02-governance-check-alignment.md) | `ai-check` | 已结案 | 部分采纳 · 跳过 2 项 | 部分采纳 · 跳过 3 项 | 部分采纳 | 部分采纳 · 跳过 2 项 |
+| [standards 骨架接入（已撤回）](./2026-11-02-standards-skeleton-adoption.md) | — | 已撤回 | 不采纳 | 不采纳 | 不采纳 | 不采纳 |
+| [Docker 镜像原生多架构构建](./2026-11-07-native-multiarch-docker.md) | `docker-workflow` | 已通知 | 已采纳 · [#222](https://github.com/dependfix/dependfix/issues/222) | 待研判 · [#1002](https://github.com/CaoMeiYouRen/momei/issues/1002) | — | 待研判 · [#718](https://github.com/CaoMeiYouRen/caomei-auth/issues/718) |
+
+> 多仓库提案按项目列出 issue；有 issue 的以 GitHub 为准，本地批次以 `status.json` 的项目记录为准。
 
 ## 下游研判记录
 
-| 项目 | 记录 |
-| :--- | :--- |
-| momei | [2026-11-03 momei 研判记录](./2026-11-03-momei-feedback.md) |
+| 项目 | 范围 | 日期 | 记录 |
+| :--- | :--- | :--- | :--- |
+| momei | 2026-11-02 批次 | 2026-11-03 | [2026-11-03-momei-feedback.md](./2026-11-03-momei-feedback.md) |
+| dependfix | Docker 原生多架构 | 2026-11-07 | [#222](https://github.com/dependfix/dependfix/issues/222) |
+<!-- proposals-status:end -->

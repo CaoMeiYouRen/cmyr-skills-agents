@@ -1,7 +1,8 @@
 # 提案：AI 基建治理检查对齐（ai:check）
 
 > 能力：`ai-check`（B 类：检查项统一，脚本由项目自持）
-> 发起：2026-11-02 ｜ 状态：待各项目 agent 研判
+> 发起：2026-11-02 ｜ 状态：已结案（逐项目结论见文末生成块，数据源 [status.json](./status.json)）
+> 注：§2–§4 是 2026-11-02 的核验快照；caomei-ui 的 references 索引此后已补齐，现状与跳过项以文末生成块为准。
 
 ## 1 变更摘要
 
@@ -78,3 +79,21 @@ done
 - 不提供统一脚本或 npm 包。
 - 不修改任何下游文件。
 - 不规定 CI job 名称与执行时机。
+
+<!-- proposal-status:start -->
+## 项目研判结论（自动生成）
+
+> 数据源 `docs/proposals/status.json`；由 `node scripts/check-proposals.mjs --write` 生成，请勿手工编辑。
+
+| 项目 | 结论 | 日期 | 依据 |
+| :--- | :--- | :--- | :--- |
+| dependfix | 部分采纳 | 2026-11-08 | 上游登记 |
+| momei | 部分采纳 | 2026-11-03 | 项目反馈 |
+| caomei-ui | 部分采纳 | 2026-11-09 | 扫描标记 |
+| caomei-auth | 部分采纳 | 2026-11-02 | 上游登记 |
+
+- **dependfix**：其余检查项现状合规，机检补强登记为项目候选
+- **momei**：只采纳 #4 references 索引
+- **caomei-ui**：frontmatter 与 references 索引已机检；无书面结论，跳过项未登记
+- **caomei-auth**：其余检查项已对齐
+<!-- proposal-status:end -->

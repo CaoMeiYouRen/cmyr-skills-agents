@@ -1,7 +1,8 @@
 # 提案：任务开局 CI 回执检查
 
 > 能力：`task-start-ci-receipt`（A 类，随 L0 技能分发）
-> 发起：2026-11-02 ｜ 状态：待各项目 agent 研判
+> 发起：2026-11-02 ｜ 状态：已通知（逐项目结论见文末生成块，数据源 [status.json](./status.json)）
+> 注：§2 与 §3 是 2026-11-02 的核验快照；momei / caomei-ui 此后已落地，现状以文末生成块为准。
 
 ## 1 变更摘要
 
@@ -65,3 +66,21 @@ node scripts/check-capabilities.mjs --projects ../dependfix,../caomei-auth,../mo
 - 不修改任何下游文件，不创建 `.session` 目录。
 - 不规定 briefing 的具体措辞与行数上限。
 - 不把 CI 回执当成质量门或发布门禁。
+
+<!-- proposal-status:start -->
+## 项目研判结论（自动生成）
+
+> 数据源 `docs/proposals/status.json`；由 `node scripts/check-proposals.mjs --write` 生成，请勿手工编辑。
+
+| 项目 | 结论 | 日期 | 依据 |
+| :--- | :--- | :--- | :--- |
+| dependfix | 已采纳 | 2026-11-09 | 扫描标记 |
+| momei | 已采纳 | 2026-11-03 | 项目反馈 |
+| caomei-ui | 已采纳 | 2026-11-09 | 扫描标记 |
+| caomei-auth | 待研判 | — | — |
+
+- **dependfix**：AGENTS.md 已列为 hard requirement（扫描命中 text + files）
+- **momei**：briefing 增加一行；gh 不可用记「不可用 + 原因」，空 conclusion 记「进行中」
+- **caomei-ui**：docs/standards/ai-collaboration.md 已含回执与四态结论
+- **caomei-auth**：.session 已建立，但 AGENTS.md 与 docs/standards 未见回执规则；提案要求先引入 session 再启用
+<!-- proposal-status:end -->

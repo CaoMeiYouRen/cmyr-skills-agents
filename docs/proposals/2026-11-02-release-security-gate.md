@@ -1,7 +1,8 @@
 # 提案：发布前安全告警门禁（政策对齐 + 模板）
 
 > 能力：`release-security-gate`（B 类：政策统一、实现由项目自建）
-> 发起：2026-11-02 ｜ 状态：待各项目 agent 研判
+> 发起：2026-11-02 ｜ 状态：已结案（逐项目结论见文末生成块，数据源 [status.json](./status.json)）
+> 注：§2 与 §3 是 2026-11-02 的核验快照，caomei-ui / caomei-auth 的缺口此后已补齐；现状与结论以文末生成块为准。
 
 ## 1 变更摘要
 
@@ -70,3 +71,21 @@ grep -n "security" <项目>/.github/workflows/release.yml
 - 不统一台账路径、命令名、token 变量名（项目参数）。
 - 不提供统一脚本或 action（本轮只给政策与模板）。
 - 不修改任何下游文件，不替项目决定 report-only 时长。
+
+<!-- proposal-status:start -->
+## 项目研判结论（自动生成）
+
+> 数据源 `docs/proposals/status.json`；由 `node scripts/check-proposals.mjs --write` 生成，请勿手工编辑。
+
+| 项目 | 结论 | 日期 | 依据 |
+| :--- | :--- | :--- | :--- |
+| dependfix | 已采纳 | 2026-11-09 | 扫描标记 |
+| momei | 已采纳 | 2026-11-03 | 项目反馈 |
+| caomei-ui | 已采纳 | 2026-11-09 | 扫描标记 |
+| caomei-auth | 已采纳 | 2026-11-09 | 扫描标记 |
+
+- **dependfix**：扫描命中台账与命令；能力台账记为 mature 样板
+- **momei**：过渡期：open + dismissed 双读、台账 v2、数据源 fail-closed；一个发布周期后移除 --transition-mode
+- **caomei-ui**：release.yml 已执行 check:security-alerts；台账与 §2.1 扫描发现 + 人工核验已核对（f9a30be）
+- **caomei-auth**：release.yml 已接线；open + dismissed 扫描发现 + 人工核验：已实现并登记台账
+<!-- proposal-status:end -->

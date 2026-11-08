@@ -25,7 +25,9 @@
 | 延后 | 进 backlog | 写明触发条件或目标阶段 |
 | 不采纳 | `optOut` | 写明理由（不适用 / 成本高于收益 / 已有等价实现） |
 
-> 台账只记录「不采纳」（`optOut`）与「已验证样板」（`mature`）；待研判 / 已采纳 / 延后属于项目侧状态，不写进 registry，避免与项目 backlog 双写。
+> 台账只记录「不采纳」（`optOut`）与「已验证样板」（`mature`）；待研判 / 已采纳 / 延后属于项目侧状态，不写进 registry，避免与项目 backlog 双写。提案侧的项目结论汇总在 `docs/proposals/status.json`（含证据来源与日期），以 issue 为准，不搬运项目 backlog 细节。
+
+> 未开 issue、由用户转交的本地批次在 `status.json` 用 `notifiedVia: local-batch` 记录；它只表示项目已收到并给出结论，不代表已完成 §5 的 issue 通知与回写。
 
 **关键提案**（安全、发布阻塞、跨项目能力）应由用户裁决是否优先处理，不由 agent 自行插队。
 
@@ -80,16 +82,18 @@
 
 ### 5.4 状态回写
 
-- issue 创建后，在 `docs/proposals/README.md` 索引登记 issue 链接与状态。
-- 项目状态以 issue 为准（待研判 / 已采纳 / 延后 / 不采纳），上游不双写项目 backlog。
-- 关闭 issue 不等于采纳；不采纳仍需在能力台账登记 `optOut` 与理由（见 §2）。
-- 提案被上游废弃时，在各 issue 说明替代方案后关闭，不静默删除。
+- 上游在 `docs/proposals/status.json` 登记每个受影响项目的结论，再运行 `node scripts/check-proposals.mjs --write` 生成 README 索引与提案文末的结论块；不手工改生成内容，也不在能力台账重复记录项目状态。
+- 有 issue 的提案以 issue 为准；本地批次（`notifiedVia: local-batch`）以 `status.json` 的项目结论与证据为准。上游只登记汇总与证据来源（`basis`：`feedback` / `issue` / `scan` / `record`）。
+- 关闭 issue 不等于采纳；能力已登记到 `registry` 时，不采纳仍需登记 `optOut` 与理由（见 §2）。
+- 提案被上游废弃时，在 `status.json` 把 `stage` 改为 `withdrawn` 并写 `reason`，在各 issue 说明替代方案后关闭，不静默删除。
 
 ## 6 验收
 
 - [ ] 阶段结束或下阶段开始前有「提案检查」记录（有/无、处理方式）。
-- [ ] 不采纳的提案有 `optOut` 理由；已采纳 / 延后的状态在项目 backlog / issue 可查；达到样板标准时再更新 `mature`。
+- [ ] 不采纳的提案在能力已登记时有 `optOut` 理由；已采纳 / 延后的状态在项目 backlog / issue 可查；达到样板标准时再更新 `mature`。
 - [ ] 上游扫描有矩阵输出，且没有把已收敛能力重复提案。
-- [ ] 已发起的提案经过优化审查，且每个受影响仓库有且仅有一个对应 issue；issue 链接已登记到 `docs/proposals/README.md`。
+- [ ] 已发起并走 issue 通知的提案经过优化审查，每个受影响仓库有且仅有一个对应 issue；本地批次在 `status.json` 标记 `notifiedVia: local-batch`，不被计为已通知。
+- [ ] `node scripts/check-proposals.mjs` 通过，issue 链接与项目结论已登记到 `status.json`。
+- [ ] 已结案 / 已撤回的提案没有残留 `pending` 项目，撤回提案写有 `reason` 与重启条件。
 
 > 本节的 issue 粒度与审查要求自 2026-11-07 起适用于新发起的提案；存量已发起提案不追溯，除非重新发起或扩面到新仓库。

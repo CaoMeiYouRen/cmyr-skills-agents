@@ -1,7 +1,7 @@
 # 提案：Docker 镜像原生多架构构建（去 QEMU）
 
 > 能力：`docker-workflow`（B-convention；本提案细化其「原生多架构」约定，不新增能力）
-> 发起：2026-11-07 ｜ 状态：已通知（待各项目研判）
+> 发起：2026-11-07 ｜ 状态：已通知（逐项目结论见文末生成块，数据源 [status.json](./status.json)）
 > 审查：2026-11-07 通过（blocker 0 / warning 0 / suggest 2；三轮独立复核，清单见 [README](./README.md) 的「提交前优化审查」）
 > 通知：2026-11-07 已提交 momei [#1002](https://github.com/CaoMeiYouRen/momei/issues/1002)、dependfix [#222](https://github.com/dependfix/dependfix/issues/222)、caomei-auth [#718](https://github.com/CaoMeiYouRen/caomei-auth/issues/718)
 
@@ -147,3 +147,19 @@ merge (ubuntu-latest)
 
 1. 后续可把首批三个项目的构建耗时做成对比表，用于评估其余 14 个仓库的优先级。
 2. `docker-workflow` 的 marker 目前只按文件存在判定，后续可考虑增加「原生多架构」的文本 / 配置标记，避免漂移无法自动发现。
+
+<!-- proposal-status:start -->
+## 项目研判结论（自动生成）
+
+> 数据源 `docs/proposals/status.json`；由 `node scripts/check-proposals.mjs --write` 生成，请勿手工编辑。
+
+| 项目 | 结论 | 日期 | 依据 |
+| :--- | :--- | :--- | :--- |
+| dependfix | 已采纳 | 2026-11-07 | issue 回复 |
+| momei | 待研判 | — | — |
+| caomei-auth | 待研判 | — | — |
+
+- **dependfix**：issue 已结案：原生 matrix、按 digest 推送、merge 合成与 registry 回读门禁均具备，作为参照样板
+- **momei**：仍使用 setup-qemu-action@v4；issue 已开，尚无回执
+- **caomei-auth**：docker.yml 与 release.yml 已复用原生 docker-build.yml；补发重建入口待确认；issue 已开，尚无回执
+<!-- proposal-status:end -->

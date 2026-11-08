@@ -1,0 +1,249 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-09",
+  "projects": [
+    "dependfix",
+    "momei",
+    "caomei-ui",
+    "caomei-auth"
+  ],
+  "proposals": [
+    {
+      "id": "task-start-ci-receipt",
+      "title": "任务开局 CI 回执检查",
+      "file": "2026-11-02-task-start-ci-receipt.md",
+      "capability": "task-start-ci-receipt",
+      "stage": "notified",
+      "notifiedAt": "2026-11-02",
+      "notifiedVia": "local-batch",
+      "affectedProjects": [
+        "dependfix",
+        "momei",
+        "caomei-ui",
+        "caomei-auth"
+      ],
+      "projects": {
+        "dependfix": {
+          "status": "adopted",
+          "basis": "scan",
+          "observedAt": "2026-11-09",
+          "note": "AGENTS.md 已列为 hard requirement（扫描命中 text + files）"
+        },
+        "momei": {
+          "status": "adopted",
+          "basis": "feedback",
+          "decidedAt": "2026-11-03",
+          "note": "briefing 增加一行；gh 不可用记「不可用 + 原因」，空 conclusion 记「进行中」"
+        },
+        "caomei-ui": {
+          "status": "adopted",
+          "basis": "scan",
+          "observedAt": "2026-11-09",
+          "note": "docs/standards/ai-collaboration.md 已含回执与四态结论"
+        },
+        "caomei-auth": {
+          "status": "pending",
+          "note": ".session 已建立，但 AGENTS.md 与 docs/standards 未见回执规则；提案要求先引入 session 再启用"
+        }
+      }
+    },
+    {
+      "id": "release-security-gate",
+      "title": "发布前安全告警门禁",
+      "file": "2026-11-02-release-security-gate.md",
+      "capability": "release-security-gate",
+      "stage": "concluded",
+      "notifiedAt": "2026-11-02",
+      "notifiedVia": "local-batch",
+      "concludedAt": "2026-11-09",
+      "affectedProjects": [
+        "dependfix",
+        "momei",
+        "caomei-ui",
+        "caomei-auth"
+      ],
+      "projects": {
+        "dependfix": {
+          "status": "adopted",
+          "basis": "scan",
+          "observedAt": "2026-11-09",
+          "note": "扫描命中台账与命令；能力台账记为 mature 样板"
+        },
+        "momei": {
+          "status": "adopted",
+          "basis": "feedback",
+          "decidedAt": "2026-11-03",
+          "note": "过渡期：open + dismissed 双读、台账 v2、数据源 fail-closed；一个发布周期后移除 --transition-mode"
+        },
+        "caomei-ui": {
+          "status": "adopted",
+          "basis": "scan",
+          "observedAt": "2026-11-09",
+          "note": "release.yml 已执行 check:security-alerts；台账与 §2.1 扫描发现 + 人工核验已核对（f9a30be）"
+        },
+        "caomei-auth": {
+          "status": "adopted",
+          "basis": "scan",
+          "observedAt": "2026-11-09",
+          "note": "release.yml 已接线；open + dismissed 扫描发现 + 人工核验：已实现并登记台账"
+        }
+      }
+    },
+    {
+      "id": "ai-check",
+      "title": "AI 基建治理检查对齐",
+      "file": "2026-11-02-governance-check-alignment.md",
+      "capability": "ai-check",
+      "stage": "concluded",
+      "notifiedAt": "2026-11-02",
+      "notifiedVia": "local-batch",
+      "concludedAt": "2026-11-09",
+      "affectedProjects": [
+        "dependfix",
+        "momei",
+        "caomei-ui",
+        "caomei-auth"
+      ],
+      "projects": {
+        "dependfix": {
+          "status": "partial",
+          "basis": "record",
+          "decidedAt": "2026-11-08",
+          "declinedItems": [
+            "#5 弃用引用扫描",
+            "#6 能力标记"
+          ],
+          "note": "其余检查项现状合规，机检补强登记为项目候选"
+        },
+        "momei": {
+          "status": "partial",
+          "basis": "feedback",
+          "decidedAt": "2026-11-03",
+          "declinedItems": [
+            "#5 弃用引用扫描",
+            "#6 能力标记",
+            "#1 的 manifest 比对子项"
+          ],
+          "note": "只采纳 #4 references 索引"
+        },
+        "caomei-ui": {
+          "status": "partial",
+          "basis": "scan",
+          "observedAt": "2026-11-09",
+          "note": "frontmatter 与 references 索引已机检；无书面结论，跳过项未登记"
+        },
+        "caomei-auth": {
+          "status": "partial",
+          "basis": "record",
+          "decidedAt": "2026-11-02",
+          "declinedItems": [
+            "#5 弃用引用扫描",
+            "#6 能力标记"
+          ],
+          "note": "其余检查项已对齐"
+        }
+      }
+    },
+    {
+      "id": "standards-skeleton-adoption",
+      "title": "standards 骨架接入（已撤回）",
+      "file": "2026-11-02-standards-skeleton-adoption.md",
+      "stage": "withdrawn",
+      "concludedAt": "2026-11-09",
+      "reason": "四个项目均记录为不采纳：上游正文与项目现有规范形成第二权威。仅当满足以下之一时重启：上游 standards 发布为包 / submodule 可直接引用；项目需要「规范来源可追溯」（URL + commit）标注；cmyr-template-cli 支持把 standards 作为 l0Selection.files 直接分发。重启时仍不搬运正文。",
+      "affectedProjects": [
+        "dependfix",
+        "momei",
+        "caomei-ui",
+        "caomei-auth"
+      ],
+      "projects": {
+        "dependfix": {
+          "status": "declined",
+          "basis": "record",
+          "decidedAt": "2026-11-08",
+          "note": "三层事实源、角色矩阵与主定义 / 镜像治理均已有正文，搬运会形成第二权威并触发 standards-redundant 门禁"
+        },
+        "momei": {
+          "status": "declined",
+          "basis": "feedback",
+          "decidedAt": "2026-11-03",
+          "note": "AGENTS.md §2 已有三层事实源、§6.3 已有主定义 / 镜像治理"
+        },
+        "caomei-ui": {
+          "status": "declined",
+          "basis": "record",
+          "decidedAt": "2026-11-03",
+          "note": "AGENTS.md §2 / §8.2 已有等价正文，check:standards-redundant:strict 禁止规范重复表述"
+        },
+        "caomei-auth": {
+          "status": "declined",
+          "basis": "record",
+          "decidedAt": "2026-11-02",
+          "note": "AGENTS.md §2 / §6.2 已有等价正文"
+        }
+      }
+    },
+    {
+      "id": "native-multiarch-docker",
+      "title": "Docker 镜像原生多架构构建",
+      "file": "2026-11-07-native-multiarch-docker.md",
+      "capability": "docker-workflow",
+      "stage": "notified",
+      "notifiedAt": "2026-11-07",
+      "notifiedVia": "issue",
+      "affectedProjects": [
+        "dependfix",
+        "momei",
+        "caomei-auth"
+      ],
+      "issues": {
+        "dependfix": {
+          "id": "#222",
+          "url": "https://github.com/dependfix/dependfix/issues/222"
+        },
+        "momei": {
+          "id": "#1002",
+          "url": "https://github.com/CaoMeiYouRen/momei/issues/1002"
+        },
+        "caomei-auth": {
+          "id": "#718",
+          "url": "https://github.com/CaoMeiYouRen/caomei-auth/issues/718"
+        }
+      },
+      "projects": {
+        "dependfix": {
+          "status": "adopted",
+          "basis": "issue",
+          "decidedAt": "2026-11-07",
+          "note": "issue 已结案：原生 matrix、按 digest 推送、merge 合成与 registry 回读门禁均具备，作为参照样板"
+        },
+        "momei": {
+          "status": "pending",
+          "note": "仍使用 setup-qemu-action@v4；issue 已开，尚无回执"
+        },
+        "caomei-auth": {
+          "status": "pending",
+          "note": "docker.yml 与 release.yml 已复用原生 docker-build.yml；补发重建入口待确认；issue 已开，尚无回执"
+        }
+      }
+    }
+  ],
+  "feedback": [
+    {
+      "project": "momei",
+      "scope": "2026-11-02 批次",
+      "date": "2026-11-03",
+      "file": "2026-11-03-momei-feedback.md"
+    },
+    {
+      "project": "dependfix",
+      "scope": "Docker 原生多架构",
+      "date": "2026-11-07",
+      "issue": {
+        "id": "#222",
+        "url": "https://github.com/dependfix/dependfix/issues/222"
+      }
+    }
+  ]
+}

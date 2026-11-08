@@ -24,3 +24,4 @@ jobs:
       - run: pnpm run lint:md:check
       - run: pnpm run test
       - run: node scripts/verify-manifest.mjs
+      - run: node scripts/check-proposals.mjs

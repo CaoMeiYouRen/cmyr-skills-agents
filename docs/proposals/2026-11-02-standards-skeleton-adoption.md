@@ -1,7 +1,8 @@
-# 草案：`standards/` 骨架接入（仅 dependfix 试点）
+# 已撤回：`standards/` 骨架接入（原 dependfix 试点）
 
-> 状态：**草案，未发起**。先在 dependfix 试点两节，验证后再决定是否向其余三个项目发正式提案。
-> 能力：`standards-adoption`（尚未登记到能力台账，定稿后再登记）
+> 状态：**已撤回（2026-11-09）**。四个项目均不采纳：引入上游正文会形成第二权威。重启条件见 §6 与文末结论块。项目结论数据源 [status.json](./status.json)。
+> 能力：`standards-adoption`（未登记到能力台账；撤回后不登记）
+> 以下 §1–§5 为撤回前的草案内容，仅作历史记录，不再执行。
 
 ## 1 为什么先试点
 
@@ -41,21 +42,36 @@
 - [ ] 规则变更时只需改一处，评审能指出唯一权威位置。
 - [ ] 记录合并前后行数与重复条款对比，作为是否推广的依据。
 
-## 6 后续
+## 6 重启条件
 
-试点通过后：
-1. 向其余三个项目发正式提案（authority + roles 两节）；
-2. 再评估 `gates` / `memory` / `intake` / `proposals` 是否作为第二批；
-3. 决定是否把 `standards/` 纳入 `cmyr-template-cli` 的 `l0Selection.files`。
+本轮试点未启动：四个项目均已有等价正文，引入上游正文会形成第二权威。仅当满足以下之一时重启：
 
-## 7 项目研判记录
+1. 上游 `standards/` 发布为包 / submodule，可直接引用而不复制正文；
+2. 项目需要「规范来源可追溯」（URL + commit）标注；
+3. `cmyr-template-cli` 支持把 `standards/` 作为 `l0Selection.files` 直接分发。
 
-| 项目 | 结论 | 理由 |
-| :--- | :--- | :--- |
-| caomei-auth | 本轮不采纳 | 草案尚未发起正式提案；项目 `AGENTS.md` §2（三层事实源与冲突顺序）与 §6.2（主定义 / 镜像治理）已有等价正文，再引入上游正文会违反「同一规则只有一处正文」。 |
-| momei | 本轮不采纳 | 草案尚未发起；`AGENTS.md` §2 已有三层事实源与冲突顺序，§6.3 已有主定义 / 镜像治理，再引入上游正文会形成第二权威。 |
-| caomei-ui | 本轮不采纳 | 草案尚未发起；`AGENTS.md` §2 已有三层事实源与冲突顺序、§8.2 已有主定义 / 镜像治理，且 `check:standards-redundant:strict` 禁止规范重复表述，搬运上游正文会直接触发本仓门禁。 |
-| dependfix | 本轮不采纳 | 试点对象本身：`docs/standards/documentation.md §4` 已有三层事实源、冲突顺序与规范单点声明，`docs/standards/ai-governance.md §2` 已有主定义 / 符号链接镜像治理，`AGENTS.md` 已有角色矩阵；再引入上游正文会形成第二权威，且会触发 `check:standards-redundant:strict`（2026-11-08 研判）。 |
+重启时仍不搬运正文：只补来源标注与指针。
 
-- 复查条件：四个项目均已给出结论（dependfix 2026-11-08 不采纳，口径与前三个项目一致）；仅当上游 `standards/` 变为可直接引用（发布为包 / submodule）或项目需要「规范来源可追溯」标注时重新评估，仍不搬运正文。
-- 能力台账：`standards-adoption` 尚未登记，本轮不写入 `capabilities/registry.json`；若试点定稿后登记，结论在本表继续更新。
+## 7 复查条件
+
+- 四个项目均已给出结论（dependfix 2026-11-08 不采纳，口径与前三个项目一致），逐项目结论见文末生成块。
+- 仅当满足 §6 的三条之一时重新评估，仍不搬运正文。
+- 能力台账：`standards-adoption` 尚未登记，本轮不写入 `capabilities/registry.json`；若重启后登记，结论在 `status.json` 继续更新。
+
+<!-- proposal-status:start -->
+## 项目研判结论（自动生成）
+
+> 数据源 `docs/proposals/status.json`；由 `node scripts/check-proposals.mjs --write` 生成，请勿手工编辑。
+
+| 项目 | 结论 | 日期 | 依据 |
+| :--- | :--- | :--- | :--- |
+| dependfix | 不采纳 | 2026-11-08 | 上游登记 |
+| momei | 不采纳 | 2026-11-03 | 项目反馈 |
+| caomei-ui | 不采纳 | 2026-11-03 | 上游登记 |
+| caomei-auth | 不采纳 | 2026-11-02 | 上游登记 |
+
+- **dependfix**：三层事实源、角色矩阵与主定义 / 镜像治理均已有正文，搬运会形成第二权威并触发 standards-redundant 门禁
+- **momei**：AGENTS.md §2 已有三层事实源、§6.3 已有主定义 / 镜像治理
+- **caomei-ui**：AGENTS.md §2 / §8.2 已有等价正文，check:standards-redundant:strict 禁止规范重复表述
+- **caomei-auth**：AGENTS.md §2 / §6.2 已有等价正文
+<!-- proposal-status:end -->
