@@ -29,6 +29,16 @@
 
 > 未开 issue、由用户转交的本地批次在 `status.json` 用 `notifiedVia: local-batch` 记录；它只表示项目已收到并给出结论，不代表已完成 §5 的 issue 通知与回写。
 
+### 2.1 重复 optOut 回炉
+
+同一子项被 2 个及以上项目以结构性理由（跨仓读取、机制缺失、与项目现有权威冲突）optOut 时，视为提案设计问题，不是项目问题：
+
+- 下一批次不得继续收集 optOut 充当结论，须在「撤回该子项 / 改判据 / 改机制」中选一；
+- 因跨仓读取被拒的能力，优先改为上游发布只读快照（版本化 JSON 或 release asset），项目只消费快照，不读上游仓库；
+- 回炉结论写入提案与 `status.json` 的 `reason`，`optOut` 保留为历史，不删除。
+
+登记方式：在提案结论或 `registry` 的 `note` 写明「已回炉 + 日期 + 处置」，避免同一子项在后续批次重复出现。
+
 **关键提案**（安全、发布阻塞、跨项目能力）应由用户裁决是否优先处理，不由 agent 自行插队。
 
 ## 3 下游 → 上游反馈
@@ -45,9 +55,10 @@
 - **时机**：至少满足以下之一——每个提案批次前、每月一次、下游发布节点之后。
 - **动作**：
   1. 跑 `node scripts/check-capabilities.mjs --projects <下游路径...>`，得到能力矩阵；
-  2. 对比各项目 `AGENTS.md`、`docs/standards`、`.github/workflows` 的新增能力与做法；
-  3. 把「已有项目验证、其他项目缺失」的能力登记为 `candidate`，再决定是否形成提案；
-  4. 已收敛的能力只做漂移检测，不重复提案。
+  2. 跑 `node scripts/scan-proposal-issues.mjs --strict`，列出逾期未回执的 open issue 与需要回读评论的已关闭 issue；逾期只提醒项目给状态，不代项目研判；
+  3. 对比各项目 `AGENTS.md`、`docs/standards`、`.github/workflows` 的新增能力与做法；
+  4. 把「已有项目验证、其他项目缺失」的能力登记为 `candidate`，再决定是否形成提案；
+  5. 已收敛的能力只做漂移检测，不重复提案；同一子项被 2 个以上项目结构性 optOut 时按 §2.1 回炉。
 - **输出**：更新 `capabilities/registry.json` 与 `docs/proposals/`；**不直接修改下游**。
 
 ## 5 上游 → 下游通知（issue）

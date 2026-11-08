@@ -120,3 +120,30 @@ node scripts/check-proposals.mjs --json
 | `--json` | 输出 JSON 摘要 |
 
 **退出码**：`0` 通过；`1` 状态校验失败或生成内容不一致；`2` 参数、文件或标记错误。
+
+### `scan-proposal-issues.mjs`
+
+读取 `docs/proposals/status.json` 登记的 proposal issue，通过 `gh` 查询状态与评论，标出逾期未回执与需要回读的已关闭 issue。只输出报告，不修改 issue。
+
+```bash
+# 例行扫描：open 且静默超过 7 天算逾期
+node scripts/scan-proposal-issues.mjs
+
+# 存在逾期时退出码为 1，便于定时任务告警
+node scripts/scan-proposal-issues.mjs --strict
+
+# 指定基准日期，便于复现
+node scripts/scan-proposal-issues.mjs --now 2026-11-09 --overdue-days 7
+```
+
+**参数**：
+
+| 参数 | 说明 |
+|------|------|
+| `--status <path>` | 状态文件，默认 `docs/proposals/status.json` |
+| `--now <YYYY-MM-DD>` | 计算天数用的基准日期 |
+| `--overdue-days <n>` | 静默超过多少天算逾期，默认 7 |
+| `--strict` | 有逾期时退出码 1（待回读只报告） |
+| `--json` | 输出 JSON |
+
+**退出码**：`0` 报告完成；`1` `--strict` 下存在逾期；`2` 参数、文件或 `gh` 调用错误。

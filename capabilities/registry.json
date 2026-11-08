@@ -129,7 +129,7 @@
       "title": "AI 基建治理检查（ai:check）",
       "type": "B-template",
       "channel": "standard-template",
-      "note": "检查项对齐提案阶段；政策定稿后迁到 standards/",
+      "note": "检查项对齐提案；#5/#6 已按重复 optOut 回炉规则撤出后续批次（2026-11-09），optOut 保留为历史",
       "mature": [],
       "applies_to": [
         "node"

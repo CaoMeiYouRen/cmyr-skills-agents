@@ -31,7 +31,8 @@
     "test": "vitest run",
     "dev:tsdown": "cross-env NODE_ENV=development tsdown --watch",
     "commit": "cz",
-    "prepare": "husky"
+    "prepare": "husky",
+    "scan:proposals": "node scripts/scan-proposal-issues.mjs"
   },
   "devDependencies": {
     "@clack/prompts": "^1.0.0",

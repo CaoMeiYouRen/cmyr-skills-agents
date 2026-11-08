@@ -52,6 +52,9 @@ node scripts/check-proposals.mjs
 
 # 更新状态后重新生成 README 索引与提案结论块
 node scripts/check-proposals.mjs --write
+
+# 例行扫描登记的 issue：逾期未回执 / 已关闭但需回读评论
+node scripts/scan-proposal-issues.mjs --strict
 ```
 
 字段口径：
