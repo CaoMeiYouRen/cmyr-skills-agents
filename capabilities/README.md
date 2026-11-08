@@ -22,7 +22,7 @@
 | `id` | 稳定标识，用于提案、扫描、引用 |
 | `canonical` | 权威实现或政策所在的仓库路径 |
 | `template` | `B-template` 的结构模板路径 |
-| `mature` | 已验证过的项目（通常 1 个，作为样板） |
+| `mature` | 已验证过的项目（样板，不要求覆盖全部采纳者；有书面反馈或 issue 结论的项目可追加） |
 | `applies_to` | 适用栈，用于过滤（如 `node`、`pnpm`） |
 | `status` | `experiment` → `candidate` → `upstream` → `adopted` → `deprecated` |
 | `markers` | 采纳标记数组：`{ kind: scripts\|files\|text, required, values, param? }`；`present` 要求所有 `required` 组命中 |

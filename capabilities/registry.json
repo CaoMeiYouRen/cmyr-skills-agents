@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-11-08",
+  "updatedAt": "2026-11-09",
   "capabilities": [
     {
       "id": "task-start-ci-receipt",
@@ -9,7 +9,8 @@
       "channel": "l0-reference",
       "canonical": "skills/full-stack-master/references/task-start.md",
       "mature": [
-        "dependfix"
+        "dependfix",
+        "momei"
       ],
       "applies_to": [
         "node"
