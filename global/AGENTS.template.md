@@ -1,6 +1,6 @@
 # AGENTS.md — 全局模板
 
-> 将此文件复制到项目根目录，按需修改 `<!-- TODO -->` 标记处即可。
+> 将此文件复制到项目根目录，按需修改 `<!-- 项目填充 -->` 标记处即可。
 > 兼容 GitHub Copilot / Claude Code / OpenCode / Cursor / Windsurf 等主流 AI 编码工具。
 
 ---
@@ -14,7 +14,7 @@
 3. 在动手前先确认方案，在完成后主动验证结果。
 4. 遇到歧义时提问，而不是猜测。
 
-<!-- TODO: 如需限定角色范围，取消注释并修改 -->
+<!-- 项目填充：如需限定角色范围，取消注释并修改 -->
 <!-- 你专注于 [前端 / 后端 / 全栈 / DevOps / 数据] 开发。 -->
 
 ---
@@ -52,7 +52,7 @@
 - **容器化**：优先 Docker。
 - **部署**：优先 Vercel / Cloudflare Serverless，兼容传统 VPS。
 - **CI/CD**：优先 GitHub Actions。
-- **镜像发布**：默认推送到 <!-- TODO: 指定镜像仓库，如 docker.io + ghcr.io -->；默认构建 linux/amd64 + linux/arm64 多架构镜像。
+- **镜像发布**：默认推送到 <!-- 项目填充：指定镜像仓库，如 docker.io + ghcr.io -->；默认构建 linux/amd64 + linux/arm64 多架构镜像。
 
 ### 包管理与构建
 
@@ -64,7 +64,7 @@
 
 - **框架**：优先 Vitest，兼容 Jest（NestJS 沿用 Jest）。
 - **E2E**：优先 Playwright。
-- **覆盖率**：<!-- TODO: 指定最低覆盖率阈值，如 80% -->。
+- **覆盖率**：<!-- 项目填充：指定最低覆盖率阈值，如 80% -->。
 
 ### 文档
 
@@ -79,7 +79,7 @@
 
 | 检查项 | 工具 | 说明 |
 |---|---|---|
-| 代码规范 | ESLint | 零 error，warning 不超过 <!-- TODO: 阈值 --> 个 |
+| 代码规范 | ESLint | 零 error，warning 不超过 <!-- 项目填充：阈值 --> 个 |
 | 提交消息 | commitlint | 必须符合 Conventional Commits |
 | 样式规范 | stylelint | 如项目使用 CSS / SCSS |
 | Markdown 规范 | markdownlint | 如项目包含文档 |
@@ -117,7 +117,7 @@
   - 格式：`<type>(<scope>): <description>`
   - 常用 type：`feat` / `fix` / `docs` / `refactor` / `test` / `chore` / `perf` / `ci`
 - **提交粒度**：每个提交对应一个逻辑变更，避免"大杂烩"提交。
-- **分支策略**：<!-- TODO: 指定分支策略，如 Git Flow / GitHub Flow / Trunk Based -->。
+- **分支策略**：<!-- 项目填充：指定分支策略，如 Git Flow / GitHub Flow / Trunk Based -->。
 
 ---
 
@@ -154,15 +154,15 @@
 
 ### 项目简介
 
-<!-- TODO: 一句话描述项目目的 -->
+<!-- 项目填充：一句话描述项目目的 -->
 
 ### 特殊约定
 
-<!-- TODO: 项目特有的编码约定、禁止项、例外情况 -->
+<!-- 项目填充：项目特有的编码约定、禁止项、例外情况 -->
 
 ### 依赖说明
 
-<!-- TODO: 项目特有的关键依赖及其用途 -->
+<!-- 项目填充：项目特有的关键依赖及其用途 -->
 
 ### 技能与资产覆盖
 
@@ -172,13 +172,13 @@
 > - **单个能力的行为差异**（追加必查项、覆盖某默认参数）：写入 `.ai/overrides/skills/<name>.md` 或 `.ai/overrides/agents/<name>.md`；只写差异，不抄写核心已有条款。
 > - **项目规范本身**：写入 `docs/standards/*`。
 
-<!-- TODO: 按需覆盖。全局参数示例：
+<!-- 项目填充：按需覆盖。全局参数示例：
 - code-reviewer：diff 规模阈值 10 文件 / 800 行新增；证据目录 artifacts/review-gate/
 - full-stack-master：任务粒度阈值；session 目录 .session/
 - super-search：报告输出目录 research-output/
 -->
 
-<!-- TODO: 单能力覆盖示例（.ai/overrides/skills/code-reviewer.md）：
+<!-- 项目填充：单能力覆盖示例（.ai/overrides/skills/code-reviewer.md）：
 # code-reviewer 项目覆盖
 ## 追加必查项
 - 浮层 / portal 改动必须核验宿主页面稳定性（见 docs/standards/testing.md）

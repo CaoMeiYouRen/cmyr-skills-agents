@@ -35,4 +35,4 @@ registry 至少记录：ID、适用范围、来源路径、同步地址、更新
 - 「怎么造一个技能」在 `skills/skill-creator`；本文件只管「外部能力能不能进来、进来后算什么」。
 - 「这一类需求该用哪个技能」在技能索引与 `skills/find-skills` / 编排角色；本文件不做能力检索。
 
-<!-- TODO: 项目填充：registry 路径、首批外部候选（nuxt / vue / vitest / pnpm 等）与本项目的同步频率。 -->
+<!-- 项目填充：registry 路径、首批外部候选（nuxt / vue / vitest / pnpm 等）与本项目的同步频率。 -->

@@ -25,3 +25,9 @@ jobs:
       - run: pnpm run test
       - run: node scripts/verify-manifest.mjs
       - run: node scripts/check-proposals.mjs
+      - name: Check placeholders
+        run: |
+          if grep -rn "TODO" standards global/AGENTS.template.md docs/proposals; then
+            echo "模板与提案中不得使用 TODO 占位符；改用「项目填充」，避免 todo-to-issue 误建 issue"
+            exit 1
+          fi

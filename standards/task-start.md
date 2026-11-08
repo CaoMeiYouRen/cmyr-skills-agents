@@ -16,7 +16,7 @@
 | 任务态文件 | `.session/current-task.yaml` | 未引入 session 的项目需先补齐 |
 | 展示位置 | 任务开局 briefing | 也可只在失败时输出 |
 
-<!-- TODO: 项目填充：实际默认分支、session 路径、briefing 模板位置。 -->
+<!-- 项目填充：实际默认分支、session 路径、briefing 模板位置。 -->
 
 ## 3 采纳验收
 

@@ -19,3 +19,6 @@ jobs:
       - uses: "actions/checkout@v5"
       - name: "TODO to Issue"
         uses: "alstr/todo-to-issue-action@v5"
+        with:
+          # 模板与提案中的「项目填充」是占位符，不是可执行任务；不要为它们建 issue
+          IGNORE: "global/AGENTS\\.template\\.md,standards/,docs/proposals/"
