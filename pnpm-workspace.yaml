@@ -5,7 +5,7 @@ packages: []
 overrides:
   vite: ^7.3.7
   piscina: ^4.9.4
-  undici: 7.29.1
+  undici: ^7.30.1
   fast-uri: ^3.1.9
   semver: ^7.7.3
   "@typescript-eslint/parser": ^8.54.0
@@ -23,7 +23,7 @@ overrides:
   "@octokit/request-error": ^5.1.1
   "@semantic-release/github": ^12.0.6
   "@semantic-release/npm": ^13.1.5
-  "@actions/http-client>undici": ^7.28.0
+  "@actions/http-client>undici": ^7.30.1
   brace-expansion: ^2.1.7
   "@isaacs/brace-expansion": ^5.0.1
   defu: ^6.1.5
@@ -33,7 +33,7 @@ overrides:
   lodash: ^4.18.1
   lodash-es: ^4.18.1
   micromatch>picomatch: ^2.3.2
-  "@semantic-release/github>undici": ^7.28.0
+  "@semantic-release/github>undici": ^7.30.1
   picomatch@^4.0.0: ^4.0.4
   rollup: ^4.59.0
   tmp: ^0.2.6
