@@ -1,7 +1,9 @@
 # 提案：规划文档模型 v1（粒度 / 进度 / 归档）
 
 > 能力：—（文档模型约定，未登记为 capability）
-> 发起：2026-11-20 ｜ 状态：草案（逐项目结论见文末生成块，数据源 [status.json](./status.json)）
+> 发起：2026-11-20 ｜ 状态：已通知（逐项目结论见文末生成块，数据源 [status.json](./status.json)）
+> 审查：2026-11-20 通过（blocker 0 / warning 1 / suggest 3；warning：分片计数初稿有 2 处读数偏差，已由 `0382b75` 订正；suggest 均为项目侧参数，见 §4）
+> 通知：2026-11-20 已提交 dependfix [#269](https://github.com/dependfix/dependfix/issues/269)、momei [#1071](https://github.com/CaoMeiYouRen/momei/issues/1071)、caomei-ui [#71](https://github.com/CaoMeiYouRen/caomei-ui/issues/71)、caomei-auth [#745](https://github.com/CaoMeiYouRen/caomei-auth/issues/745)
 > 注：§2 为 2026-11-20 的文件快照；项目改名与字段补齐后，以文末生成块与项目正文为准。
 
 ## 1 变更摘要

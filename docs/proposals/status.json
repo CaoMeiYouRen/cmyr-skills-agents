@@ -232,13 +232,33 @@
       "id": "planning-doc-model",
       "title": "规划文档模型 v1（粒度 / 进度 / 归档）",
       "file": "2026-11-20-planning-doc-model.md",
-      "stage": "draft",
+      "stage": "notified",
+      "notifiedAt": "2026-11-20",
+      "notifiedVia": "issue",
       "affectedProjects": [
         "dependfix",
         "momei",
         "caomei-ui",
         "caomei-auth"
       ],
+      "issues": {
+        "dependfix": {
+          "id": "#269",
+          "url": "https://github.com/dependfix/dependfix/issues/269"
+        },
+        "momei": {
+          "id": "#1071",
+          "url": "https://github.com/CaoMeiYouRen/momei/issues/1071"
+        },
+        "caomei-ui": {
+          "id": "#71",
+          "url": "https://github.com/CaoMeiYouRen/caomei-ui/issues/71"
+        },
+        "caomei-auth": {
+          "id": "#745",
+          "url": "https://github.com/CaoMeiYouRen/caomei-auth/issues/745"
+        }
+      },
       "projects": {
         "dependfix": {
           "status": "pending"
