@@ -32,7 +32,7 @@ grep -n "5-6\|8 要素\|上限\|归档" docs/standards/planning.md
 | 项目 | todo | backlog | 归档主文件 | 分片 | 进度可视化 |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | dependfix | 27 行（M63 正文 200+ 行） | 457 行 / 44,911 字符 | `todo-archive.md` 仅索引表 | 51 todo + 16 roadmap | 位置速查表 + 标题内 `✅ 已闭环` |
-| momei | 34 行 | 228 行 / 21,238 字符 | `todo-archive.md` 近线 11 块 / 366 行 | 15 todo + 22 roadmap | 状态图例 checkbox，无表 |
+| momei | 34 行 | 228 行 / 21,238 字符 | `todo-archive.md` 近线 11 块 / 366 行 | 14 todo + 20 roadmap | 状态图例 checkbox，无表 |
 | caomei-ui | 29 行 | 149 行 / 14,023 字符 | `todo-archive.md` 索引表 + 近线 6 块 / 374 行 | 19 `phase-*.md` | 「未完成项汇总」指针 |
 | caomei-auth | 41 行 | 132 行 / 10,196 字符 | `docs/archive/completed-work.md`（主题式） | 无 | 一段话 |
 
@@ -102,8 +102,8 @@ grep -n "5-6\|8 要素\|上限\|归档" docs/standards/planning.md
 | 项目 | 现状 | v1 动作 | 影响面 |
 | :--- | :--- | :--- | :--- |
 | dependfix | 48 个符合命名式；3 个补丁式（`m2-m55` / `m10-c53-c59c61` / `m6-m7-t711`） | 48 个不动；3 个保留原名，在 `archive/index.md` 标注「遗留命名，勿仿效」 | 0 处链接改动 |
-| momei | 15 todo + 22 roadmap 全部符合 | 不动 | — |
-| caomei-ui | 19 个 `phase-*.md` | 改名为 `todo-archive-phases-<起>[-<止>].md` | `todo-archive.md` 36 处、`roadmap.md` 19 处、`archive/index.md` 若干 |
+| momei | 14 todo + 20 roadmap 全部符合 | 不动 | — |
+| caomei-ui | 18 个 `phase-*.md` | 改名为 `todo-archive-phases-<起>[-<止>].md` | `todo-archive.md` / `roadmap.md` / `archive/index.md` 各 18 个链接目标 |
 | caomei-auth | `docs/archive/completed-work.md`（主题式） | 冻结为历史主题归档；下一阶段起新建阶段式归档与索引 | 新增文件，不改旧文件 |
 
 改名约束（保真）：
@@ -128,7 +128,7 @@ grep -n "5-6\|8 要素\|上限\|归档" docs/standards/planning.md
 | :--- | :--- | :--- | :--- |
 | dependfix | **必须** | 进度表；小条目分层；3 个遗留命名标注；归档块字段对齐 | 低（形态已接近目标） |
 | momei | **必须** | 进度表；小条目分层；索引表替换标题目录；归档块字段对齐 | 中 |
-| caomei-ui | **建议** | 进度表；19 个分片改名 + 链接重指；新阶段起 roadmap 分片独立 | 中（机械操作，链接面 55+ 处） |
+| caomei-ui | **建议** | 进度表；18 个分片改名 + 链接重指；新阶段起 roadmap 分片独立 | 中（机械操作，链接面 54 处） |
 | caomei-auth | **必须** | 新建阶段式归档 + 索引；`completed-work.md` 冻结；进度表 | 中（9 个阶段，历史量小） |
 
 ## 4 需要项目 agent 研判的问题
