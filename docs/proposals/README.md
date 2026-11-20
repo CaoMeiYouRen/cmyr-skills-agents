@@ -83,6 +83,7 @@ node scripts/scan-proposal-issues.mjs --strict
 | [AI 基建治理检查对齐](./2026-11-02-governance-check-alignment.md) | `ai-check` | 已结案 | 部分采纳 · 跳过 2 项 | 部分采纳 · 跳过 3 项 | 部分采纳 | 部分采纳 · 跳过 2 项 |
 | [standards 骨架接入（已撤回）](./2026-11-02-standards-skeleton-adoption.md) | — | 已撤回 | 不采纳 | 不采纳 | 不采纳 | 不采纳 |
 | [Docker 镜像原生多架构构建](./2026-11-07-native-multiarch-docker.md) | `docker-workflow` | 已通知 | 已采纳 · [#222](https://github.com/dependfix/dependfix/issues/222) | 待研判 · [#1002](https://github.com/CaoMeiYouRen/momei/issues/1002) | — | 待研判 · [#718](https://github.com/CaoMeiYouRen/caomei-auth/issues/718) |
+| [规划文档模型 v1（粒度 / 进度 / 归档）](./2026-11-20-planning-doc-model.md) | — | 草案 | 待研判 | 待研判 | 待研判 | 待研判 |
 
 > 多仓库提案按项目列出 issue；有 issue 的以 GitHub 为准，本地批次以 `status.json` 的项目记录为准。
 

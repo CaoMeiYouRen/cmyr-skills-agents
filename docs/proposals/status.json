@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-09",
+  "updatedAt": "2026-11-20",
   "projects": [
     "dependfix",
     "momei",
@@ -225,6 +225,32 @@
         "caomei-auth": {
           "status": "pending",
           "note": "docker.yml 与 release.yml 已复用原生 docker-build.yml；补发重建入口待确认；issue 已开，尚无回执"
+        }
+      }
+    },
+    {
+      "id": "planning-doc-model",
+      "title": "规划文档模型 v1（粒度 / 进度 / 归档）",
+      "file": "2026-11-20-planning-doc-model.md",
+      "stage": "draft",
+      "affectedProjects": [
+        "dependfix",
+        "momei",
+        "caomei-ui",
+        "caomei-auth"
+      ],
+      "projects": {
+        "dependfix": {
+          "status": "pending"
+        },
+        "momei": {
+          "status": "pending"
+        },
+        "caomei-ui": {
+          "status": "pending"
+        },
+        "caomei-auth": {
+          "status": "pending"
         }
       }
     }
