@@ -1,6 +1,6 @@
 # 提案：破坏性提交人工审查
 
-> 能力：—（规则类约定；采纳后只落在 `conventional-committer`，不登记为独立能力）
+> 能力：—（规则类约定；政策在 `global/AGENTS.md`，格式与流程在 `conventional-committer`，不登记为独立能力）
 > 发起：2026-11-21 ｜ 状态：草案（未通知，待用户授权）
 > 审查：2026-11-21 通过（blocker 0 / warning 0 / suggest 3；三轮独立复核，前两轮共 12 项 blocker、16 项 warning 全部关闭，见 §8）
 > 注：§2 为 2026-11-21 的本机快照，行号、提交计数与工具链行为以当日检出为准。
@@ -9,7 +9,7 @@
 
 在破坏性提交（Conventional Commits 的 `!` 头部或 `BREAKING CHANGE:` footer）进入本地历史**之前**，增加一道**人工审查**：由项目所有者（或其明确授权的人）确认破坏性语义、影响面与迁移说明，并把确认结果以固定 footer 写进提交消息。AI 的 Review Gate 与作者自检都不替代这道确认。
 
-- 上游（本提案通过后新增）：`skills/conventional-committer/SKILL.md` 增硬性要求与工作流步骤。规则只写这一处，`standards/gates.md` 不加章节（一条规则只写一次，见 `standards/README.md` §3）。
+- 上游（2026-11-21 已落地）：`global/AGENTS.md` 与 `global/AGENTS.template.md` 各增一条政策（只写要求与指针），`skills/conventional-committer/SKILL.md` 承载判定、格式与流程。政策与格式分工，不复述同一条正文；`standards/gates.md` 不加章节。
 - 项目侧：提交规范所在小节、`.husky/commit-msg` 机检（可选）、PR 模板（squash 合并场景）。
 
 三条原则：
@@ -174,6 +174,7 @@ BREAKING CHANGE: @dependfix/engine 的 tryLockfileRepair 由同步改为异步�
 - 不改变 A 阶段 Review Gate 定义；人工确认是额外一道，不能替代审计。
 - 不要求历史提交补记录，不追溯已发布版本。
 - 不改变机器人 PR 的合并路径；该场景作为 §4 问题 6 单列，不在本提案强制范围内。
+- 不在全局规范里复制 `Breaking-Review:` 的格式细节：全局只写政策与指针，格式与流程只在 `conventional-committer`。
 
 ## 8 提交前优化审查记录
 
@@ -249,6 +250,19 @@ suggest 处置：改为「四个项目、三条链路」；验收 #1 补 `AGENTS
 ### 8.4 第三轮复核（2026-11-21）
 
 结论：blocker 0 / warning 0 / suggest 3。suggest 为「头部补全轮次数字」「§8.4 补计数」「§3.2 的短哈希措辞」，均已按建议修订。
+
+### 8.5 上游落地（2026-11-21）
+
+按指针式方案落地，政策与格式分工：
+
+| 文件 | 改动 |
+| :--- | :--- |
+| `global/AGENTS.md` | §编码规范 → Git 规范增一条：破坏性提交提交前须人工确认，记录按 `conventional-committer` 的 `Breaking-Review:` 格式 |
+| `global/AGENTS.template.md` | §Git 规范增同义短句，供新项目种子使用 |
+| `skills/conventional-committer/SKILL.md` | 新增「破坏性提交」章节（判定 / 格式 / 位置 / 重确认 / 合并与回退 / 示例）、Step 3.6 与 3.7、硬性要求第 4 条、反模式一条 |
+| 本提案 | §1 上游描述、§7 边界、本节同步；§2 快照不改 |
+
+未做：本机全局配置同步（`~/.config/opencode/AGENTS.md` 等），需用户单独授权后执行 `node scripts/sync-agents-md.mjs`。
 
 <!-- proposal-status:start -->
 ## 项目研判结论（自动生成）

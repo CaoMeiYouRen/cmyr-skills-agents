@@ -26,6 +26,8 @@ metadata:
 	- [ ] 3.3 主题、正文必须使用简体中文（或用户显式指定的其他语言），type / scope 必须为英文。
 	- [ ] 3.4 多类型变更时按 feat > refactor/perf > fix > 其他 选取主类型，其余改动沉到正文。
 	- [ ] 3.5 最终消息必须通过「交付前检查」与「消息格式规范」中的硬性约束。
+	- [ ] 3.6 判定是否为破坏性提交（`!` 头部或 `BREAKING CHANGE:` footer）；是则先取得用户人工确认，未确认不得进入 Step 4。
+	- [ ] 3.7 确认后按「破坏性提交」写入 `Breaking-Review:` 行，置于 `BREAKING CHANGE:` 之前。
 - [ ] Step 4: 执行提交 (conditional)
 	- [ ] 4.1 只有在用户明确允许时才执行 git add / git commit。
 	- [ ] 4.2 提交后复查消息是否符合 commitlint 习惯。
@@ -102,6 +104,7 @@ metadata:
 1. 只能输出提交信息本身，禁止附加解释、问题、注释、格式说明或元数据。
 2. 默认使用简体中文；用户明确指定其他语言时跟随用户。
 3. type / scope 永远使用英文。
+4. 破坏性提交必须同时含 `Breaking-Review:` 与 `BREAKING CHANGE:` footer，且前者在前；缺少人工确认记录不得提交。
 
 ### 示例
 
@@ -111,12 +114,35 @@ refactor(server): 优化服务器端口配置
 - 将端口变量重命名为大写形式（PORT）
 ```
 
+## 破坏性提交
+
+破坏性提交指消息含 `!` 头部（`<type>(<scope>)!:`）或 `BREAKING CHANGE:` footer 的提交。
+
+- **提交前人工确认**：确认对象是最终 diff 与最终提交消息；AI 自查与 Review Gate 不替代，未确认不得提交。
+- **记录格式**：`Breaking-Review: <确认人标识> <YYYY-MM-DD> <approved|approved-with-migration>`。标识为单个 token（无空格，默认 `owner`）；`approved-with-migration` 须在正文或项目文档给出迁移路径。
+- **位置**：`Breaking-Review:` 必须位于 `BREAKING CHANGE:` 之前；写在之后会被并入发布说明的 note 文本。
+- **只写 `!` 不合规**：部分发布链不识别 `!`，会出现版本已 bump 但发布说明缺破坏面描述；`BREAKING CHANGE:` footer 才是稳定标记。
+- **重确认**：确认后提交树或消息文本有变化（含 amend）需重新确认；`Breaking-Review:` 行本身不计入比较。
+- **合并与回退**：squash / rebase merge 时由合并者把记录带进落库消息；revert 保留原记录，不回补。
+
+示例：
+
+```text
+feat(api): 移除 v1 响应包装
+
+- 响应体改为直接返回业务数据
+
+Breaking-Review: owner 2026-11-21 approved
+BREAKING CHANGE: 移除 { code, message, data } 包装，客户端需按新结构解析。
+```
+
 ## 反模式
 
 - 不看 diff，直接用模糊消息如 update files。
 - 把多类变更混成一个没有 scope 的提交。
 - 在质量检查未完成时默认提交。
 - 在 husky hook 兼容的环境下滥用 `--no-verify`，跳过了本应生效的检查。
+- 破坏性提交未经人工确认就落库，或只写 `!` 而不写 `BREAKING CHANGE:` footer。
 - 主题或正文出现英文长句，违反默认简体中文约定。
 - 在主题里塞括号备注（如 `feat(api): 新增支付接口（兼容老逻辑）`），备注应沉到正文。
 - 多类型变更没有收敛主类型，导致 type 难以反映本次主体意图。

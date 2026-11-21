@@ -116,6 +116,7 @@
 - **提交消息**：遵循 [Conventional Commits](https://www.conventionalcommits.org/)。
   - 格式：`<type>(<scope>): <description>`
   - 常用 type：`feat` / `fix` / `docs` / `refactor` / `test` / `chore` / `perf` / `ci`
+- **破坏性提交**：`!` 头部或 `BREAKING CHANGE:` footer 的提交，提交前需人工确认，记录格式见 `conventional-committer`。
 - **提交粒度**：每个提交对应一个逻辑变更，避免"大杂烩"提交。
 - **分支策略**：<!-- 项目填充：指定分支策略，如 Git Flow / GitHub Flow / Trunk Based -->。
 
