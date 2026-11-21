@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-20",
+  "updatedAt": "2026-11-21",
   "projects": [
     "dependfix",
     "momei",
@@ -259,6 +259,32 @@
           "url": "https://github.com/CaoMeiYouRen/caomei-auth/issues/745"
         }
       },
+      "projects": {
+        "dependfix": {
+          "status": "pending"
+        },
+        "momei": {
+          "status": "pending"
+        },
+        "caomei-ui": {
+          "status": "pending"
+        },
+        "caomei-auth": {
+          "status": "pending"
+        }
+      }
+    },
+    {
+      "id": "breaking-change-human-review",
+      "title": "破坏性提交人工审查",
+      "file": "2026-11-21-breaking-change-human-review.md",
+      "stage": "draft",
+      "affectedProjects": [
+        "dependfix",
+        "momei",
+        "caomei-ui",
+        "caomei-auth"
+      ],
       "projects": {
         "dependfix": {
           "status": "pending"
