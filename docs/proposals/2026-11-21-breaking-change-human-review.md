@@ -1,8 +1,9 @@
 # 提案：破坏性提交人工审查
 
 > 能力：—（规则类约定；政策在 `global/AGENTS.md`，格式与流程在 `conventional-committer`，不登记为独立能力）
-> 发起：2026-11-21 ｜ 状态：草案（未通知，待用户授权）
+> 发起：2026-11-21 ｜ 状态：已通知（逐项目结论见文末生成块，数据源 [status.json](./status.json)）
 > 审查：2026-11-21 通过（blocker 0 / warning 0 / suggest 3；三轮独立复核，前两轮共 12 项 blocker、16 项 warning 全部关闭，见 §8）
+> 通知：2026-11-21 已提交 dependfix [#270](https://github.com/dependfix/dependfix/issues/270)、momei [#1072](https://github.com/CaoMeiYouRen/momei/issues/1072)、caomei-ui [#73](https://github.com/CaoMeiYouRen/caomei-ui/issues/73)、caomei-auth [#746](https://github.com/CaoMeiYouRen/caomei-auth/issues/746)
 > 注：§2 为 2026-11-21 的本机快照，行号、提交计数与工具链行为以当日检出为准。
 
 ## 1 变更摘要

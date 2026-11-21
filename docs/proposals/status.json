@@ -278,13 +278,33 @@
       "id": "breaking-change-human-review",
       "title": "破坏性提交人工审查",
       "file": "2026-11-21-breaking-change-human-review.md",
-      "stage": "draft",
+      "stage": "notified",
+      "notifiedAt": "2026-11-21",
+      "notifiedVia": "issue",
       "affectedProjects": [
         "dependfix",
         "momei",
         "caomei-ui",
         "caomei-auth"
       ],
+      "issues": {
+        "dependfix": {
+          "id": "#270",
+          "url": "https://github.com/dependfix/dependfix/issues/270"
+        },
+        "momei": {
+          "id": "#1072",
+          "url": "https://github.com/CaoMeiYouRen/momei/issues/1072"
+        },
+        "caomei-ui": {
+          "id": "#73",
+          "url": "https://github.com/CaoMeiYouRen/caomei-ui/issues/73"
+        },
+        "caomei-auth": {
+          "id": "#746",
+          "url": "https://github.com/CaoMeiYouRen/caomei-auth/issues/746"
+        }
+      },
       "projects": {
         "dependfix": {
           "status": "pending"
