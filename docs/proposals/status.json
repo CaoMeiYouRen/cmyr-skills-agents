@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-21",
+  "updatedAt": "2026-11-25",
   "projects": [
     "dependfix",
     "momei",
@@ -313,6 +313,28 @@
           "status": "pending"
         },
         "caomei-ui": {
+          "status": "pending"
+        },
+        "caomei-auth": {
+          "status": "pending"
+        }
+      }
+    },
+    {
+      "id": "backlog-priority-dual-axis",
+      "title": "Backlog 优先级双轴评分（重要度 × 紧急度）",
+      "file": "2026-11-25-backlog-priority-dual-axis.md",
+      "stage": "draft",
+      "affectedProjects": [
+        "dependfix",
+        "momei",
+        "caomei-auth"
+      ],
+      "projects": {
+        "dependfix": {
+          "status": "pending"
+        },
+        "momei": {
           "status": "pending"
         },
         "caomei-auth": {
