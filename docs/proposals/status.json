@@ -324,12 +324,28 @@
       "id": "backlog-priority-dual-axis",
       "title": "Backlog 优先级双轴评分（重要度 × 紧急度）",
       "file": "2026-11-25-backlog-priority-dual-axis.md",
-      "stage": "draft",
+      "stage": "notified",
+      "notifiedAt": "2026-11-25",
+      "notifiedVia": "issue",
       "affectedProjects": [
         "dependfix",
         "momei",
         "caomei-auth"
       ],
+      "issues": {
+        "dependfix": {
+          "id": "#284",
+          "url": "https://github.com/dependfix/dependfix/issues/284"
+        },
+        "momei": {
+          "id": "#1098",
+          "url": "https://github.com/CaoMeiYouRen/momei/issues/1098"
+        },
+        "caomei-auth": {
+          "id": "#747",
+          "url": "https://github.com/CaoMeiYouRen/caomei-auth/issues/747"
+        }
+      },
       "projects": {
         "dependfix": {
           "status": "pending"

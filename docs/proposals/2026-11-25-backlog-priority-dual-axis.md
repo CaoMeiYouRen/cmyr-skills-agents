@@ -1,7 +1,7 @@
 # 提案：Backlog 优先级双轴评分（重要度 × 紧急度）
 
 > 能力：—（规划评分口径，未登记为 capability）
-> 发起：2026-11-25 ｜ 状态：草案（未通知；逐项目结论见文末生成块，数据源 [status.json](./status.json)）
+> 发起：2026-11-25 ｜ 状态：已通知（dependfix [#284](https://github.com/dependfix/dependfix/issues/284)、momei [#1098](https://github.com/CaoMeiYouRen/momei/issues/1098)、caomei-auth [#747](https://github.com/CaoMeiYouRen/caomei-auth/issues/747)；逐项目结论见文末生成块）
 > 参考实现：caomei-ui [规划规范 §3.1](https://github.com/CaoMeiYouRen/caomei-ui/blob/51dac9a2/docs/standards/planning.md)（2026-11-25 用户裁定，提交 `51dac9a2`；评分批次记录 `docs/design/governance/2026-11-25-backlog-priority-dual-axis.md`）
 > 审查：2026-11-25 通过（blocker 0 / warning 0 / suggest 0；作者自检 + 用户复核，记录见 §8）
 
